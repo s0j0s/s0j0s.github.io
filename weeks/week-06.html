@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Week 6. SubAgent로 큰 작업 나누기</title>
+    <meta name="description" content="Claude Code Engineering Newsletter Week 6">
+    <link rel="stylesheet" href="../assets/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav">
+        <a class="brand" href="../index.html">Claude Code Engineering</a>
+        <a href="../index.html#roadmap">Roadmap</a>
+      </nav>
+    </header>
+
+    <main class="article">
+      <p class="eyebrow">Week 6</p>
+      <h1>SubAgent로 큰 작업 나누기</h1>
+      <p class="lead">
+        큰 작업은 한 Claude에게 한 번에 맡기기보다 조사, 구현, 리뷰 역할을 나누면
+        품질과 맥락 관리가 좋아집니다.
+      </p>
+
+      <aside class="callout">
+        <h2>이번 주 핵심</h2>
+        <p>
+          SubAgent는 Claude를 더 똑똑하게 만드는 기능이 아니라,
+          큰 일을 더 작고 검증 가능한 단위로 나누는 방식입니다.
+        </p>
+      </aside>
+
+      <p>
+        리팩토링 범위가 넓거나 버그 원인이 길게 이어질 때, 한 대화에서 모든 것을 처리하려고 하면
+        맥락이 쉽게 흐려집니다. 처음에는 원인 분석을 하다가, 중간에는 구현을 하고,
+        마지막에는 리뷰까지 해야 합니다. 역할이 섞이면 놓치는 부분도 생깁니다.
+      </p>
+
+      <p>
+        SubAgent는 이런 작업을 역할별로 나눌 때 유용합니다. 한쪽은 조사만 하고,
+        다른 쪽은 제한된 범위에서 구현하고, 또 다른 쪽은 diff를 기준으로 위험을 봅니다.
+      </p>
+
+      <h2>1. 필요한 상황</h2>
+      <ul>
+        <li>변경 범위가 넓은 리팩토링</li>
+        <li>원인 분석이 긴 버그</li>
+        <li>리뷰와 구현을 분리하고 싶은 작업</li>
+        <li>여러 후보 접근을 비교해야 하는 작업</li>
+      </ul>
+
+      <p>
+        반대로 작은 수정까지 SubAgent로 나누면 오히려 느려집니다. SubAgent는 큰 작업의
+        맥락 부담을 줄이는 도구이지, 모든 일을 절차화하기 위한 도구는 아닙니다.
+      </p>
+
+      <h2>2. 역할 분리 예시</h2>
+      <div class="compare-grid">
+        <section>
+          <h3>Investigator</h3>
+          <ul>
+            <li>관련 파일과 호출 흐름을 찾는다.</li>
+            <li>원인 후보를 정리한다.</li>
+            <li>구현은 하지 않는다.</li>
+          </ul>
+        </section>
+        <section>
+          <h3>Builder</h3>
+          <ul>
+            <li>정해진 범위만 수정한다.</li>
+            <li>기존 패턴을 따른다.</li>
+            <li>테스트를 실행하고 결과를 남긴다.</li>
+          </ul>
+        </section>
+      </div>
+
+      <p>
+        Reviewer 역할도 중요합니다. Reviewer는 구현자의 설명을 믿는 것이 아니라 diff를 기준으로 봅니다.
+        버그, 회귀 위험, 누락된 테스트, 과한 변경을 우선 확인합니다.
+      </p>
+
+      <h2>3. 좋은 요청 방식</h2>
+      <p>
+        SubAgent를 쓸 때는 역할과 산출물을 명확히 해야 합니다.
+        “조사해줘”보다 “구현하지 말고 관련 파일, 호출 흐름, 원인 후보, 검증 방법만 정리해줘”가 낫습니다.
+      </p>
+
+      <pre><code>Investigator:
+이 결제 실패 이슈의 원인을 조사해줘.
+파일 수정은 하지 말고 관련 코드 위치, 호출 흐름,
+가능성 높은 원인 2개, 확인해야 할 테스트만 정리해줘.
+
+Builder:
+Investigator 결과를 바탕으로 가장 작은 수정만 적용해줘.
+인증, 결제 공통 모듈은 계획 없이 리팩토링하지 마.
+구현 후 관련 테스트를 실행해줘.
+
+Reviewer:
+이번 diff를 리뷰해줘.
+버그, 회귀 위험, 테스트 누락만 우선순위대로 말해줘.</code></pre>
+
+      <h2>4. 남용하면 생기는 문제</h2>
+      <p>
+        SubAgent가 많아지면 각자의 결과를 통합하는 비용이 생깁니다. 작은 작업에 역할을 나누면
+        실제 수정 시간보다 조율 시간이 더 커질 수 있습니다. 또한 역할을 잘못 나누면
+        조사 결과와 구현 결과가 어긋날 수 있습니다.
+      </p>
+
+      <p>
+        그래서 사람은 최종 판단자로 남아야 합니다. 어떤 조사 결과를 채택할지,
+        어느 구현안을 진행할지, 리뷰 지적 중 무엇을 반영할지는 사람이 결정합니다.
+      </p>
+
+      <aside class="callout">
+        <h2>팀에서 합의하면 좋은 기준</h2>
+        <p>
+          SubAgent는 “파일 수가 많다”보다 “역할을 분리해야 품질이 올라간다”는 판단이 있을 때 사용합니다.
+          작은 작업은 기본 루프로 충분합니다.
+        </p>
+      </aside>
+
+      <h2>다음 주 예고</h2>
+      <p>
+        다음 주에는 Claude Code를 안정적으로 쓰기 위한 자동 안전장치,
+        Hooks를 팀 품질 기준과 연결하는 방법을 다룹니다.
+      </p>
+
+      <a class="next-link" href="week-07.html">다음 글: Hooks로 안전장치 만들기</a>
+    </main>
+  </body>
+</html>

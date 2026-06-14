@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Week 7. Hooks로 안전장치 만들기</title>
+    <meta name="description" content="Claude Code Engineering Newsletter Week 7">
+    <link rel="stylesheet" href="../assets/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav">
+        <a class="brand" href="../index.html">Claude Code Engineering</a>
+        <a href="../index.html#roadmap">Roadmap</a>
+      </nav>
+    </header>
+
+    <main class="article">
+      <p class="eyebrow">Week 7</p>
+      <h1>Hooks로 안전장치 만들기</h1>
+      <p class="lead">
+        팀에서 Claude Code를 안정적으로 쓰려면 좋은 요청뿐 아니라
+        자동으로 걸리는 안전장치가 필요합니다.
+      </p>
+
+      <aside class="callout">
+        <h2>이번 주 핵심</h2>
+        <p>
+          Hooks는 Claude를 믿기 위한 장치가 아니라,
+          팀의 기본 품질 기준을 자동으로 지키게 하는 장치입니다.
+        </p>
+      </aside>
+
+      <p>
+        Claude에게 매번 “테스트 돌려줘”, “포맷 확인해줘”, “secret 들어갔는지 봐줘”라고
+        말하는 것은 오래 가지 않습니다. 사람도 반복 체크리스트를 빠뜨리는데,
+        Claude에게 매번 대화로만 지시하는 방식은 더 쉽게 흔들립니다.
+      </p>
+
+      <p>
+        Hooks는 특정 시점에 자동으로 실행되는 안전장치입니다. 변경 후 테스트를 실행하거나,
+        위험한 명령을 막거나, 특정 파일이 수정될 때 경고를 띄우는 식으로 팀의 기본 기준을
+        작업 흐름 안에 넣을 수 있습니다.
+      </p>
+
+      <h2>1. 왜 필요한가</h2>
+      <p>
+        팀의 품질 기준은 기억에 의존하면 약해집니다. 특히 Claude Code를 쓰면 변경 속도가 빨라지기 때문에
+        검증 루프가 따라오지 못할 수 있습니다. Hooks는 이 간격을 줄입니다.
+      </p>
+
+      <p>
+        중요한 점은 Hooks가 모든 판단을 자동화하는 것이 아니라는 점입니다.
+        사람이 항상 기억하지 않아도 되는 기본 확인을 자동으로 걸어두는 데 목적이 있습니다.
+      </p>
+
+      <h2>2. 실무 Hook 예시</h2>
+      <ul>
+        <li>변경 후 테스트 실행</li>
+        <li>formatter와 linter 확인</li>
+        <li>secret 검사</li>
+        <li>위험 명령 차단</li>
+        <li>특정 파일 수정 시 경고</li>
+        <li>PR 전 체크리스트 출력</li>
+      </ul>
+
+      <h2>3. 자동화할 것과 사람이 판단할 것</h2>
+      <p>
+        자동화하기 좋은 것은 결과가 명확한 작업입니다. 테스트 통과 여부, 포맷팅 여부,
+        secret 패턴 검출, 금지 명령 실행 같은 것은 Hook에 잘 맞습니다.
+      </p>
+
+      <p>
+        반대로 제품 의도, 설계 방향, 리스크 수용 여부는 사람이 판단해야 합니다.
+        Hook은 사람의 판단을 대체하기보다 판단 전에 놓치면 안 되는 기본 신호를 제공합니다.
+      </p>
+
+      <div class="compare-grid">
+        <section>
+          <h3>Hook에 잘 맞음</h3>
+          <ul>
+            <li>테스트 명령 실행</li>
+            <li>포맷 검사</li>
+            <li>민감정보 패턴 검사</li>
+            <li>금지 파일 변경 경고</li>
+          </ul>
+        </section>
+        <section>
+          <h3>사람이 판단</h3>
+          <ul>
+            <li>변경 방향 승인</li>
+            <li>배포 리스크 수용</li>
+            <li>설계 트레이드오프</li>
+            <li>제품 요구사항 해석</li>
+          </ul>
+        </section>
+      </div>
+
+      <h2>4. 너무 강한 Hook의 문제</h2>
+      <p>
+        모든 것을 차단으로 시작하면 개발 흐름이 막힙니다. 테스트가 느리거나 flaky한데 매번 강제하면
+        Claude Code 사용 자체가 답답해질 수 있습니다. 처음부터 완벽한 방어선을 만들려고 하기보다
+        팀이 실제로 놓치는 문제부터 잡는 편이 좋습니다.
+      </p>
+
+      <h2>5. 팀 도입 순서</h2>
+      <p>
+        Hooks는 단계적으로 강화하는 것이 현실적입니다.
+      </p>
+
+      <pre><code>관찰
+-> 경고
+-> 자동 실행
+-> 차단</code></pre>
+
+      <p>
+        처음에는 어떤 파일이 자주 바뀌고 어떤 검증이 자주 빠지는지 관찰합니다.
+        그 다음 경고를 띄우고, 팀이 동의한 작업은 자동 실행으로 올립니다.
+        정말 위험한 명령이나 민감정보 유출처럼 명확한 리스크만 차단으로 둡니다.
+      </p>
+
+      <aside class="callout">
+        <h2>팀에서 합의하면 좋은 기준</h2>
+        <p>
+          Hooks는 “귀찮은 체크리스트 자동화”부터 시작합니다.
+          팀이 실제로 자주 놓치는 검증을 하나씩 작업 흐름에 넣는 것이 가장 효과적입니다.
+        </p>
+      </aside>
+
+      <h2>다음 주 예고</h2>
+      <p>
+        다음 주에는 지금까지 다룬 작업 루프, <code>CLAUDE.md</code>, Skills, MCP,
+        SubAgent, Hooks를 팀 플레이북으로 묶는 방법을 정리합니다.
+      </p>
+
+      <a class="next-link" href="week-08.html">다음 글: 팀 플레이북</a>
+    </main>
+  </body>
+</html>

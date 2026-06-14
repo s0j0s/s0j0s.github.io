@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Week 8. 팀 플레이북: Claude Code를 팀의 개발 시스템으로 만들기</title>
+    <meta name="description" content="Claude Code Engineering Newsletter Week 8">
+    <link rel="stylesheet" href="../assets/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav">
+        <a class="brand" href="../index.html">Claude Code Engineering</a>
+        <a href="../index.html#roadmap">Roadmap</a>
+      </nav>
+    </header>
+
+    <main class="article">
+      <p class="eyebrow">Week 8</p>
+      <h1>팀 플레이북: Claude Code를 팀의 개발 시스템으로 만들기</h1>
+      <p class="lead">
+        Claude Code 활용은 개인 생산성 팁에서 끝나지 않고,
+        팀의 작업 방식으로 정리될 때 가장 큰 효과가 납니다.
+      </p>
+
+      <aside class="callout">
+        <h2>이번 주 핵심</h2>
+        <p>
+          Claude Code를 잘 쓰는 팀은 AI 사용법을 개인 기량에 맡기지 않고,
+          팀의 개발 시스템으로 만듭니다.
+        </p>
+      </aside>
+
+      <p>
+        지난 7주 동안 다룬 내용은 결국 하나로 이어집니다. Claude Code를 잘 쓰는 팀은
+        좋은 프롬프트 몇 개를 공유하는 데서 멈추지 않습니다. 일을 맡기는 루프를 정하고,
+        프로젝트 맥락을 정리하고, 반복 작업을 표준화하고, 외부 시스템과 안전장치를 연결합니다.
+      </p>
+
+      <p>
+        이것을 팀 플레이북으로 만들면 개인마다 다른 사용법이 줄어듭니다. 새로 합류한 사람도
+        “우리 팀은 Claude Code를 이렇게 쓴다”는 기준을 빠르게 이해할 수 있습니다.
+      </p>
+
+      <h2>1. 지난 7주 정리</h2>
+      <ul>
+        <li>작업 루프: 바로 구현하지 않고 조사, 계획, 구현, 테스트, 리뷰로 나눈다.</li>
+        <li><code>CLAUDE.md</code>: 반복 설명하는 팀 규칙을 프로젝트 메모리로 관리한다.</li>
+        <li>Skills: 반복 작업을 재사용 가능한 작업 방식으로 고정한다.</li>
+        <li>MCP: GitHub, 이슈, 문서 같은 신뢰 가능한 외부 맥락을 연결한다.</li>
+        <li>SubAgent: 큰 작업을 조사, 구현, 리뷰 역할로 나눈다.</li>
+        <li>Hooks: 테스트, 포맷팅, 보안 검사 같은 기본 기준을 자동화한다.</li>
+      </ul>
+
+      <h2>2. 팀 플레이북에 들어갈 내용</h2>
+      <p>
+        플레이북은 거창한 문서가 아니어도 됩니다. 중요한 것은 팀이 실제로 자주 하는 작업의
+        기본값을 정하는 것입니다.
+      </p>
+
+      <ul>
+        <li>언제 Claude Code를 쓰는가</li>
+        <li>어떤 요청 패턴을 기본으로 쓰는가</li>
+        <li>어떤 작업은 사람이 반드시 리뷰하는가</li>
+        <li>어떤 Skill을 공통으로 쓰는가</li>
+        <li>어떤 MCP와 Hook을 허용하는가</li>
+        <li>쓰기 권한과 위험 명령은 어떻게 승인하는가</li>
+      </ul>
+
+      <h2>3. 팀용 slash command 예시</h2>
+      <p>
+        팀에서 자주 쓰는 작업은 slash command로 묶어두면 사용성이 좋아집니다.
+        이름은 짧고, 동작은 팀 기준을 반영해야 합니다.
+      </p>
+
+      <pre><code>/investigate
+관련 파일, 호출 흐름, 원인 후보, 검증 방법을 조사한다. 구현은 하지 않는다.
+
+/fix-with-tests
+수정 계획을 먼저 제안하고, 승인 후 구현한다. 관련 테스트를 실행하고 결과를 요약한다.
+
+/review
+diff 기준으로 버그, 회귀 위험, 테스트 누락을 우선순위대로 리뷰한다.
+
+/release-note
+병합된 변경을 사용자 영향 중심으로 정리한다. 내부 구현 세부사항은 줄인다.
+
+/simplify
+동작을 바꾸지 않는 범위에서 복잡도를 낮출 후보를 찾고, 작은 단계로 제안한다.</code></pre>
+
+      <h2>4. 도입 전략</h2>
+      <p>
+        모든 것을 한 번에 만들 필요는 없습니다. 오히려 한 번에 도입하면 팀이 따라가기 어렵습니다.
+        반복되는 작업 하나를 고르고, 거기서부터 표준화하는 편이 좋습니다.
+      </p>
+
+      <p>
+        예를 들어 리뷰 품질이 문제라면 먼저 리뷰 Skill과 리뷰 요청 패턴을 만듭니다.
+        테스트 누락이 문제라면 Hooks와 <code>/fix-with-tests</code>부터 시작합니다.
+        이슈 맥락이 자주 빠진다면 GitHub나 이슈 트래커 MCP부터 붙입니다.
+      </p>
+
+      <h2>5. 성공 기준</h2>
+      <p>
+        Claude Code 도입의 성공 기준을 코드 생성량으로 잡으면 방향이 흔들립니다.
+        더 많은 코드를 더 빨리 만드는 것보다, 더 적은 설명으로 더 안정적인 변경을 만들고,
+        리뷰와 테스트 루프를 단단하게 만드는 것이 중요합니다.
+      </p>
+
+      <ul>
+        <li>리뷰에서 발견되는 기본 실수가 줄었는가</li>
+        <li>테스트 실행과 결과 공유가 일관적인가</li>
+        <li>반복 설명이 줄었는가</li>
+        <li>새 팀원이 Claude Code 사용 방식을 빠르게 따라오는가</li>
+        <li>위험한 작업에서 승인과 검증 절차가 지켜지는가</li>
+      </ul>
+
+      <aside class="callout">
+        <h2>팀에서 합의하면 좋은 기준</h2>
+        <p>
+          Claude Code 플레이북은 완성된 문서가 아니라 운영 중 계속 다듬는 시스템입니다.
+          반복되는 불편이 보이면 메모리, Skill, MCP, Hook 중 어디에 반영할지 정합니다.
+        </p>
+      </aside>
+
+      <h2>마무리</h2>
+      <p>
+        Claude Code는 코드를 대신 써주는 도구로도 쓸 수 있습니다. 하지만 팀 차원의 효과는
+        작업 루프, 맥락, 반복 작업, 외부 연결, 역할 분리, 안전장치가 함께 맞물릴 때 나옵니다.
+        결국 중요한 질문은 “Claude에게 무엇을 시킬까”가 아니라
+        “우리 팀의 개발 시스템 안에서 Claude가 어떤 역할을 맡을까”입니다.
+      </p>
+
+      <a class="next-link" href="../index.html#roadmap">로드맵으로 돌아가기</a>
+    </main>
+  </body>
+</html>

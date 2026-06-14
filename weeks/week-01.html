@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Week 1. Prompt Engineering에서 Agentic Engineering까지</title>
+    <meta name="description" content="Claude Code Engineering Newsletter Week 1">
+    <link rel="stylesheet" href="../assets/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav">
+        <a class="brand" href="../index.html">Claude Code Engineering</a>
+        <a href="../index.html">Roadmap</a>
+      </nav>
+    </header>
+
+    <main class="article">
+      <p class="eyebrow">Week 1</p>
+      <h1>Prompt Engineering에서 Agentic Engineering까지</h1>
+      <p class="lead">
+        Claude Code를 잘 쓰기 위해 먼저 봐야 할 것은 명령어 사용법이 아니라
+        개발 방식의 변화입니다.
+      </p>
+
+      <p>
+        AI 도구는 처음에는 질문에 답하는 도구에 가까웠습니다. 좋은 답을 얻으려면
+        좋은 질문을 해야 했고, 그래서 많은 사람이 Prompt Engineering에 집중했습니다.
+        하지만 실제 소프트웨어 개발은 질문 하나로 끝나지 않습니다. 코드베이스의 구조,
+        팀의 규칙, 테스트 방식, 배포 제약, 기존 설계 의도까지 함께 이해해야 합니다.
+      </p>
+
+      <p>
+        그래서 개발에서 AI를 쓰는 방식은 점점 바뀌고 있습니다. 질문을 잘 쓰는 단계에서,
+        맥락을 설계하고, AI가 코드베이스 안에서 계획하고 검증하며 일하게 만드는 단계로
+        이동하고 있습니다.
+      </p>
+
+      <h2>1. Prompt Engineering: 질문을 잘 쓰는 단계</h2>
+      <p>초기 AI 활용의 핵심은 프롬프트였습니다.</p>
+
+      <pre><code>React로 todo app 만들어줘.
+이 코드를 리팩토링해줘.
+이 에러를 고쳐줘.</code></pre>
+
+      <p>
+        이 방식은 빠르게 도움을 받을 수 있지만 한계가 명확합니다. AI는 현재 프로젝트의
+        구조를 모릅니다. 팀의 코드 스타일도 모릅니다. 왜 기존 코드가 그렇게 작성되었는지도
+        모릅니다. 테스트를 어떻게 돌려야 하는지도 모릅니다.
+      </p>
+
+      <p>
+        결국 결과물은 그럴듯한 답변일 수는 있지만, 우리 코드베이스에 바로 들어갈 수 있는
+        변경은 아닐 가능성이 큽니다.
+      </p>
+
+      <h2>2. Context Engineering: 맥락을 설계하는 단계</h2>
+      <p>
+        다음 단계는 Context Engineering입니다. 좋은 답을 얻기 위해 질문만 다듬는 것이 아니라,
+        AI가 참고해야 할 맥락을 함께 제공하는 방식입니다.
+      </p>
+
+      <p>예를 들면 다음 정보들이 중요해집니다.</p>
+
+      <ul>
+        <li>프로젝트 구조</li>
+        <li>주요 도메인 개념</li>
+        <li>빌드와 테스트 명령</li>
+        <li>코드 스타일</li>
+        <li>아키텍처 원칙</li>
+        <li>하지 말아야 할 변경</li>
+        <li>자주 발생하는 실수</li>
+        <li>리뷰 기준</li>
+      </ul>
+
+      <p>
+        Claude Code에서 <code>CLAUDE.md</code>가 중요한 이유도 여기에 있습니다.
+        <code>CLAUDE.md</code>는 매번 반복해서 설명하던 팀의 규칙과 프로젝트 맥락을
+        Claude가 지속적으로 참고할 수 있게 해줍니다. 즉, 개인의 프롬프트 실력을 팀의
+        공통 작업 환경으로 바꾸는 장치입니다.
+      </p>
+
+      <h2>3. Coding Agent: 코드베이스 안에서 일하는 단계</h2>
+      <p>
+        Chat 기반 AI와 Coding Agent의 차이는 큽니다. Chat AI는 주로 답변을 생성합니다.
+        반면 Coding Agent는 코드베이스를 읽고, 파일을 수정하고, 테스트를 실행하고,
+        diff를 확인하며 작업할 수 있습니다.
+      </p>
+
+      <p>Claude Code는 이 지점에서 가치가 커집니다.</p>
+
+      <pre><code>이 버그의 원인을 먼저 조사해줘.
+관련 파일과 호출 흐름을 정리한 뒤 수정 계획을 제안해줘.
+구현 후 테스트를 실행하고 실패하면 원인을 다시 분석해줘.
+마지막으로 diff 기준으로 리스크를 설명해줘.</code></pre>
+
+      <p>
+        이런 방식에서는 AI가 답변자가 아니라 작업 루프의 일부가 됩니다. 중요한 것은
+        단순히 코드를 생성하는 능력이 아니라, 코드베이스 안에서 근거를 찾고 변경을 만들고
+        검증하는 흐름입니다.
+      </p>
+
+      <h2>4. Agentic Engineering: 계획하고, 실행하고, 검증하는 방식</h2>
+      <p>
+        Agentic Engineering은 AI가 독립적으로 모든 것을 알아서 한다는 뜻이 아닙니다.
+        오히려 반대에 가깝습니다. 사람은 목표, 제약, 품질 기준, 최종 판단을 담당하고,
+        AI는 조사, 반복 구현, 테스트 실행, 변경 요약 같은 작업을 수행합니다.
+      </p>
+
+      <p>중요한 것은 루프입니다.</p>
+
+      <pre><code>목표 정의
+-> 코드 조사
+-> 변경 계획
+-> 구현
+-> 테스트
+-> 리뷰
+-> 수정</code></pre>
+
+      <p>
+        Claude Code를 효율적으로 쓰는 팀은 이 루프를 명확하게 만듭니다. 반대로 Claude Code를
+        단순히 코드 빨리 짜주는 도구로만 쓰면 품질이 흔들립니다. 변경 의도를 놓치거나,
+        테스트가 부족하거나, 기존 설계와 맞지 않는 코드가 들어갈 수 있습니다.
+      </p>
+
+      <h2>5. 그래서 팀의 사용법이 중요하다</h2>
+      <p>
+        Claude Code를 개인이 각자 다르게 쓰면 생산성은 일시적으로 오를 수 있습니다.
+        하지만 팀 전체의 개발 방식은 크게 바뀌지 않습니다. 팀 단위로 효과를 내려면
+        공통 패턴이 필요합니다.
+      </p>
+
+      <ul>
+        <li>작업 전에는 계획을 먼저 받는다.</li>
+        <li>큰 작업은 조사, 구현, 리뷰로 나눈다.</li>
+        <li><code>CLAUDE.md</code>에 팀 규칙을 축적한다.</li>
+        <li>반복 작업은 Skills로 표준화한다.</li>
+        <li>외부 시스템 연결은 MCP로 관리한다.</li>
+        <li>큰 작업은 SubAgent로 역할을 분리한다.</li>
+        <li>Hooks로 테스트, 포맷팅, 보안 검사를 자동화한다.</li>
+        <li>최종 판단은 항상 사람이 diff와 테스트 결과를 보고 한다.</li>
+      </ul>
+
+      <p>
+        이것이 Claude Code를 개인 생산성 도구에서 팀의 Engineering System으로 바꾸는 핵심입니다.
+      </p>
+
+      <h2>이번 주 실천 과제</h2>
+      <p>
+        이번 주에는 Claude Code로 코드를 바로 수정하기보다, 현재 팀의 작업 방식을 돌아봅니다.
+        아래 질문에 답해보면 좋습니다.
+      </p>
+
+      <pre><code>우리 팀에서 Claude Code가 항상 알아야 하는 프로젝트 규칙은 무엇인가?
+반복해서 시키는 작업은 무엇인가?
+Claude가 자주 실수하는 지점은 무엇인가?
+코드 변경 전에 반드시 확인해야 하는 테스트나 명령은 무엇인가?
+리뷰할 때 가장 중요하게 보는 기준은 무엇인가?</code></pre>
+
+      <p>
+        이 답변은 다음 주부터 <code>CLAUDE.md</code>, Skills, Hooks, SubAgent 설계의 재료가 됩니다.
+      </p>
+
+      <h2>다음 주 예고</h2>
+      <p>
+        다음 주에는 Claude Code를 더 잘 쓰기 위한 기본 작업 루프를 다룹니다. 핵심은
+        잘 물어보기가 아니라 일을 잘 맡기기입니다. 바로 구현시키는 방식에서 벗어나,
+        계획을 받고, 변경 범위를 좁히고, 테스트로 닫는 실전 패턴을 정리합니다.
+      </p>
+
+      <a class="next-link" href="../index.html">로드맵으로 돌아가기</a>
+    </main>
+  </body>
+</html>

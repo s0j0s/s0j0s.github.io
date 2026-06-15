@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Week 1. Prompt Engineering에서 Agentic Engineering까지</title>
+    <title>Week 1. Claude Code에게 일을 잘 맡기는 법</title>
     <meta name="description" content="Claude Code Engineering Newsletter Week 1">
     <link rel="stylesheet" href="../assets/styles.css">
   </head>
@@ -17,205 +17,112 @@
 
     <main class="article">
       <p class="eyebrow">Week 1</p>
-      <h1>Prompt Engineering에서 Agentic Engineering까지</h1>
+      <h1>Claude Code에게 일을 잘 맡기는 법</h1>
       <p class="lead">
-        Claude Code를 잘 쓰려면 명령어를 많이 외우는 것보다,
-        일을 맡기는 방식을 바꾸는 것이 먼저입니다.
+        “고쳐줘”라고 말하는 것에서 한 걸음만 더 나아가도,
+        Claude Code는 팀에 훨씬 더 도움이 되는 도구가 됩니다.
       </p>
 
       <aside class="callout">
         <h2>이번 주 핵심</h2>
         <p>
-          이번 글은 개념을 깊게 파는 글이 아니라, 앞으로 8주 동안 다룰 지도를 먼저 그리는 글입니다.
-          핵심은 Claude Code를 “답변 도구”가 아니라 <strong>조사하고, 계획하고, 수정하고,
-          검증하는 작업 루프</strong> 안에 두는 것입니다.
+          Claude Code를 코드 대신 써주는 도구로만 보면 효과가 금방 줄어듭니다.
+          회사에 도움이 되게 쓰려면 <strong>먼저 조사하고, 작게 고치고,
+          테스트 근거를 남기는 방식</strong>으로 맡겨야 합니다.
         </p>
       </aside>
 
       <p>
-        AI 도구를 처음 쓸 때는 대부분 이렇게 시작합니다. “이 코드 고쳐줘”,
-        “React 컴포넌트 만들어줘”, “에러 원인 알려줘”처럼 질문을 잘 쓰는 데 집중합니다.
-        이것이 Prompt Engineering입니다.
+        Claude Code를 처음 쓰면 자연스럽게 이렇게 말하게 됩니다.
+        “이 코드 고쳐줘”, “이 에러 해결해줘”, “테스트 만들어줘.”
+        틀린 사용법은 아닙니다. 작은 작업에서는 이 정도 요청만으로도 꽤 도움이 됩니다.
       </p>
 
       <p>
-        하지만 Claude Code는 단순히 답을 생성하는 챗봇과 다릅니다.
-        공식 문서에서도 Claude Code를 코드베이스를 읽고, 파일을 편집하고,
-        명령을 실행하는 <a href="https://code.claude.com/docs/en/overview">agentic coding tool</a>로 설명합니다.
-        그래서 중요한 질문은 “어떤 프롬프트를 쓰면 코드가 빨리 나오나”가 아니라
-        “어떤 기준과 검증 루프 안에서 일을 맡길 것인가”에 가깝습니다.
+        문제는 실제 회사 코드가 그렇게 단순하지 않다는 데 있습니다.
+        버그 하나를 고치려 해도 프로젝트 구조, 기존 설계, 테스트 방법, 배포 영향,
+        팀의 코딩 규칙을 같이 봐야 합니다. Claude Code는 파일을 읽고,
+        코드를 수정하고, 명령을 실행할 수 있기 때문에 이런 흐름에 잘 맞습니다.
       </p>
 
       <p>
-        그런데 실제 개발은 질문 하나로 끝나지 않습니다. 코드를 고치려면 프로젝트 구조,
-        팀의 규칙, 테스트 방법, 배포 제약, 기존 설계 의도까지 알아야 합니다.
-        그래서 Claude Code를 잘 쓰는 방향은 “질문을 잘 쓰기”에서
-        “일을 잘 맡기기”로 바뀌고 있습니다.
+        그래서 이번 8주 뉴스레터의 목표는 거창한 AI 이론을 설명하는 것이 아닙니다.
+        팀원이 쉬는 시간에 가볍게 읽고, 다음 작업에서 바로 써볼 수 있는
+        Claude Code 사용 습관을 하나씩 정리하는 것입니다.
       </p>
 
+      <h2>1. 흔한 시작: 바로 고쳐달라고 하기</h2>
       <p>
-        예를 들어 결제 버그를 Claude Code에 맡기는 팀을 생각해보겠습니다.
-        “결제가 실패해, 고쳐줘”라고 바로 맡기면 빠를 수는 있지만, 원인 조사와 검증 기준이 비어 있습니다.
-        이 시리즈는 같은 결제 버그를 조사, 계획, 구현, 리뷰, 안전장치까지 이어지는 흐름으로 다룹니다.
+        가장 쉬운 요청은 바로 수정 요청입니다.
       </p>
 
-      <h2>Vibe coding과 Agentic Engineering의 차이</h2>
-      <p>
-        Karpathy가 말한 vibe coding은 빠른 실험과 프로토타입에는 잘 맞습니다.
-        원하는 느낌을 말하고, AI가 만든 결과를 보면서 계속 방향을 바꾸는 방식입니다.
-        재미있고 빠르지만, 팀의 프로덕션 코드에 그대로 적용하기에는 부족합니다.
-        운영 코드는 “그럴듯함”보다 재현 조건, 변경 범위, 테스트 증거, 리뷰 가능성이 중요하기 때문입니다.
-      </p>
+      <pre><code>결제 버그 고쳐줘.
+이 테스트 실패 고쳐줘.
+이 컴포넌트 리팩토링해줘.</code></pre>
 
       <p>
-        Simon Willison은 <a href="https://simonwillison.net/2025/Mar/19/vibe-coding/">모든 AI-assisted programming이 vibe coding은 아니라고 설명합니다</a>.
-        AI가 코드를 썼더라도 사람이 변경을 리뷰하고, 테스트하고, 왜 맞는지 설명할 수 있다면
-        그것은 무책임한 위임이 아니라 AI를 활용한 소프트웨어 개발에 가깝습니다.
-        이 시리즈에서 말하는 Agentic Engineering도 같은 선 위에 있습니다.
-      </p>
-
-      <h2>1. Prompt Engineering: 질문을 잘 쓰기</h2>
-      <p>
-        Prompt Engineering은 AI에게 원하는 답을 얻기 위해 질문을 잘 작성하는 방법입니다.
-        Claude Code를 처음 쓸 때 가장 익숙한 방식입니다.
-      </p>
-
-      <pre><code>React로 todo app 만들어줘.
-이 코드를 리팩토링해줘.
-이 에러를 고쳐줘.</code></pre>
-
-      <p>
-        이 방식은 빠르지만 개발 업무 전체를 맡기기에는 부족합니다.
-        결제 버그처럼 원인, 영향 범위, 테스트 기준이 중요한 작업은 질문 하나보다 작업 루프가 필요합니다.
+        이 방식은 빠릅니다. 하지만 Claude가 원인을 충분히 보지 않고
+        그럴듯한 위치를 바로 고칠 수 있습니다. 그러면 처음에는 편해 보여도
+        리뷰할 때 “왜 이렇게 바꿨어요?”, “테스트는 뭘 봤어요?”라는 질문이 남습니다.
       </p>
 
       <div class="example-grid">
         <section>
           <h3>부족한 요청</h3>
-          <pre><code>이 버그 고쳐줘.</code></pre>
+          <pre><code>결제 버그 고쳐줘.</code></pre>
         </section>
         <section>
           <h3>더 나은 요청</h3>
-          <pre><code>이 버그의 원인을 먼저 찾아줘.
-관련 파일을 정리하고,
-수정 계획을 제안한 뒤,
-내가 확인하면 구현해줘.</code></pre>
+          <pre><code>결제 실패 원인을 먼저 조사해줘.
+관련 파일과 재현 흐름을 정리하고,
+가장 작은 수정안을 제안한 뒤,
+테스트 결과와 diff 리스크까지 알려줘.</code></pre>
         </section>
       </div>
 
-      <h2>2. Context Engineering: 필요한 배경을 알려주기</h2>
+      <h2>2. 좋은 요청은 길이가 아니라 순서가 다릅니다</h2>
       <p>
-        Context Engineering은 AI가 <strong>무슨 정보를 보고 판단할지</strong> 설계하는 일입니다.
-        쉽게 말하면 Claude에게 “지금 이 작업을 하려면 이 배경을 먼저 봐라”라고 정리해주는 것입니다.
-        자세한 방법은 Week 3의 <code>CLAUDE.md</code>에서 다룹니다.
+        Claude Code에게 일을 맡길 때는 긴 프롬프트보다 순서가 중요합니다.
+        바로 구현시키기 전에 먼저 봐야 할 것, 바꿔도 되는 범위,
+        확인해야 할 기준을 알려주면 결과가 훨씬 안정적입니다.
       </p>
-
-      <p>
-        여기서는 프로젝트 구조, 도메인 규칙, 테스트 명령, 금지된 리팩토링 범위 같은 배경이 들어갑니다.
-        결제 버그라면 “결제 도메인 규칙은 어디에 있는가”, “어떤 테스트를 돌려야 하는가”가
-        먼저 Claude에게 보여야 합니다.
-      </p>
-
-      <h2>3. Harness Engineering: 일할 수 있는 도구를 연결하기</h2>
-      <p>
-        Harness Engineering은 AI가 <strong>어떻게 일할지</strong> 설계하는 일입니다.
-        같은 Claude라도 어떤 도구를 쓸 수 있는지, 어떤 순서로 움직이는지,
-        결과를 어떻게 검증하는지에 따라 완전히 다른 작업자가 됩니다.
-        테스트, 권한, 경고, 차단 같은 안전장치는 Week 7의 Hooks에서 더 구체적으로 다룹니다.
-      </p>
-
-      <p>
-        여기에는 파일 접근, 터미널 명령, 테스트 실행, 권한 승인, 외부 시스템 연결이 포함됩니다.
-        결제 버그 조사 중 GitHub Issue를 읽고, 관련 테스트를 실행하고,
-        위험한 쓰기 작업은 승인 후 진행하게 만드는 장치입니다.
-      </p>
-
-      <pre><code>이 버그의 원인을 먼저 조사해줘.
-관련 파일과 호출 흐름을 정리한 뒤 수정 계획을 제안해줘.
-구현 후 테스트를 실행하고 실패하면 원인을 다시 분석해줘.
-마지막으로 diff 기준으로 리스크를 설명해줘.</code></pre>
-
-      <p>
-        이런 요청을 하면 Claude는 단순히 답만 하는 것이 아니라 작업 과정에 들어옵니다.
-        중요한 것은 “코드를 빨리 생성하는 능력”이 아니라 “근거를 찾고, 변경하고,
-        검증하는 흐름”입니다.
-      </p>
-
-      <p>
-        간단히 말하면 Context는 <code>무엇을 보여줄지</code>,
-        Harness는 <code>어떻게 일하게 할지</code>입니다. Context가 없으면 AI가 엉뚱한
-        정보를 바탕으로 판단하고, Harness가 없으면 맞는 판단을 해도 실제 변경과 검증으로
-        이어지지 않을 수 있습니다.
-      </p>
-
-      <h2>4. Agentic Engineering: 작은 작업 루프로 맡기기</h2>
-      <p>
-        Agentic Engineering은 AI가 모든 것을 알아서 한다는 뜻이 아닙니다.
-        사람이 목표와 기준을 정하고, Claude가 조사, 구현, 테스트, 요약 같은 작업을
-        반복해서 수행하는 방식입니다.
-      </p>
-
-      <p>핵심은 한 번에 크게 시키지 않고, 다음 루프를 반복하는 것입니다.</p>
 
       <pre><code>목표 정의
--> 코드 조사
--> 변경 계획
+-> 원인 조사
+-> 작은 수정안
 -> 구현
 -> 테스트
--> 리뷰
--> 수정</code></pre>
+-> diff 리스크 확인</code></pre>
 
       <p>
-        Claude Code를 효율적으로 쓰는 팀은 이 루프를 명확하게 만듭니다.
-        반대로 Claude Code를 “코드 빨리 짜주는 도구”로만 쓰면 품질이 흔들릴 수 있습니다.
-        변경 의도를 놓치거나, 테스트가 부족하거나, 기존 설계와 맞지 않는 코드가 들어갈 수 있습니다.
+        이 순서만 지켜도 Claude Code의 답변은 달라집니다.
+        코드를 많이 만드는 것보다, 변경 이유와 검증 근거가 같이 남기 때문입니다.
       </p>
 
+      <h2>3. 회사에 도움이 되는 사용법</h2>
       <p>
-        이때 사람의 역할은 줄어드는 것이 아니라 바뀝니다. 한 줄씩 코드를 쓰는 시간은 줄 수 있지만,
-        목표, 제약, 검증 기준, 리스크 수용 범위를 정하는 책임은 더 중요해집니다.
-        Kent Beck이 AI coding agent를 “genie”에 비유한 것처럼,
-        원하는 것을 말해도 의도와 다르게 수행될 수 있습니다.
-        그래서 엔지니어는 더 좋은 지시자가 아니라 더 분명한 판단자가 되어야 합니다.
-      </p>
-
-      <h2>5. 그래서 팀의 사용법이 중요합니다</h2>
-      <p>
-        Claude Code를 개인이 각자 다르게 쓰면 생산성은 일시적으로 오를 수 있습니다.
-        하지만 팀 전체의 개발 방식은 크게 바뀌지 않습니다.
-        팀 단위로 효과를 내려면 공통 사용법이 필요합니다.
+        팀에서 Claude Code를 쓰는 목적은 “AI가 코드를 많이 쓰게 하기”가 아닙니다.
+        회사에 도움이 되려면 리뷰 비용을 줄이고, 장애 가능성을 낮추고,
+        새로 들어온 팀원도 변경 이유를 이해할 수 있게 만들어야 합니다.
       </p>
 
       <ul>
-        <li>작업 전에는 계획을 먼저 받는다.</li>
-        <li>큰 작업은 조사, 구현, 리뷰로 나눈다.</li>
-        <li><code>CLAUDE.md</code>에 팀 규칙을 축적한다.</li>
-        <li>반복 작업은 Skills로 표준화한다.</li>
-        <li>외부 시스템 연결은 MCP로 관리한다.</li>
-        <li>큰 작업은 SubAgent로 역할을 분리한다.</li>
-        <li>Hooks로 테스트, 포맷팅, 보안 검사를 자동화한다.</li>
-        <li>최종 판단은 항상 사람이 diff와 테스트 결과를 보고 한다.</li>
+        <li>관련 파일을 먼저 찾게 한다.</li>
+        <li>수정 전에 원인과 계획을 말하게 한다.</li>
+        <li>작은 변경부터 하게 한다.</li>
+        <li>테스트, 빌드, 재현 조건처럼 확인 가능한 근거를 남기게 한다.</li>
+        <li>마지막에는 diff 기준으로 위험한 부분을 다시 보게 한다.</li>
       </ul>
 
       <p>
-        이 공통 사용법이 쌓이면 Claude Code는 개인 생산성 도구를 넘어
-        팀의 Engineering System이 됩니다.
+        이 습관이 쌓이면 Claude Code는 개인 생산성 도구를 넘어
+        팀의 작업 방식을 안정시키는 도구가 됩니다.
       </p>
 
-      <aside class="callout">
-        <h2>한 문장으로 정리</h2>
-        <p>
-          Claude Code를 잘 쓰는 팀은 “좋은 프롬프트”보다
-          “좋은 작업 루프와 팀 규칙”을 먼저 만듭니다.
-        </p>
-      </aside>
-
-      <h2>실전에서 바로 써먹는 패턴</h2>
+      <h2>4. 이번 주에 바로 써볼 요청</h2>
       <p>
-        Claude Code에게 바로 코드를 맡기기 전에, 작업의 기준을 먼저 말해주는 습관을 들이면
-        결과가 훨씬 안정적입니다. 요청은 짧아도 되지만, 판단 기준은 빠지면 안 됩니다.
-        Anthropic의 <a href="https://code.claude.com/docs/en/best-practices">Claude Code best practices</a>도
-        테스트, 빌드, 스크린샷처럼 Claude가 직접 확인할 수 있는 pass/fail 신호를 주는 방식을 강조합니다.
+        이번 주에는 딱 하나만 바꿔봐도 충분합니다.
+        Claude Code에게 바로 구현시키기 전에 “먼저 조사해줘”를 붙여보세요.
       </p>
 
       <pre><code>이 작업은 바로 구현하지 말고 먼저 조사해줘.
@@ -224,29 +131,22 @@
 테스트로 확인할 수 있는 기준까지 제안해줘.</code></pre>
 
       <p>
-        결제 버그라면 “수정해줘”에서 멈추지 말고, 재현 조건, 관련 테스트,
-        변경 diff의 리스크까지 닫아달라고 맡기는 편이 좋습니다.
-        팀에서는 “바로 수정 요청”을 기본값으로 두지 않는 것만으로도 리뷰 비용이 줄어듭니다.
-        다음 주에는 결제 버그 같은 실무 사례를 기준으로 이 감각을 실제 작업 루프로 정리합니다.
+        여기서 핵심은 Claude를 못 믿어서 천천히 시키는 것이 아닙니다.
+        더 믿고 맡기기 위해, 먼저 근거를 만들게 하는 것입니다.
       </p>
 
       <aside class="callout">
-        <h2>주의할 오해</h2>
+        <h2>한 문장으로 정리</h2>
         <p>
-          AI 코딩의 성공 기준은 코드 생성량이 아닙니다.
-          유지보수 가능한 변경, 리뷰 가능한 diff, 테스트로 남는 증거가 더 중요합니다.
-          METR의 <a href="https://arxiv.org/abs/2507.09089">생산성 연구</a>처럼
-          숙련 개발자가 익숙한 대형 코드베이스에서 AI 도구를 썼을 때 오히려 시간이 늘어난 사례도 있습니다.
-          Week 1에서는 과장된 생산성 약속보다, 검증 가능한 작업 방식을 기준으로 삼겠습니다.
+          Claude Code를 잘 쓰는 팀은 “빨리 만들어줘”보다
+          “먼저 보고, 작게 고치고, 확인해서 알려줘”를 기본값으로 둡니다.
         </p>
       </aside>
 
       <h2>더 읽어볼 글</h2>
       <ul>
         <li>Anthropic, <a href="https://code.claude.com/docs/en/best-practices">Best practices for Claude Code</a></li>
-        <li>Simon Willison, <a href="https://simonwillison.net/2025/Mar/11/using-llms-for-code/">Here’s how I use LLMs to help me write code</a></li>
         <li>Simon Willison, <a href="https://simonwillison.net/2025/Mar/19/vibe-coding/">Not all AI-assisted programming is vibe coding</a></li>
-        <li>Simon Willison, <a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">The lethal trifecta for AI agents</a></li>
       </ul>
 
       <h2>다음 주 예고</h2>

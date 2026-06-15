@@ -87,11 +87,19 @@
         <section>
           <h3>더 나은 방식</h3>
           <pre><code>- API 타입은 src/api/types.ts에서만 정의한다.
+- 결제 도메인 규칙은 docs/billing-rules.md를 먼저 확인한다.
 - 결제 로직 수정 후에는 npm run test:billing을 실행한다.
+- 결제 실패 재현은 test:billing:e2e의 refund, retry 케이스를 우선 본다.
 - UI 문구 변경은 ko.json과 en.json을 함께 수정한다.
-- 인증 흐름은 직접 리팩토링하지 말고 먼저 계획을 제안한다.</code></pre>
+- 인증, 결제 공통 모듈은 직접 리팩토링하지 말고 먼저 계획을 제안한다.</code></pre>
         </section>
       </div>
+
+      <p>
+        결제 버그를 자주 다루는 팀이라면 도메인 규칙, 실행해야 할 테스트 명령,
+        건드리면 안 되는 공통 모듈 범위를 <code>CLAUDE.md</code>에 넣어둡니다.
+        그러면 Week 2의 기본 루프를 짧게 요청해도 Claude가 같은 기준을 반복해서 적용할 수 있습니다.
+      </p>
 
       <h2>4. 너무 긴 메모리의 문제</h2>
       <p>

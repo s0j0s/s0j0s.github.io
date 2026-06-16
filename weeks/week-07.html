@@ -16,12 +16,22 @@
     </header>
 
     <main class="article">
+      <div class="week-progress week-7">Week 7 of 8 <span aria-hidden="true"></span> 안전장치</div>
       <p class="eyebrow">Week 7</p>
       <h1>Hooks로 안전장치 만들기</h1>
       <p class="lead">
         팀에서 Claude Code를 안정적으로 쓰려면 좋은 요청뿐 아니라
         자동으로 걸리는 안전장치가 필요합니다.
       </p>
+
+      <aside class="summary-box">
+        <h2>3줄 요약</h2>
+        <ul>
+          <li>Hooks는 Claude Code 작업 중 반복 확인을 자동으로 알려주는 안전장치입니다.</li>
+          <li>처음부터 차단하지 말고 경고부터 시작해야 팀원이 부담 없이 받아들일 수 있습니다.</li>
+          <li>Java 백엔드 팀이라면 관련 JUnit 테스트, 정적 검사, secret 검사부터 연결하기 좋습니다.</li>
+        </ul>
+      </aside>
 
       <aside class="callout">
         <h2>이번 주 핵심</h2>
@@ -57,25 +67,25 @@
 
       <h2>2. 실무 Hook 예시</h2>
       <ul>
-        <li>변경 후 테스트 실행</li>
-        <li>formatter와 linter 확인</li>
+        <li>변경 후 관련 JUnit 테스트 실행</li>
+        <li>정적 검사와 코드 스타일 확인</li>
         <li>secret 검사</li>
         <li>위험 명령 차단</li>
-        <li>특정 파일 수정 시 경고</li>
-        <li>결제 관련 파일 수정 시 결제 테스트 실행 또는 경고</li>
+        <li>트랜잭션, 배치, 외부 연동 파일 수정 시 경고</li>
+        <li>상태 업데이트 관련 파일 수정 시 관련 테스트 실행 안내</li>
         <li>PR 전 체크리스트 출력</li>
       </ul>
 
       <p>
-        예를 들어 <code>src/billing</code>이나 결제 API 어댑터가 바뀌면
-        <code>npm run test:billing</code>을 실행하라고 경고하는 Hook부터 시작할 수 있습니다.
+        예를 들어 상태 업데이트 서비스나 외부 연동 어댑터가 바뀌면
+        관련 JUnit 테스트나 <code>./gradlew test</code>를 실행하라고 경고하는 Hook부터 시작할 수 있습니다.
         팀이 안정성을 확인한 뒤에는 같은 Hook을 자동 실행으로 올리고,
         민감정보 유출이나 위험 명령처럼 명확한 리스크만 차단으로 둡니다.
       </p>
 
       <h2>3. 자동화할 것과 사람이 판단할 것</h2>
       <p>
-        자동화하기 좋은 것은 결과가 명확한 작업입니다. 테스트 통과 여부, 포맷팅 여부,
+        자동화하기 좋은 것은 결과가 명확한 작업입니다. 테스트 통과 여부, 코드 스타일 위반 여부,
         secret 패턴 검출, 금지 명령 실행 같은 것은 Hook에 잘 맞습니다.
       </p>
 
@@ -89,7 +99,7 @@
           <h3>Hook에 잘 맞음</h3>
           <ul>
             <li>테스트 명령 실행</li>
-            <li>포맷 검사</li>
+            <li>코드 스타일 검사</li>
             <li>민감정보 패턴 검사</li>
             <li>금지 파일 변경 경고</li>
           </ul>
@@ -129,11 +139,29 @@
         정말 위험한 명령이나 민감정보 유출처럼 명확한 리스크만 차단으로 둡니다.
       </p>
 
+      <aside class="prompt-card">
+        <h2>복사해서 써볼 요청</h2>
+        <p>팀에서 첫 Hook 후보를 정할 때 사용할 수 있습니다.</p>
+        <pre><code>최근 변경에서 자주 수정되는 Java 백엔드 파일을 기준으로
+Hook으로 경고하면 좋을 항목을 제안해줘.
+처음부터 차단하지 말고 경고로 시작할 항목,
+자동 실행해도 괜찮은 테스트,
+사람 승인이 필요한 위험 작업을 나눠서 정리해줘.</code></pre>
+      </aside>
+
       <aside class="callout">
         <h2>팀에서 합의하면 좋은 기준</h2>
         <p>
           Hooks는 “귀찮은 체크리스트 자동화”부터 시작합니다.
           팀이 실제로 자주 놓치는 검증을 하나씩 작업 흐름에 넣는 것이 가장 효과적입니다.
+        </p>
+      </aside>
+
+      <aside class="action-box">
+        <h2>이번 주 실천</h2>
+        <p>
+          차단 Hook을 만들기 전에 “상태 업데이트 관련 파일이 바뀌면 관련 테스트를 확인하라”는
+          경고 메시지 하나만 먼저 정해봅니다.
         </p>
       </aside>
 

@@ -16,12 +16,22 @@
     </header>
 
     <main class="article">
+      <div class="week-progress week-3">Week 3 of 8 <span aria-hidden="true"></span> 팀 기준</div>
       <p class="eyebrow">Week 3</p>
       <h1>CLAUDE.md를 팀 작업 기준으로 활용하기</h1>
       <p class="lead">
         이미 배포된 <code>CLAUDE.md</code>를 실제 작업에서 잘 쓰고,
         부족한 기준은 팀이 함께 개선해가는 방법을 다룹니다.
       </p>
+
+      <aside class="summary-box">
+        <h2>3줄 요약</h2>
+        <ul>
+          <li><code>CLAUDE.md</code>는 새로 만드는 문서가 아니라 이미 있는 팀 기준을 작업에 연결하는 장치입니다.</li>
+          <li>작업 전에는 기준을 확인하게 하고, 작업 후에는 diff가 기준을 지켰는지 다시 보게 합니다.</li>
+          <li>오래된 테스트 명령이나 애매한 규칙을 발견하면 개선 후보로 남깁니다.</li>
+        </ul>
+      </aside>
 
       <aside class="callout">
         <h2>이번 주 핵심</h2>
@@ -72,15 +82,15 @@
       </p>
 
       <div class="example-grid">
-        <section>
+        <section class="weak-example">
           <h3>그냥 넘기는 방식</h3>
           <pre><code>테스트 명령이 틀린 것 같은데
 이번에는 내가 알아서 돌릴게.</code></pre>
         </section>
-        <section>
+        <section class="strong-example">
           <h3>더 나은 방식</h3>
-          <pre><code>CLAUDE.md의 테스트 명령이 현재 package.json과 맞지 않아.
-이번 작업에서는 npm run test:billing을 사용했고,
+          <pre><code>CLAUDE.md의 테스트 명령이 현재 Gradle 설정과 맞지 않아.
+이번 작업에서는 ./gradlew test를 사용했고,
 CLAUDE.md에는 이 명령으로 수정하는 것을 제안해줘.</code></pre>
         </section>
       </div>
@@ -109,6 +119,22 @@ CLAUDE.md에는 이 명령으로 수정하는 것을 제안해줘.</code></pre>
         <p>
           작업 전에는 <code>CLAUDE.md</code> 기준을 확인하게 하고,
           작업 후에는 지키지 못한 기준과 문서 개선 후보를 남깁니다.
+        </p>
+      </aside>
+
+      <aside class="prompt-card">
+        <h2>복사해서 써볼 요청</h2>
+        <p>작업을 시작할 때 팀 기준을 먼저 적용하게 만드는 요청입니다.</p>
+        <pre><code>바로 구현하지 말고 먼저 CLAUDE.md를 확인해줘.
+이 작업에 적용해야 할 테스트 명령, 건드리면 안 되는 범위,
+리뷰 기준을 정리한 뒤 수정 계획을 제안해줘.</code></pre>
+      </aside>
+
+      <aside class="action-box">
+        <h2>이번 주 실천</h2>
+        <p>
+          버그 수정 요청 앞에 “CLAUDE.md 기준으로 먼저 확인해줘”를 붙이고,
+          작업 후에는 문서 개선 후보가 있는지 같이 물어봅니다.
         </p>
       </aside>
 

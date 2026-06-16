@@ -177,6 +177,34 @@ h1 {
   content: "";
 }
 
+.week-progress.week-2 span::before {
+  width: 25%;
+}
+
+.week-progress.week-3 span::before {
+  width: 37.5%;
+}
+
+.week-progress.week-4 span::before {
+  width: 50%;
+}
+
+.week-progress.week-5 span::before {
+  width: 62.5%;
+}
+
+.week-progress.week-6 span::before {
+  width: 75%;
+}
+
+.week-progress.week-7 span::before {
+  width: 87.5%;
+}
+
+.week-progress.week-8 span::before {
+  width: 100%;
+}
+
 .article h2 {
   margin-top: 44px;
   padding-top: 28px;

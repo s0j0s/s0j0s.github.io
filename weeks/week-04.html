@@ -16,11 +16,21 @@
     </header>
 
     <main class="article">
+      <div class="week-progress week-4">Week 4 of 8 <span aria-hidden="true"></span> 반복 작업</div>
       <p class="eyebrow">Week 4</p>
       <h1>Skills로 반복 작업 표준화하기</h1>
       <p class="lead">
         자주 시키는 일은 매번 프롬프트로 설명하지 말고, Skill로 고정하면 됩니다.
       </p>
+
+      <aside class="summary-box">
+        <h2>3줄 요약</h2>
+        <ul>
+          <li>세 번 이상 반복해서 설명한 요청은 Skill 후보입니다.</li>
+          <li>Skill은 긴 프롬프트가 아니라 팀의 반복 작업 순서와 출력 형식을 정하는 장치입니다.</li>
+          <li>우리 팀에서는 리뷰, 테스트 보강, 장애 원인 분석부터 작게 시작하기 좋습니다.</li>
+        </ul>
+      </aside>
 
       <aside class="callout">
         <h2>이번 주 핵심</h2>
@@ -64,13 +74,13 @@
       </p>
 
       <div class="example-grid">
-        <section>
+        <section class="weak-example">
           <h3>프롬프트</h3>
           <pre><code>이번 diff 리뷰해줘.
 버그랑 테스트 누락 위주로 보고,
 스타일 얘기는 적게 해줘.</code></pre>
         </section>
-        <section>
+        <section class="strong-example">
           <h3>Skill</h3>
           <pre><code>코드 리뷰 요청이면 항상:
 1. 버그와 회귀 위험을 먼저 본다.
@@ -106,9 +116,9 @@
       </p>
 
       <p>
-        결제 버그를 공통 사례로 보면 “결제 코드 리뷰 Skill”과 “결제 테스트 보강 Skill”을
-        분리할 수 있습니다. 리뷰 Skill은 환불, 재시도, 중복 결제 같은 회귀 위험을 먼저 보게 하고,
-        테스트 보강 Skill은 누락된 성공, 실패, 경계 케이스를 기존 테스트 스타일에 맞춰 찾게 합니다.
+        Java 백엔드 작업을 공통 사례로 보면 “상태 전환 리뷰 Skill”과 “테스트 보강 Skill”을
+        분리할 수 있습니다. 리뷰 Skill은 트랜잭션 범위, DB 업데이트 조건, 예외 처리 누락을 먼저 보게 하고,
+        테스트 보강 Skill은 성공, 실패, 경계 케이스를 기존 JUnit 스타일에 맞춰 찾게 합니다.
       </p>
 
       <h2>5. 팀 공통 Skill과 개인 Skill</h2>
@@ -126,9 +136,27 @@
         </p>
       </aside>
 
+      <aside class="prompt-card">
+        <h2>실전 Skill 예시</h2>
+        <p>상태 업데이트 로직 리뷰를 매번 같은 기준으로 보고 싶을 때 쓸 수 있습니다.</p>
+        <pre><code>상태 전환 리뷰 Skill:
+1. 트랜잭션 범위와 DB 업데이트 조건을 먼저 확인한다.
+2. 예외 처리, 재시도, 중복 처리 누락을 찾는다.
+3. 기존 JUnit 테스트 스타일에 맞춰 빠진 케이스를 제안한다.
+4. 출력은 위험도 높은 순서로 파일/라인 기준으로 짧게 쓴다.</code></pre>
+      </aside>
+
+      <aside class="action-box">
+        <h2>이번 주 실천</h2>
+        <p>
+          최근에 세 번 이상 반복해서 설명한 요청을 하나 고르고,
+          “언제 쓰는지, 어떤 순서로 보는지, 어떤 형식으로 답하는지”만 정리해봅니다.
+        </p>
+      </aside>
+
       <h2>다음 주 예고</h2>
       <p>
-        다음 주에는 Claude Code가 코드베이스 밖의 GitHub, 이슈, 문서 같은 외부 시스템까지
+        다음 주에는 Claude Code가 코드베이스 밖의 GitHub, Jira, Confluence 같은 외부 시스템까지
         함께 보게 만드는 MCP를 다룹니다.
       </p>
 

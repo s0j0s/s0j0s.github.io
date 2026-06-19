@@ -53,15 +53,29 @@
       </p>
 
       <h2>1. 필요한 상황</h2>
-      <ul>
-        <li>변경 범위가 넓은 리팩토링</li>
-        <li>원인 분석이 긴 버그</li>
-        <li>리뷰와 구현을 분리하고 싶은 작업</li>
-        <li>여러 후보 접근을 비교해야 하는 작업</li>
-      </ul>
+      <div class="compare-grid">
+        <section class="strong-example">
+          <h3>SubAgent가 필요한 작업</h3>
+          <ul>
+            <li>변경 범위가 넓은 리팩토링</li>
+            <li>원인 후보가 여러 개인 버그</li>
+            <li>리뷰와 구현을 분리하고 싶은 작업</li>
+            <li>여러 후보 접근을 비교해야 하는 작업</li>
+          </ul>
+        </section>
+        <section class="weak-example">
+          <h3>쓰지 않아도 되는 작업</h3>
+          <ul>
+            <li>오타 수정</li>
+            <li>단일 테스트 추가</li>
+            <li>작은 조건문 수정</li>
+            <li>이미 원인이 명확한 버그</li>
+          </ul>
+        </section>
+      </div>
 
       <p>
-        반대로 작은 수정까지 SubAgent로 나누면 오히려 느려집니다. SubAgent는 큰 작업의
+        작은 수정까지 SubAgent로 나누면 오히려 느려집니다. SubAgent는 큰 작업의
         맥락 부담을 줄이는 도구이지, 모든 일을 절차화하기 위한 도구는 아닙니다.
       </p>
 
@@ -218,6 +232,15 @@ Reviewer:
         <p>
           최근 이슈 하나를 골라 구현 요청 전에 Investigator 역할로만 맡겨봅니다.
           결과가 충분히 명확할 때만 Builder에게 작은 수정 범위를 승인합니다.
+        </p>
+      </aside>
+
+      <aside class="callout">
+        <h2>이번 주 팀 산출물</h2>
+        <p>
+          SubAgent 사용 기준을 한 장으로 정리합니다.
+          “작은 수정은 기본 루프”, “원인 분석이 긴 버그는 Investigator”, “승인된 수정만 Builder”,
+          “구현 후 diff는 Reviewer”처럼 역할별 사용 조건을 남깁니다.
         </p>
       </aside>
 

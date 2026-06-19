@@ -83,7 +83,232 @@
         민감정보 유출이나 위험 명령처럼 명확한 리스크만 차단으로 둡니다.
       </p>
 
-      <h2>3. 자동화할 것과 사람이 판단할 것</h2>
+      <h2>3. Hook을 만드는 순서</h2>
+      <p>
+        처음 Hook을 만들 때는 자동 실행보다 경고 메시지부터 만드는 편이 좋습니다.
+        팀원이 실제 흐름에서 불편하지 않은지 확인한 뒤 자동 실행이나 차단으로 올립니다.
+      </p>
+
+      <pre><code>1. 자주 놓치는 검증을 하나 고른다.
+   예: 상태 업데이트 서비스 변경 후 관련 JUnit 테스트 확인
+
+2. 감지할 파일 범위를 정한다.
+   예: *StatusService.java, *StateRepository.java, 외부 연동 adapter
+
+3. 처음에는 경고만 출력한다.
+   예: "상태 업데이트 로직이 변경되었습니다. 관련 JUnit 테스트를 확인하세요."
+
+4. 팀이 동의하면 자동 실행으로 올린다.
+   예: ./gradlew test --tests "*Status*"
+
+5. 정말 위험한 작업만 차단한다.
+   예: secret 노출, 승인 없는 force push, 운영 설정 파일 삭제</code></pre>
+
+      <h2>4. 실제 Hook 파일 예시</h2>
+      <p>
+        처음에는 파일 경로를 파싱하지 않는 단순 Hook부터 시작해도 충분합니다.
+        아래 예시는 Claude가 파일을 수정한 뒤 테스트, Java 8, Oracle 11g 확인을 잊지 않도록
+        경고만 출력합니다.
+      </p>
+
+      <pre><code># .claude/settings.json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/test-reminder.sh"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+
+      <pre><code># .claude/hooks/test-reminder.sh
+#!/usr/bin/env bash
+
+echo "Files were changed. Before finishing, ask Claude to check related JUnit tests." &gt;&amp;2
+echo "If Java code changed, check Java 8 compatibility." &gt;&amp;2
+echo "If SQL, MyBatis XML, or JDBC query changed, check Oracle 11g compatibility." &gt;&amp;2
+
+exit 0</code></pre>
+
+      <pre><code>chmod +x .claude/hooks/test-reminder.sh</code></pre>
+
+      <p>
+        이 버전은 별도 도구 설치가 필요 없습니다. 팀원이 경고를 부담 없이 받아들이는지 먼저 확인한 뒤,
+        필요할 때 파일별로 다른 경고를 띄우는 정교한 Hook으로 확장합니다.
+      </p>
+
+      <p>
+        파일 종류별로 Java 8 또는 Oracle 11g 경고를 나누고 싶다면 <code>jq</code>로
+        Hook 입력 JSON에서 수정 파일 경로를 꺼낼 수 있습니다. <code>jq</code>는 필수는 아니고,
+        정교한 파일별 경고를 만들 때만 필요합니다.
+      </p>
+
+      <pre><code># .claude/hooks/java8-compat-guard.sh
+#!/usr/bin/env bash
+
+file_path=$(jq -r '.tool_input.file_path // empty' &lt; /dev/stdin)
+
+[[ "$file_path" != *.java ]] &amp;&amp; exit 0
+[[ ! -f "$file_path" ]] &amp;&amp; exit 0
+
+if grep -nE 'List\.of|Set\.of|Map\.of|Stream\.toList|String\.isBlank|Files\.readString|java\.net\.http|Optional\.ifPresentOrElse|(^|[^[:alnum:]_])var([^[:alnum:]_]|$)' "$file_path"; then
+  echo "Java 8 compatibility warning: Java 9+ syntax or API may have been introduced." &gt;&amp;2
+  echo "Ask Claude to replace it with a Java 8-safe alternative before finishing." &gt;&amp;2
+fi
+
+exit 0</code></pre>
+
+      <pre><code># .claude/settings.json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/test-reminder.sh"
+          },
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/java8-compat-guard.sh"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+
+      <pre><code>chmod +x .claude/hooks/java8-compat-guard.sh</code></pre>
+
+      <p>
+        Oracle 11g를 같이 쓰는 팀이라면 같은 방식으로 SQL 호환성 Hook도 추가할 수 있습니다.
+        MyBatis XML, SQL 파일, Java 문자열 쿼리에서 11g 미지원 문법이 들어오는 것을 먼저 경고합니다.
+      </p>
+
+      <pre><code># .claude/hooks/oracle11g-sql-compat-guard.sh
+#!/usr/bin/env bash
+
+file_path=$(jq -r '.tool_input.file_path // empty' &lt; /dev/stdin)
+
+case "$file_path" in
+  *.sql|*.xml|*.java) ;;
+  *) exit 0 ;;
+esac
+
+[[ ! -f "$file_path" ]] &amp;&amp; exit 0
+
+if grep -nEi 'LIMIT[[:space:]]+[0-9]|FETCH[[:space:]]+(FIRST|NEXT)|OFFSET[[:space:]]+[0-9]|AUTO_INCREMENT|GENERATED[[:space:]]+AS[[:space:]]+IDENTITY|ON[[:space:]]+DUPLICATE[[:space:]]+KEY|DATE_FORMAT|IFNULL|NOW\(\)' "$file_path"; then
+  echo "Oracle 11g compatibility warning: unsupported or risky SQL pattern found." &gt;&amp;2
+  echo "Ask Claude to rewrite this SQL for Oracle 11g before finishing." &gt;&amp;2
+fi
+
+if grep -nEi 'ROWNUM[[:space:]]*&gt;' "$file_path"; then
+  echo "Oracle 11g warning: ROWNUM &gt; n is usually invalid because ROWNUM is assigned as rows are fetched." &gt;&amp;2
+fi
+
+exit 0</code></pre>
+
+      <pre><code># .claude/settings.json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/test-reminder.sh"
+          },
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/java8-compat-guard.sh"
+          },
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/oracle11g-sql-compat-guard.sh"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+
+      <pre><code>chmod +x .claude/hooks/oracle11g-sql-compat-guard.sh</code></pre>
+
+      <h2>5. 추천 Hook Set</h2>
+      <div class="compare-grid">
+        <section class="strong-example">
+          <h3>test-reminder</h3>
+          <ul>
+            <li>서비스, repository, adapter 변경 시 관련 JUnit 테스트를 안내합니다.</li>
+            <li>처음에는 경고만 출력합니다.</li>
+            <li>안정화되면 제한된 테스트 자동 실행으로 올립니다.</li>
+          </ul>
+        </section>
+        <section class="strong-example">
+          <h3>secret-guard</h3>
+          <ul>
+            <li>토큰, 비밀번호, 인증키 패턴을 검사합니다.</li>
+            <li>명확한 민감정보 패턴은 차단 후보입니다.</li>
+            <li>오탐이 많으면 경고 단계로 낮춥니다.</li>
+          </ul>
+        </section>
+        <section class="strong-example">
+          <h3>risk-command-guard</h3>
+          <ul>
+            <li>삭제, 강제 push, 권한 변경 같은 위험 명령을 확인합니다.</li>
+            <li>Claude가 실행하기 전 사람 승인을 요구합니다.</li>
+            <li>팀에서 허용한 명령은 예외 목록으로 관리합니다.</li>
+          </ul>
+        </section>
+        <section class="strong-example">
+          <h3>pr-checklist</h3>
+          <ul>
+            <li>작업 종료 전에 테스트, diff 리스크, 문서 변경 여부를 출력합니다.</li>
+            <li>리뷰 요청 전에 빠진 근거를 확인하게 만듭니다.</li>
+            <li>차단보다 체크리스트 출력에 적합합니다.</li>
+          </ul>
+        </section>
+        <section class="strong-example">
+          <h3>oracle11g-sql-guard</h3>
+          <ul>
+            <li><code>.sql</code>, <code>.xml</code>, <code>.java</code> 변경 시 SQL 문법을 확인합니다.</li>
+            <li>Oracle 12c+, MySQL, PostgreSQL 문법이 섞이면 경고합니다.</li>
+            <li>처음에는 경고만 두고, 오탐이 적은 패턴만 차단 후보로 올립니다.</li>
+          </ul>
+        </section>
+      </div>
+
+      <h2>6. 팀에 적용하는 순서</h2>
+      <p>
+        Hook은 적용 순간부터 개발 흐름에 영향을 줍니다. 그래서 첫 주에는 경고만 켜고,
+        팀원이 실제로 불편함 없이 받아들이는지 확인하는 편이 좋습니다.
+      </p>
+
+      <pre><code>1. .claude/hooks/test-reminder.sh를 단순 경고 버전으로 만든다.
+2. .claude/settings.json에 test-reminder Hook만 연결한다.
+3. 작은 Java 파일 하나를 Claude Code로 수정해보고 경고가 뜨는지 확인한다.
+4. 팀원이 경고를 부담 없이 받아들이면 저장소에 커밋한다.
+5. 파일별 경고가 필요해지면 jq 설치 여부를 확인한다.
+6. jq를 사용할 수 있으면 java8-compat-guard.sh를 추가한다.
+7. Oracle 11g SQL 변경이 많으면 oracle11g-sql-compat-guard.sh를 추가한다.
+8. 1~2주 사용한 뒤 자동 실행이나 차단으로 올릴 항목만 따로 고른다.</code></pre>
+
+      <p>
+        처음부터 <code>./gradlew test</code>를 매번 자동 실행하면 느릴 수 있습니다.
+        먼저 “관련 테스트를 확인하라”는 경고를 안정화하고, 이후 특정 파일 패턴에만 제한적으로
+        테스트 자동 실행을 붙이는 것이 현실적입니다.
+      </p>
+
+      <h2>7. 자동화할 것과 사람이 판단할 것</h2>
       <p>
         자동화하기 좋은 것은 결과가 명확한 작업입니다. 테스트 통과 여부, 코드 스타일 위반 여부,
         secret 패턴 검출, 금지 명령 실행 같은 것은 Hook에 잘 맞습니다.
@@ -115,14 +340,14 @@
         </section>
       </div>
 
-      <h2>4. 너무 강한 Hook의 문제</h2>
+      <h2>8. 너무 강한 Hook의 문제</h2>
       <p>
         모든 것을 차단으로 시작하면 개발 흐름이 막힙니다. 테스트가 느리거나 flaky한데 매번 강제하면
         Claude Code 사용 자체가 답답해질 수 있습니다. 처음부터 완벽한 방어선을 만들려고 하기보다
         팀이 실제로 놓치는 문제부터 잡는 편이 좋습니다.
       </p>
 
-      <h2>5. 팀 도입 순서</h2>
+      <h2>9. 팀 도입 순서</h2>
       <p>
         Hooks는 단계적으로 강화하는 것이 현실적입니다.
         처음부터 차단하지 말고 관찰과 경고로 팀의 실제 누락 패턴을 먼저 확인합니다.

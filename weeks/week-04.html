@@ -1,10 +1,11 @@
 <!doctype html>
+
 <html lang="ko">
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Week 4. Skills로 반복 설명 줄이기</title>
+  <title>Week 4. Skill로 반복 설명 줄이기</title>
   <meta name="description" content="Claude Code Engineering Newsletter Week 4">
   <link rel="stylesheet" href="../assets/styles.css">
 </head>
@@ -20,26 +21,18 @@
   <main class="article">
     <div class="week-progress week-4">Week 4 of 8 <span aria-hidden="true"></span> 반복 작업</div>
     <p class="eyebrow">Week 4</p>
-    <h1>Skills로 반복 설명 줄이기</h1>
+    <h1>Skill로 반복 설명 줄이기</h1>
     <p class="lead">
-      자주 반복해서 설명하는 작업 절차는 매번 다시 쓰지 않고, Skill로 작게 분리해둘 수 있습니다.
+      자주 반복해서 설명하는 작업 절차는 매번 다시 쓰지 않고 Skill로 분리해둘 수 있습니다.
     </p>
 
     <aside class="summary-box">
       <h2>3줄 요약</h2>
       <ul>
-        <li>세 번 이상 반복해서 설명한 요청은 Skill 후보입니다.</li>
-        <li>Skill은 긴 프롬프트를 저장하는 곳이 아니라, 반복 작업의 순서와 답변 형식을 남겨두는 단위입니다.</li>
-        <li>우리 팀에서는 리뷰, 테스트 보강, 장애 원인 분석부터 작게 시작하기 좋습니다.</li>
+        <li>같은 설명을 여러 번 반복하고 있다면 Skill 후보로 검토해볼 수 있습니다.</li>
+        <li>Skill에는 반복 작업의 절차와 해당 작업에서 필요한 참고 자료를 함께 담을 수 있습니다.</li>
+        <li>리뷰, 테스트 보강, 장애 원인 분석처럼 익숙한 작업부터 시험해볼 수 있습니다.</li>
       </ul>
-    </aside>
-
-    <aside class="callout">
-      <h2>이번 주 포인트</h2>
-      <p>
-        Skill은 자주 반복하는 작업 방식을 다시 꺼내 쓰기 쉽게 남겨두는 방법입니다.
-        일회성 설명을 줄이고, 비슷한 작업에서 참고할 수 있는 흐름을 만듭니다.
-      </p>
     </aside>
 
     <p>
@@ -56,26 +49,12 @@
       어떤 형식으로 답하면 읽기 쉬운지를 알려줍니다.
     </p>
 
-    <h2>1. Skill이 필요한 순간</h2>
-    <p>
-      Skill은 복잡한 지식보다 반복되는 작업 방식에 잘 맞습니다.
-      특히 팀마다 자주 보는 포인트가 다른 작업일수록 효과가 큽니다.
-    </p>
-
-    <ul>
-      <li>커밋 메시지 작성</li>
-      <li>코드 리뷰</li>
-      <li>장애 원인 분석</li>
-      <li>리팩토링 점검</li>
-      <li>릴리즈 노트 정리</li>
-      <li>테스트 보강 범위 찾기</li>
-    </ul>
-
-    <h2>2. 프롬프트와 Skill의 차이</h2>
+    <h2>1. 반복 설명이 보일 때</h2>
     <p>
       프롬프트는 지금 한 번 필요한 지시입니다.
-      Skill은 앞으로도 반복해서 꺼내 쓸 작업 방식입니다.
-      같은 요청을 세 번 이상 설명하고 있다면 Skill 후보로 봐도 좋습니다.
+      Skill은 반복되는 작업 절차나 특정 작업에서 필요한 참고 지식을 다시 꺼내 쓰는 방법입니다.
+      커밋 메시지 작성, 코드 리뷰, 테스트 보강처럼 같은 기준을 여러 번 설명하고 있다면
+      Skill 후보로 생각해볼 수 있습니다.
     </p>
 
     <div class="example-grid">
@@ -91,49 +70,34 @@
 1. 버그와 회귀 위험을 먼저 본다.
 2. 파일/라인 기준으로 짧게 쓴다.
 3. 스타일 의견은 실제 유지보수 위험이 있을 때만 쓴다.</code></pre>
+
       </section>
     </div>
 
-    <h2>3. 좋은 Skill의 구성</h2>
+    <h2>2. 작게 만드는 Skill</h2>
     <p>
-      Skill은 길게 쓴다고 좋아지는 것이 아닙니다.
-      Claude가 바로 따라 할 수 있는 짧은 흐름이 중요합니다.
+      Skill은 길게 쓰기보다 역할과 확인 순서를 분명하게 적는 편이 읽기 쉽습니다.
+      Claude Code에서는 보통 <code>.claude/skills/스킬이름/SKILL.md</code> 형태로 둡니다.
     </p>
 
     <ul>
       <li>언제 이 Skill을 쓰면 좋은지 적습니다.</li>
       <li>작업 순서를 짧게 남깁니다.</li>
       <li>읽기 편한 답변 형식을 적습니다.</li>
-      <li>피하고 싶은 답변이나 작업 범위를 적습니다.</li>
-      <li>필요한 참고 파일이나 명령이 있으면 연결합니다.</li>
+      <li>필요한 참고 파일이나 제외할 작업 범위를 연결합니다.</li>
     </ul>
 
-    <h2>4. 작은 Skill이 낫다</h2>
     <p>
       하나의 거대한 Skill에 리뷰, 테스트, 릴리즈, 장애 분석을 모두 넣으면
       Claude가 어느 포인트를 우선해야 하는지 흐려집니다.
-      Skill은 역할이 작을수록 재사용하기 쉽고, 팀에서도 부담 없이 고치기 쉽습니다.
-    </p>
-
-    <p>
-      예를 들어 “PR 처리 Skill” 하나보다 “리뷰 Skill”, “릴리즈 노트 Skill”,
-      “테스트 보강 Skill”로 나누는 편이 좋습니다.
-      작은 Skill은 수정하기도 쉽습니다.
-      리뷰할 때 보는 포인트가 바뀌면 리뷰 Skill만 조금 고치면 됩니다.
-    </p>
-
-    <p>
-      Java 백엔드 작업을 공통 사례로 보면 “상태 전환 리뷰 Skill”과 “테스트 보강 Skill”을
-      분리할 수 있습니다.
+      처음에는 리뷰와 테스트 보강처럼 역할을 나누면 결과를 비교하고 고치기 쉽습니다.
       리뷰 Skill은 트랜잭션 범위, DB 업데이트 조건, 예외 처리 누락을 먼저 보게 하고,
       테스트 보강 Skill은 성공, 실패, 경계 케이스를 기존 JUnit 스타일에 맞춰 찾게 합니다.
     </p>
 
-    <h2>5. 우리 팀에서 시작하기 좋은 Skill 후보</h2>
+    <h2>3. 참고할 만한 Skill 후보</h2>
     <p>
-      처음부터 많은 Skill을 만들 필요는 없습니다.
-      이번 주 목표는 후보를 많이 만드는 것이 아니라,
-      팀에서 가장 자주 반복한 요청 하나를 골라 실제로 써보는 것입니다.
+      관심이 있다면 팀에서 자주 반복하는 요청 하나를 골라 가볍게 시험해볼 수 있습니다.
     </p>
 
     <div class="compare-grid">
@@ -156,7 +120,7 @@
       <section class="strong-example">
         <h3>issue-investigator</h3>
         <ul>
-          <li>Jira 이슈 기반 원인 분석에 사용합니다.</li>
+          <li>프롬프트나 파일로 제공된 Jira 이슈의 원인 분석에 사용합니다.</li>
           <li>구현하지 않고 호출 흐름과 원인 후보만 정리합니다.</li>
           <li>확인할 로그, 테스트, 관련 파일을 남깁니다.</li>
         </ul>
@@ -164,48 +128,21 @@
     </div>
 
     <p>
-      Java 8 호환성, Oracle 11g SQL, 릴리즈 노트처럼 자주 반복되는 요청이 있다면 다음 후보로 남겨둡니다.
-      하지만 첫 주에는 리뷰 Skill 하나만 실제 PR에 적용해보고,
-      쓸모없는 지적과 빠진 내용을 다듬는 편이 부담이 적습니다.
+      공개된 Java 코드 리뷰 Skill이나 범용 코드 리뷰 Skill을 참고할 수도 있지만,
+      우리 팀의 Java 8, Oracle 11g, 기존 JUnit 스타일에 맞는 기준만 골라볼 수 있습니다.
+      여러 사람이 반복해서 쓰는 기준은 공통 Skill로, 개인의 요약 방식이나 탐색 순서는 개인 Skill로 둘 수 있습니다.
     </p>
 
-    <h2>6. 팀 공통 Skill과 개인 Skill</h2>
+    <h2>4. 실전 Skill 예시</h2>
     <p>
-      같이 쓰는 Skill에는 자주 반복되는 작업 방식이 들어갑니다.
-      코드 리뷰 형식, 커밋 메시지 규칙, 릴리즈 노트처럼 여러 사람이 같이 보면 편한 작업입니다.
-      개인 Skill에는 개인의 요약 방식, 학습 방식, 선호하는 탐색 루틴을 둘 수 있습니다.
+      예를 들어 공통 리뷰 Skill을 만든다면 아래처럼 시작할 수 있습니다.
     </p>
 
-    <h2>7. 팀에 적용하는 순서</h2>
-    <p>
-      처음부터 모든 Skill을 만들기보다 <code>backend-review</code> 하나를 실제 PR에 써보고 다듬는 것이 좋습니다.
-      아래 순서로 시작하면 부담이 적습니다.
-    </p>
-
-    <pre><code>1. 저장소에 .claude/skills/backend-review/SKILL.md 초안을 만든다.
-2. 작은 PR 하나를 골라 /backend-review로 리뷰를 요청해본다.
-3. Claude가 낸 리뷰 중 쓸모없는 의견과 빠진 내용을 기록한다.
-4. SKILL.md에서 답변 형식과 확인 순서를 조금 고친다.
-5. 2~3번 써보고 괜찮으면 저장소에 남긴다.
-6. 그 다음에는 junit-test-planner, java8-compat-review 같은 후보를 하나씩 써본다.</code></pre>
-
-    <p>
-      같이 쓰는 Skill은 한 번에 완성하려고 하지 않아도 됩니다.
-      “우리 팀 리뷰에서 자주 놓치는 것”을 하나씩 반영하면
-      시간이 지날수록 실제 작업에 더 잘 맞아갑니다.
-    </p>
-
-    <h2>실전 Skill 예시</h2>
-    <p>
-      첫 공통 Skill은 아래처럼 작게 시작해볼 수 있습니다.
-      처음부터 완성된 Skill을 만들기보다, 실제 PR에 한 번 적용해보고
-      빠진 내용과 불필요한 의견을 조금씩 고치는 편이 좋습니다.
-    </p>
-
-    <pre><code># .claude/skills/backend-review/SKILL.md
----
-description: Java 8 backend review for transaction, DB update, exception handling, and missing tests
-allowed-tools: Read Grep Glob
+    <p><code>.claude/skills/backend-review/SKILL.md</code></p>
+    <pre><code>---
+description: >-
+  Java 8 백엔드 변경에서 트랜잭션, DB 조건, 예외 처리,
+  테스트 누락을 리뷰할 때 사용
 ---
 
 Java 백엔드 수정 내용을 리뷰할 때는 다음 순서로 본다.
@@ -216,25 +153,24 @@ Java 백엔드 수정 내용을 리뷰할 때는 다음 순서로 본다.
 4. 스타일 의견은 실제 장애나 유지보수 위험이 있을 때만 쓴다.
 5. 출력은 위험도 높은 순서로 파일/라인 기준으로 짧게 쓴다.</code></pre>
 
+    <pre><code>/backend-review
+
+현재 브랜치의 상태 업데이트 로직 변경을 리뷰해줘.</code></pre>
+
+    <h2>5. 가볍게 시험해보는 순서</h2>
     <p>
-      <code>allowed-tools</code>는 이 Skill에서 사용할 도구를 미리 허용하는 설정입니다.
-      처음에는 읽기 중심 도구만 두고, 수정이나 실행 권한은 필요할 때만 추가하는 편이 안전합니다.
+      처음부터 여러 Skill을 만들기보다 <code>backend-review</code> 하나를 작은 PR에 적용해볼 수 있습니다.
     </p>
 
-    <pre><code>/backend-review
-이번 수정 내용을 리뷰해줘.
-상태 업데이트 로직의 트랜잭션, DB 업데이트 조건,
-예외 처리, 누락된 JUnit 테스트만 봐줘.</code></pre>
+    <pre><code>1. 저장소에 .claude/skills/backend-review/SKILL.md 초안을 만든다.
+2. 작은 PR 하나를 골라 /backend-review로 리뷰를 요청해본다.
+3. Claude가 낸 리뷰 중 쓸모없는 의견과 빠진 내용을 기록한다.
+4. 2~3번 써본 뒤 유용한 기준만 SKILL.md에 남긴다.</code></pre>
 
-    <aside class="callout">
-      <h2>가볍게 참고해볼 점</h2>
-      <p>
-        “세 번 이상 반복해서 설명한 요청”은 Skill 후보로 남겨볼 수 있습니다.
-        Skill은 도구 설정을 크게 바꾸는 일이 아니라,
-        반복 설명을 줄이기 위한 작은 작업 메모에 가깝습니다.
-        처음에는 리뷰, 테스트 보강, 장애 원인 분석처럼 자주 반복되는 요청 하나만 골라보는 편이 좋습니다.
-      </p>
-    </aside>
+    <p>
+      한 번에 공통 방식으로 정하기보다 실제 리뷰에 시험해보고,
+      팀에 도움이 되는 기준이 확인되면 함께 다듬어도 됩니다.
+    </p>
 
     <aside class="action-box">
       <h2>한 문장으로 정리</h2>
@@ -251,6 +187,7 @@ Java 백엔드 수정 내용을 리뷰할 때는 다음 순서로 본다.
     </p>
 
     <a class="next-link" href="week-05.html">다음 글: MCP로 외부 시스템 연결하기</a>
+
   </main>
 </body>
 

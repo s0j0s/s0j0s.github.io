@@ -414,6 +414,69 @@ a.week-card:focus-visible {
   padding-left: 20px;
 }
 
+.decision-flow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 24px 0;
+}
+
+.decision-step {
+  min-width: 0;
+  padding: 20px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.decision-step-meta {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 14px;
+}
+
+.decision-step-meta span {
+  display: inline-grid;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  color: #ffffff;
+  background: var(--accent);
+  border-radius: 50%;
+  place-items: center;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.decision-step-meta strong {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.decision-step h3 {
+  margin: 0 0 12px;
+  font-size: 18px;
+}
+
+.decision-step ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.decision-step li {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.decision-step li + li {
+  margin-top: 7px;
+}
+
+.compact-prompt pre {
+  white-space: pre-wrap;
+}
+
 pre {
   overflow-x: auto;
   padding: 18px;
@@ -479,6 +542,14 @@ code {
 
   .compare-grid {
     grid-template-columns: 1fr;
+  }
+
+  .decision-flow {
+    grid-template-columns: 1fr;
+  }
+
+  .decision-step {
+    padding: 18px;
   }
 
   .prompt-card pre,

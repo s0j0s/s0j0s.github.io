@@ -6,7 +6,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Week 1. Claude Code에게 일을 잘 맡기는 법</title>
-  <meta name="description" content="Claude Code Engineering Newsletter Week 1">
+  <meta name="description" content="Claude Code에 구현을 맡기기 전에 관련 코드와 원인부터 조사하도록 요청하는 방법을 소개합니다.">
+  <meta property="og:title" content="Claude Code에게 일을 잘 맡기는 법">
+  <meta property="og:description" content="바로 구현하기 전에 관련 코드와 원인부터 조사하도록 요청하는 기본 습관을 살펴봅니다.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://s0j0s.github.io/weeks/week-01.html">
   <link rel="stylesheet" href="../assets/styles.css">
 </head>
 
@@ -14,13 +18,12 @@
   <header class="site-header">
     <nav class="nav">
       <a class="brand" href="../index.html">Claude Code Engineering</a>
-      <a href="../index.html#roadmap">Roadmap</a>
+      <a href="../index.html#roadmap">전체 로드맵</a>
     </nav>
   </header>
 
   <main class="article">
     <div class="week-progress week-1">Week 1 of 8 <span aria-hidden="true"></span> 기본 습관</div>
-    <p class="eyebrow">Week 1</p>
 
     <h1>Claude Code에게 일을 잘 맡기는 법</h1>
     <p class="article-meta">약 4분 · 실무 활용 팁</p>
@@ -47,19 +50,19 @@
     <p>
       실제 업무에서 다루는 코드에서는 버그 하나를 고칠 때도 프로젝트 구조, 기존 설계,
       테스트 방법, 배포에 미칠 영향과 팀 규칙을 함께 봐야 합니다. 우리 팀에서는 이런 기준을
-      <code>CLAUDE.md</code>에 정리해두고 있습니다. 이번 글에서는 이 기준을 참고해
+      프로젝트 지침 파일인 <code>CLAUDE.md</code>에 정리해두고 있습니다. 이번 글에서는 이 기준을 참고해
       리뷰하기 쉬운 작업 요청을 만드는 방법을 살펴보겠습니다.
     </p>
 
     <p>
-      AI 모델이 원하는 결과를 내도록 지시, 맥락, 예시, 출력 형식을 설계하고 다듬는 과정을
-      Prompt Engineering이라고 부릅니다. 여기에 Claude Code처럼 파일을 읽고,
-      코드를 수정하고, 명령을 실행하는 도구를 사용하면 작업 순서와 검증 방법도 함께 생각해볼 수 있습니다.
+      AI 모델에 어떤 맥락과 형식으로 요청할지 다듬는 일을 Prompt Engineering이라고 합니다.
+      Claude Code는 파일을 읽고 코드를 수정하거나 명령을 실행할 수 있어,
+      요청 문장뿐 아니라 조사, 수정, 검증 순서도 함께 정할 수 있습니다.
     </p>
 
     <p>
-      이처럼 AI 에이전트가 구현을 수행할 수 있도록 맥락과 작업 범위를 정하고,
-      사람이 계획, 검토, 검증을 책임지는 접근을 최근에는 Agentic Engineering이라고 부르기도 합니다.
+      이처럼 AI가 구현을 돕고 사람이 작업 범위와 품질을 책임지는 방식을
+      Agentic Engineering이라고 부르기도 합니다.
       이번 뉴스레터에서는 이 개념을 거창한 이론으로 설명하기보다,
       실제 업무에서 사용할 요청 문장과 체크 포인트로 풀어보겠습니다.
     </p>
@@ -69,10 +72,6 @@
     <p>
       가장 간단한 시작은 바로 수정을 요청하는 것입니다.
     </p>
-
-    <pre><code>상태 업데이트 버그 고쳐줘.
-이 테스트 실패 고쳐줘.
-이 서비스 코드 리팩토링해줘.</code></pre>
 
     <p>
       이 방식은 빠릅니다. 다만 Claude Code가 관련 범위를 충분히 살피기보다
@@ -110,12 +109,12 @@
       확인하면 좋을 포인트를 알려주면 결과를 함께 검토하기 쉬워집니다.
     </p>
 
-    <pre><code>목표 정의
--> 원인 조사
--> 작은 수정안
+    <pre><code>원하는 결과와 제약 정리
+-> 관련 코드와 원인 조사
+-> 수정 범위 제안
 -> 구현
 -> 테스트
--> 변경 영향 검토</code></pre>
+-> 주변 기능 영향 확인</code></pre>
 
     <p>
       이런 순서로 요청하면 코드뿐 아니라 원인, 수정 방향, 테스트 방법도
@@ -139,7 +138,7 @@
 
     </aside>
 
-    <h2>3. 리뷰하기 쉬운 결과를 받으려면</h2>
+    <h2>3. 필요한 항목만 골라 요청하기</h2>
 
     <p>
       아래 항목을 모두 적용할 필요는 없습니다.
@@ -168,7 +167,7 @@
     </p>
 
     <aside class="prompt-card">
-      <h2>요청 예시</h2>
+      <h2>복사해서 시작해보기</h2>
       <p>아래는 상황에 맞게 줄이거나 바꿔서 사용할 수 있는 예시입니다.</p>
 
       <pre><code>이 작업은 바로 구현하지 말고 먼저 조사해줘.
@@ -179,7 +178,7 @@
 
     <p>
       조사부터 요청하는 이유는 작업 속도를 늦추기 위해서가 아니라,
-      구현 전에 함께 검토할 근거를 확인하기 위해서입니다.
+      구현 전에 원인과 수정 범위를 먼저 확인하기 위해서입니다.
     </p>
 
     <aside class="callout">

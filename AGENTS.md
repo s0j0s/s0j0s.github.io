@@ -2,59 +2,66 @@
 
 ## Project Structure & Module Organization
 
-This repository is a static GitHub Pages newsletter site. The root `index.html`
-contains the roadmap and links to each article. Weekly articles live in
-`weeks/week-01.html` through `weeks/week-08.html`. Shared styling is in
-`assets/styles.css`. There is no application source tree, package manager, or
-generated build output. Keep new newsletter pages under `weeks/` and link them
-from `index.html` when they should appear in the roadmap.
+This repository is a static GitHub Pages newsletter. `index.html` contains the
+landing page and publication roadmap. Weekly articles live in
+`weeks/week-01.html` through `weeks/week-08.html`, and shared presentation rules
+live in `assets/styles.css`. `PLAN.md` defines the editorial direction and weekly
+scope. `README.md` documents GitHub Pages deployment. There is no application
+source tree, package manager, automated test suite, or generated build output.
 
 ## Build, Test, and Development Commands
 
-No build step is required. Open `index.html` directly in a browser to preview the
-site.
+No build step is required. Open `index.html` directly, or serve the repository:
 
-Useful checks:
+```sh
+python3 -m http.server 8000
+```
+
+Visit `http://localhost:8000/` to check navigation and responsive layout.
 
 ```sh
 git diff --check
 ```
 
-Checks for whitespace errors before committing.
+Checks edited files for whitespace errors.
 
 ```sh
-rg "Prompt Engineering" weeks/
+rg -n '<h1>|article-meta|article-nav' weeks/
+rg -n 'week-card (latest|upcoming)|href="weeks/' index.html
 ```
 
-Searches article content quickly when editing recurring terms or titles.
+Use these searches to compare article metadata, navigation, and publication
+state before committing.
 
 ## Coding Style & Naming Conventions
 
-Use plain HTML and CSS. Match the existing indentation: two spaces for nested
-HTML and CSS blocks. Keep article filenames in the `week-01.html` pattern.
-Prefer semantic HTML already used in the project: `main`, `section`, `article`,
-`aside`, `h1`-`h3`, `p`, `ul`, and `pre><code`. Keep Korean newsletter copy
-direct and readable; avoid adding heavy terminology unless the article explains
-it immediately.
+Use plain HTML and CSS with two spaces for newly added or edited nesting. Do not
+reindent unrelated pages. Keep article filenames in the `week-01.html` pattern
+and prefer existing semantic elements such as `main`, `section`, `article`,
+`aside`, headings, lists, and `pre><code>`. Keep Korean copy direct and easy to
+scan. Avoid prescriptive wording; present examples as options. Explain technical
+terms when they first appear and keep names such as `CLAUDE.md`, Skill, MCP,
+SubAgent, Hooks, Prompt Engineering, and Agentic Engineering consistent.
 
-## Testing Guidelines
+## Testing & Publishing Guidelines
 
-There is no automated test suite. Before submitting changes, preview the edited
-page in a browser, verify navigation links, and run `git diff --check`. For
-content edits, review the rendered page for broken layout, overly long lines in
-code blocks, and inconsistent titles between `index.html` and the weekly page.
+Preview changed pages at desktop and mobile widths. Check wrapping in prompt and
+code blocks, card spacing, and consistency between roadmap and article titles.
+Only the currently published card should use `latest` and display `이번 주`.
+Unpublished cards use `upcoming`, display `Coming soon`, and must not link to
+draft pages. Add previous or next article links only after the target issue is
+published. Run `git diff --check` after all content or layout edits.
 
 ## Commit & Pull Request Guidelines
 
-Recent commits use short Conventional Commit style, for example
-`docs(week-01): clarify agentic engineering` and `feat: add 8-week newsletter pages`.
-Use `docs` for content-only edits, `feat` for new pages or visible site
-features, and `fix` for corrections. Keep the subject under 72 characters.
-
-Pull requests should include a brief summary, the affected week or files, and
-screenshots when layout or styling changes. Link related issues when available.
+The existing history is mixed, so prefer Conventional Commits for new work:
+`docs(week-01): clarify review workflow`, `feat: add newsletter navigation`, or
+`fix: correct roadmap link`. Keep subjects under 72 characters. Pull requests
+should summarize the change, name affected weeks or files, link related issues
+when available, and include screenshots for layout or styling changes.
 
 ## Agent-Specific Instructions
 
-Keep edits scoped. Do not rewrite unrelated weeks while adjusting one article.
-Do not remove user-authored drafts or untracked files unless explicitly asked.
+Keep edits scoped. Do not rewrite unrelated weeks or remove user-authored drafts
+and untracked files. When a weekly title or direction changes, update the weekly
+page, `index.html`, and `PLAN.md` together.

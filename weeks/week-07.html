@@ -4,23 +4,28 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Week 7. Hooks로 잊기 쉬운 확인 알려주기</title>
-    <meta name="description" content="Claude Code Engineering Newsletter Week 7">
+    <meta name="description" content="Claude Code Hooks로 테스트와 정적 검사처럼 놓치기 쉬운 확인을 알림부터 단계적으로 자동화하는 방법을 소개합니다.">
+    <meta property="og:title" content="Hooks로 잊기 쉬운 확인 알려주기">
+    <meta property="og:description" content="Claude Code 작업 흐름에 부담 없는 알림을 추가하고 단계적으로 자동화하는 방법을 살펴봅니다.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://s0j0s.github.io/weeks/week-07.html">
+    <link rel="canonical" href="https://s0j0s.github.io/weeks/week-07.html">
     <link rel="stylesheet" href="../assets/styles.css">
   </head>
   <body>
     <header class="site-header">
       <nav class="nav">
         <a class="brand" href="../index.html">Claude Code Engineering</a>
-        <a href="../index.html#roadmap">Roadmap</a>
+        <a href="../index.html#roadmap">전체 로드맵</a>
       </nav>
     </header>
 
     <main class="article">
       <div class="week-progress week-7">Week 7 of 8 <span aria-hidden="true"></span> 리마인더</div>
       <p class="eyebrow">Week 7</p>
-    <h1>Hooks로 잊기 쉬운 확인 알려주기</h1>
-    <p class="article-meta">약 6분 · 실무 활용 팁</p>
-    <p class="lead">
+      <h1>Hooks로 잊기 쉬운 확인 알려주기</h1>
+      <p class="article-meta">약 6분 · 실무 활용 팁</p>
+      <p class="lead">
         팀에서 Claude Code를 안정적으로 쓰려면 좋은 요청뿐 아니라
         잊기 쉬운 확인을 알려주는 작은 장치가 있으면 편합니다.
       </p>
@@ -117,7 +122,7 @@
   "hooks": {
     "PostToolUse": [
       {
-        "matcher": "Write|Edit|MultiEdit",
+        "matcher": "Write|Edit",
         "hooks": [
           {
             "type": "command",
@@ -254,23 +259,6 @@ exit 0</code></pre>
         팀이 실제로 놓치는 문제부터 잡는 편이 좋습니다.
       </p>
 
-      <h2>9. 팀 도입 순서</h2>
-      <p>
-        Hooks는 단계적으로 강화하는 것이 현실적입니다.
-        처음부터 막으려 하지 말고 관찰과 알림으로 팀의 실제 누락 패턴을 먼저 확인합니다.
-      </p>
-
-      <pre><code>관찰
--> 알림
--> 자동 실행
--> 실행 중단</code></pre>
-
-      <p>
-        처음에는 어떤 파일이 자주 바뀌고 어떤 검증이 자주 빠지는지 관찰합니다.
-        그 다음 알림을 띄우고, 팀이 괜찮다고 느낀 작업은 자동 실행으로 올립니다.
-        정말 위험한 명령이나 민감정보 유출처럼 명확한 리스크만 실행을 멈추도록 둡니다.
-      </p>
-
       <aside class="prompt-card">
         <h2>그대로 써봐도 되는 요청</h2>
         <p>팀에서 첫 Hook 후보를 정할 때 사용할 수 있습니다.</p>
@@ -281,34 +269,18 @@ Hook으로 알려주면 좋을 항목을 제안해줘.
 사람 확인이 필요한 위험 작업을 나눠서 정리해줘.</code></pre>
       </aside>
 
-      <aside class="callout">
-        <h2>팀에서 가볍게 맞춰보면 좋은 것</h2>
-        <p>
-          Hooks는 “자주 잊는 확인 알려주기”부터 시작합니다.
-          팀이 실제로 자주 놓치는 검증을 하나씩 작업 흐름에 넣어보면 충분합니다.
-        </p>
-      </aside>
-
       <aside class="action-box">
         <h2>이번 주 실천</h2>
         <p>
           실행을 멈추는 Hook을 만들기 전에 “상태 업데이트 관련 파일이 바뀌면 관련 테스트를 확인하라”는
-          알림 메시지 하나만 먼저 써봅니다.
-        </p>
-      </aside>
-
-      <aside class="callout">
-        <h2>이번 주에 가볍게 남겨볼 것</h2>
-        <p>
-          첫 Hook 후보를 하나만 골라봅니다. 추천은 <code>test-reminder</code>입니다.
-          이 Hook은 테스트를 강제로 실행하기보다 “관련 테스트를 확인하라”는 알림을 출력하고,
-          팀이 1~2주 써본 뒤 자동 실행이나 실행 중단으로 올릴 항목을 따로 고릅니다.
+          <code>test-reminder</code> 알림 하나만 먼저 써봅니다. 팀이 1~2주 사용한 뒤
+          자동 실행이나 실행 중단으로 올릴 항목을 따로 고릅니다.
         </p>
       </aside>
 
       <h2>다음 주 예고</h2>
       <p>
-        다음 주에는 지금까지 다룬 작업 루프, <code>CLAUDE.md</code>, Skills, MCP,
+        다음 주에는 지금까지 다룬 작업 루프, <code>CLAUDE.md</code>, Skill, MCP,
         SubAgent, Hooks를 작은 팀 메모로 묶는 방법을 정리합니다.
       </p>
 

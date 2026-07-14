@@ -45,8 +45,14 @@ SubAgent, Hooks, Prompt Engineering, and Agentic Engineering consistent.
 
 ## Testing & Publishing Guidelines
 
-Preview changed pages at desktop and mobile widths. Check wrapping in prompt and
-code blocks, card spacing, and consistency between roadmap and article titles.
+Preview changed article pages at desktop and mobile widths. Weekly slide pages
+target desktop presentations and do not require mobile-specific layout, interaction,
+or preview checks. For slide pages, prioritize readable line breaks over maximizing
+headline size and preview representative desktop sizes such as 1366×768 and
+1920×1080. Reduce a slide-specific heading size or adjust its line breaks when a
+Korean particle, ending, or punctuation mark would be left alone on a line. Check
+wrapping in prompt and code blocks, card spacing, and consistency between roadmap
+and article titles.
 Only the currently published card should use `latest` and display `이번 주`.
 Unpublished cards use `upcoming`, display `Coming soon`, and must not link to
 draft pages. Add previous or next article links only after the target issue is
@@ -61,6 +67,9 @@ should summarize the change, name affected weeks or files, link related issues
 when available, and include screenshots for layout or styling changes.
 
 ## Agent-Specific Instructions
+
+The company uses Claude Code in an AWS Bedrock environment. Keep this environment
+in mind when writing company-specific guidance or examples.
 
 Keep edits scoped. Do not rewrite unrelated weeks or remove user-authored drafts
 and untracked files. When a weekly title or direction changes, update the weekly

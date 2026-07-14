@@ -4,23 +4,28 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Week 8. 팀에서 편하게 꺼내 쓰는 Claude Code 메모</title>
-    <meta name="description" content="Claude Code Engineering Newsletter Week 8">
+    <meta name="description" content="8주 동안 살펴본 Claude Code 작업 패턴을 팀에서 다시 꺼내 쓸 수 있는 작은 메모로 정리합니다.">
+    <meta property="og:title" content="팀에서 편하게 꺼내 쓰는 Claude Code 메모">
+    <meta property="og:description" content="요청 패턴, CLAUDE.md, Skill, MCP, SubAgent, Hooks를 작은 팀 메모로 정리합니다.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://s0j0s.github.io/weeks/week-08.html">
+    <link rel="canonical" href="https://s0j0s.github.io/weeks/week-08.html">
     <link rel="stylesheet" href="../assets/styles.css">
   </head>
   <body>
     <header class="site-header">
       <nav class="nav">
         <a class="brand" href="../index.html">Claude Code Engineering</a>
-        <a href="../index.html#roadmap">Roadmap</a>
+        <a href="../index.html#roadmap">전체 로드맵</a>
       </nav>
     </header>
 
     <main class="article">
       <div class="week-progress week-8">Week 8 of 8 <span aria-hidden="true"></span> 팀 메모</div>
       <p class="eyebrow">Week 8</p>
-    <h1>팀에서 편하게 꺼내 쓰는 Claude Code 메모</h1>
-    <p class="article-meta">약 6분 · 실무 활용 팁</p>
-    <p class="lead">
+      <h1>팀에서 편하게 꺼내 쓰는 Claude Code 메모</h1>
+      <p class="article-meta">약 6분 · 실무 활용 팁</p>
+      <p class="lead">
         각자 써본 Claude Code 활용법을 작은 메모로 남겨두면,
         다음에 비슷한 작업을 할 때 더 편하게 꺼내 쓸 수 있습니다.
       </p>
@@ -29,7 +34,7 @@
         <h2>3줄 요약</h2>
         <ul>
           <li>Claude Code 활용법은 개인 팁으로만 두기보다 쓸 만한 것만 가볍게 공유해도 도움이 됩니다.</li>
-          <li>팀 메모에는 요청 패턴, CLAUDE.md, Skills, MCP, SubAgent, Hooks에서 써본 내용을 짧게 남깁니다.</li>
+          <li>팀 메모에는 요청 패턴, CLAUDE.md, Skill, MCP, SubAgent, Hooks에서 써본 내용을 짧게 남깁니다.</li>
           <li>처음에는 모든 것을 만들기보다 자주 반복되는 업무 하나만 골라 작게 시도합니다.</li>
         </ul>
       </aside>
@@ -57,7 +62,7 @@
       <ul>
         <li>작업 루프: 바로 구현하지 않고 조사, 계획, 방향 확인, 구현, 테스트, 리뷰로 나눠본다.</li>
         <li><code>CLAUDE.md</code>: 반복 설명하는 내용을 프로젝트 메모로 남긴다.</li>
-        <li>Skills: 반복 작업을 다시 꺼내 쓸 수 있게 남긴다.</li>
+        <li>Skill: 반복 작업을 다시 꺼내 쓸 수 있게 남긴다.</li>
         <li>MCP: GitHub, Jira, Confluence 같은 외부 맥락을 필요할 때 연결한다.</li>
         <li>SubAgent: 큰 작업을 조사, 구현, 리뷰 역할로 나눠본다.</li>
         <li>Hooks: 테스트, 정적 검사, 보안 검사처럼 잊기 쉬운 확인을 알려준다.</li>
@@ -140,10 +145,11 @@
 - CLAUDE.md와 어긋나는 부분은 없는가
 - MCP나 외부 시스템에 쓰기 작업을 했다면 사람이 확인했는가</code></pre>
 
-      <h2>4. 팀용 slash command 예시</h2>
+      <h2>4. 명령처럼 실행하는 팀용 Skill 예시</h2>
       <p>
-        팀에서 자주 쓰는 작업은 slash command로 묶어두면 사용성이 좋아집니다.
-        이름은 짧고, 동작은 실제로 자주 쓰는 흐름을 반영하면 충분합니다.
+        팀에서 자주 쓰는 작업은 <code>.claude/skills/&lt;이름&gt;/SKILL.md</code>에 두고
+        <code>/이름</code>으로 직접 실행할 수 있습니다. 기존 <code>.claude/commands/</code>도 동작하지만,
+        참고 자료와 스크립트를 함께 묶을 수 있는 Skill 형식이 새 작업에는 더 잘 맞습니다.
       </p>
 
       <pre><code>/investigate
@@ -152,7 +158,7 @@
 /fix-with-tests
 수정 계획을 먼저 제안하고, 방향 확인 후 구현한다. 관련 테스트를 실행하고 결과를 요약한다.
 
-/review
+/backend-review
 diff 기준으로 버그, 회귀 위험, 테스트 누락을 우선순위대로 리뷰한다.
 
 /release-note
@@ -161,7 +167,7 @@ diff 기준으로 버그, 회귀 위험, 테스트 누락을 우선순위대로 
 /issue-context
 Jira, Confluence, GitHub 순서로 작업 맥락을 모은다. 쓰기 작업은 하지 않는다.
 
-/simplify
+/small-refactor
 동작을 바꾸지 않는 범위에서 복잡도를 낮출 후보를 찾고, 작은 단계로 제안한다.</code></pre>
 
       <h2>5. 도입 전략</h2>
@@ -172,7 +178,7 @@ Jira, Confluence, GitHub 순서로 작업 맥락을 모은다. 쓰기 작업은 
 
       <p>
         예를 들어 리뷰 품질이 문제라면 먼저 리뷰 Skill과 리뷰 요청 패턴을 만듭니다.
-        테스트 누락이 문제라면 Hooks와 <code>/fix-with-tests</code>부터 시작합니다.
+        테스트 누락이 문제라면 <code>fix-with-tests</code> Skill과 Hooks부터 시작합니다.
         이슈 맥락이 자주 빠진다면 GitHub, Jira, Confluence MCP부터 붙입니다.
       </p>
 
@@ -221,7 +227,7 @@ Hooks로 알려줄 항목을 짧게 정리해줘.</code></pre>
         <h2>팀에서 가볍게 맞춰보면 좋은 것</h2>
         <p>
           Claude Code 팀 메모는 완성된 문서가 아니라 써보면서 조금씩 다듬는 기록입니다.
-          반복되는 불편이 보이면 메모리, Skill, MCP, Hook 중 어디에 남기면 좋을지 이야기해봅니다.
+          반복되는 불편이 보이면 메모리, Skill, MCP, Hooks 중 어디에 남기면 좋을지 이야기해봅니다.
         </p>
       </aside>
 

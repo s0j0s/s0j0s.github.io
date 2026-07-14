@@ -5,238 +5,363 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Week 2. 조사, 계획, 테스트까지 이어지는 작업 루프</title>
-  <meta name="description" content="Claude Code Engineering Newsletter Week 2">
+  <title>Week 2. 바로 구현하기 전에, 완료 기준부터 맞추기</title>
+  <meta name="description" content="주문 상태 변경 기능을 예시로 Claude Code와 완료 기준을 다듬고, 작업을 Phase로 나누어 진행하는 방법을 소개합니다.">
+  <meta property="og:title" content="바로 구현하기 전에, 완료 기준부터 맞추기">
+  <meta property="og:description" content="계획을 확인하고 Phase별로 구현하며 결과를 살펴보는 Agentic Engineering 작업 흐름을 소개합니다.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://s0j0s.github.io/weeks/week-02.html">
+  <link rel="canonical" href="https://s0j0s.github.io/weeks/week-02.html">
   <link rel="stylesheet" href="../assets/styles.css">
 </head>
 
-<body>
-  <header class="site-header">
+<body class="slide-page">
+  <header class="site-header slide-header">
     <nav class="nav">
       <a class="brand" href="../index.html">Claude Code Engineering</a>
-      <a href="../index.html#roadmap">Roadmap</a>
+      <div class="nav-actions">
+        <button class="slide-view-toggle" type="button" aria-pressed="false">전체 보기</button>
+        <a href="../index.html#roadmap">전체 로드맵</a>
+      </div>
     </nav>
   </header>
 
-  <main class="article">
-    <div class="week-progress week-2">Week 2 of 8 <span aria-hidden="true"></span> 작업 루프</div>
-    <p class="eyebrow">Week 2</p>
-
-    <h1>조사, 계획, 테스트까지 이어지는 작업 루프</h1>
-    <p class="article-meta">약 4분 · 실무 활용 팁</p>
-    <p class="lead">
-      Week 1에서 살펴본 “먼저 조사해줘”를 바탕으로,
-      조사 결과를 계획, 구현, 테스트, 변경 영향 검토까지 연결하는 흐름을 정리합니다.
-    </p>
-
-    <aside class="summary-box">
-      <h2>3줄 요약</h2>
-      <ul>
-        <li>“바로 고쳐줘”는 작은 작업에는 편하지만, 복잡한 작업에서는 원인과 수정 범위를 다시 확인해야 할 수 있습니다.</li>
-        <li>조사 결과에서 수정 범위와 테스트 방법을 먼저 정하면, 구현 후 계획대로 바뀌었는지 확인하기 쉽습니다.</li>
-        <li>이번 글에서는 버그 수정을 맡길 때 이 흐름을 어떻게 활용할 수 있는지 살펴봅니다.</li>
-      </ul>
-    </aside>
-
-    <p>
-      1주차에서는 조사부터 요청하는 방법을 살펴봤습니다.
-      이번에는 조사 결과에서 수정 범위와 테스트 방법을 정하고,
-      구현 결과가 계획과 맞는지 확인하는 흐름을 살펴봅니다.
-    </p>
-
-    <aside class="callout">
-      <h2>이번 글의 예시 버그</h2>
-      <p>
-        작업 상태 업데이트 API가 성공 응답을 반환했지만,
-        DB의 상태는 바뀌지 않은 상황을 기준으로 보겠습니다.
-        상태 전환 조건, DB 업데이트 결과, 예외 처리를 함께 확인해야 하는
-        가상의 Java 백엔드 버그입니다.
-      </p>
-    </aside>
-
-    <h2>1. 조사 결과를 보고, 어디까지 고칠지 정하기</h2>
-
-    <p>
-      Claude Code가 조사 결과를 보여주면, 바로 구현을 맡기기 전에
-      수정 범위와 테스트 항목을 확인해볼 수 있습니다.
-      아래 예시에서는 세 단계로 나누어 살펴보겠습니다.
-    </p>
-
-    <div class="decision-flow">
-      <section class="decision-step">
-        <div class="decision-step-meta">
-          <span>1</span>
-          <strong>Claude Code가 정리</strong>
+  <main class="slide-deck" aria-label="Week 2 슬라이드">
+    <div class="slide-track">
+      <section class="slide slide-cover is-active" aria-labelledby="slide-title-1">
+        <div class="slide-content">
+          <p class="slide-kicker">Week 2 · 계획과 구현</p>
+          <h1 id="slide-title-1">바로 구현하기 전에,<br>완료 기준부터 맞추기</h1>
+          <p class="slide-lead">
+            계획을 함께 확인하고 작업을 작은 단계(Phase)로 나누어,<br>
+            원하는 결과를 확인하며 구현해봅니다.
+          </p>
+          <p class="slide-hint">키보드 방향키 또는 아래 버튼으로 넘겨보세요.</p>
         </div>
-        <h3>조사 결과 확인</h3>
-        <ul>
-          <li>현재 상태가 UPDATE 조건과 맞지 않아 변경된 행이 0건입니다.</li>
-          <li>변경된 행이 0건이어도 API는 성공 응답을 반환합니다.</li>
-          <li>이 상황을 확인하는 테스트가 없습니다.</li>
-        </ul>
       </section>
 
-      <section class="decision-step">
-        <div class="decision-step-meta">
-          <span>2</span>
-          <strong>사람이 범위를 확인</strong>
+      <section class="slide" aria-labelledby="slide-title-2">
+        <div class="slide-content slide-content-narrow">
+          <p class="slide-kicker">Week 1에서 한 걸음 더</p>
+          <h2 id="slide-title-2">무엇을 만들지<br><span>먼저 맞춰볼까요?</span></h2>
+          <p class="slide-statement">
+            구현 전에 <span class="slide-emphasis">화면·규칙·완료 기준</span>을 확인하면, 결과를 본 뒤 원하는 내용을 다시 찾는 일을 줄일 수 있습니다.
+          </p>
         </div>
-        <h3>수정 범위 확인</h3>
-        <ul>
-          <li>변경된 행이 0건이면 성공이 아니라 실패로 처리합니다.</li>
-          <li>다른 기능은 건드리지 않고 상태 업데이트 로직만 수정합니다.</li>
-        </ul>
       </section>
 
-      <section class="decision-step">
-        <div class="decision-step-meta">
-          <span>3</span>
-          <strong>구현 후 함께 확인</strong>
+      <section class="slide" aria-labelledby="slide-title-3">
+        <div class="slide-content">
+          <p class="slide-kicker">예시 · 관리자 주문 상태 변경</p>
+          <h2 id="slide-title-3">“주문 상태 변경을<br><span>그냥 구현해줘.</span>”</h2>
+          <div class="direct-build-animation" aria-label="요청 직후 바로 주문 상태 변경 기능을 구현하는 흐름입니다.">
+            <div class="direct-build-request">
+              <span>요청</span>
+              <strong>관리자 화면에서 주문 상태를<br>변경할 수 있게 해줘.</strong>
+            </div>
+            <span class="direct-build-arrow" aria-hidden="true">→</span>
+            <div class="order-admin direct-order">
+              <div class="order-summary"><span>주문 <strong>#A-1042</strong></span><span>현재 <strong>결제 완료</strong></span></div>
+              <div class="order-editor"><span>배송 중</span><button type="button" tabindex="-1" aria-hidden="true">저장</button></div>
+              <div class="order-save-result">상태 변경 완료</div>
+            </div>
+          </div>
+          <p class="slide-caption direct-build-caption">드롭다운과 저장 버튼은 금방 만들 수 있습니다. 문제는 화면 뒤에서 정해야 할 규칙입니다.</p>
         </div>
-        <h3>테스트 항목 확인</h3>
-        <ul>
-          <li>허용된 상태 전환이 정상적으로 처리되는지 확인합니다.</li>
-          <li>허용되지 않은 상태 전환이 실패로 처리되는지 확인합니다.</li>
-        </ul>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-4">
+        <div class="slide-content">
+          <p class="slide-kicker">단순한 화면 뒤의 질문</p>
+          <h2 id="slide-title-4">버튼은 동작하지만,<br><span>정해야 할 규칙이 남았습니다.</span></h2>
+          <ol class="slide-output-list slide-question-grid" aria-label="변경 순서, 변경 담당자, 동시 저장, 기록 남기기를 차례로 확인합니다.">
+            <li style="--question: 0"><span>1</span><strong>변경 순서</strong><small>배송 완료 주문도 취소할 수 있나요?</small></li>
+            <li style="--question: 1"><span>2</span><strong>변경 담당자</strong><small>상담원과 운영자 모두 변경할 수 있나요?</small></li>
+            <li style="--question: 2"><span>3</span><strong>동시 저장</strong><small>두 사람이 동시에 저장하면 어떻게 되나요?</small></li>
+            <li style="--question: 3"><span>4</span><strong>기록 남기기</strong><small>누가 언제 바꿨는지 기록해야 하나요?</small></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-5">
+        <div class="slide-content">
+          <p class="slide-kicker">Claude Code와 다시 시작</p>
+          <h2 id="slide-title-5">구현 전에 계획을<br><span>함께 다듬습니다.</span></h2>
+          <ol class="agentic-plan-animation" aria-label="계획 작성, 사람의 계획 확인, 단계별 문서 분리, 사람의 재확인, Phase별 구현과 확인 순서로 진행합니다.">
+            <li style="--step: 0">
+              <span>01</span><strong>PLAN.md 초안</strong>
+              <small>Claude Code가 화면과 규칙 정리</small>
+              <code>PLAN.md</code>
+            </li>
+            <li style="--step: 1" class="user-review-step">
+              <span>02</span><strong>사람이 계획 확인</strong>
+              <small>“취소 주문은 변경 금지.”</small>
+              <em>계획 수정</em>
+            </li>
+            <li style="--step: 2" class="phase-files-step">
+              <span>03</span><strong>작은 단계로 나누기</strong>
+              <small>확인할 수 있는 Phase로 나누기</small>
+              <div><code>phase-01-order-ui.md</code><code>phase-02-policy.md</code><code>phase-03-update.md</code></div>
+            </li>
+            <li style="--step: 3" class="user-review-step">
+              <span>04</span><strong>사람이 다시 확인</strong>
+              <small>범위와 순서를 마지막 확인</small>
+              <em>계획 확인</em>
+            </li>
+            <li style="--step: 4" class="implementation-step">
+              <span>05</span><strong>구현·확인 반복</strong>
+              <small>한 Phase씩 만들고 사용자 확인</small>
+              <div class="implementation-preview"><b>결제 완료</b><i>→</i><b>배송 중</b></div>
+            </li>
+          </ol>
+          <p class="slide-caption agentic-plan-caption">에이전트가 구현을 돕고 사람이 범위와 품질을 확인하는 방식을 Agentic Engineering이라고 합니다.</p>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-6">
+        <div class="slide-content">
+          <p class="slide-kicker">Step 1 · Claude Code가 초안 작성</p>
+          <h2 id="slide-title-6">Claude Code가<br><span><code>PLAN.md</code> 초안을 작성합니다.</span></h2>
+          <ol class="slide-output-list">
+            <li><span>1</span>주문 조회·상태 변경 화면</li>
+            <li><span>2</span>바꿀 수 있는 순서·변경 담당자</li>
+            <li><span>3</span>저장 기록·문제 상황 테스트 기준</li>
+          </ol>
+          <p class="slide-statement slide-statement-compact">Claude Code가 만든 계획은 정답이 아니라, 구현 전에 사람이 함께 고칠 수 있는 초안입니다.</p>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-7">
+        <div class="slide-content">
+          <p class="slide-kicker">Step 2 · 사람이 계획을 확인</p>
+          <h2 id="slide-title-7">필요한 것은 더하고,<br><span>이번 범위는 선명하게.</span></h2>
+          <div class="slide-boundary">
+            <article class="is-included">
+              <span>이번에 포함</span>
+              <strong>변경 순서·담당자<br>기록 남기기·두 번 저장 막기</strong>
+            </article>
+            <article>
+              <span>이번에는 제외</span>
+              <strong>고객 알림·여러 주문 변경<br>자동 환불</strong>
+            </article>
+          </div>
+          <p class="slide-statement slide-statement-compact">원하는 기능뿐 아니라, 이번에 만들지 않을 기능도 함께 확인합니다.</p>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-8">
+        <div class="slide-content">
+          <p class="slide-kicker">Step 3 · 구현 순서를 작은 단계(Phase)로 나누기</p>
+          <h2 id="slide-title-8">한 번에 만들지 않고,<br><span>확인 가능한 단위로 나눕니다.</span></h2>
+          <ol class="slide-workflow">
+            <li><span>Phase 01</span><strong>조회와 변경 화면</strong></li>
+            <li><span>Phase 02</span><strong>변경 순서와 담당자</strong></li>
+            <li><span>Phase 03</span><strong>저장과 기록</strong></li>
+            <li><span>마지막 확인</span><strong>동시 저장·오류 확인</strong></li>
+          </ol>
+          <p class="slide-statement slide-statement-compact"><code>phase-01-order-ui.md</code>처럼 단계별 문서로 나누면 각 범위와 완료 조건을 따로 확인할 수 있습니다.</p>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-9">
+        <div class="slide-content">
+          <p class="slide-kicker">Step 4 · Phase마다 사람이 확인</p>
+          <h2 id="slide-title-9">하나씩 만들고,<br><span>확인 후 다음으로.</span></h2>
+          <ol class="phase-review-loop" aria-label="Phase 구현, 결과 정리, 사람의 확인, 다음 Phase 진행을 반복합니다.">
+            <li><span>01</span><strong>Phase 구현</strong><small>정한 범위만 작업</small></li>
+            <li><span>02</span><strong>결과 정리</strong><small>구현 내용과 테스트</small></li>
+            <li class="user-review"><span>03</span><strong>사람이 확인</strong><small>고치거나 계속할지 결정</small></li>
+            <li><span>04</span><strong>다음 Phase</strong><small>확인한 뒤에 시작</small></li>
+          </ol>
+          <p class="phase-review-return">↩ 수정이 필요하면 같은 Phase로 돌아갑니다.</p>
+          <div class="slide-message-card slide-followup-message">
+            <code>한 Phase를 구현한 뒤 결과를 정리하고 멈춰줘.<br>내가 확인하면 다음 Phase를 진행해줘.</code>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-10">
+        <div class="slide-content">
+          <p class="slide-kicker">같은 요청 · 다른 확인 기준</p>
+          <h2 id="slide-title-10">과정이 다르면,<br><span>확인할 근거도 달라집니다.</span></h2>
+          <div class="quality-compare-animation">
+            <article class="quality-result quick-result">
+              <div class="quality-result-heading">
+                <span>바로 구현</span>
+                <strong>동작을 본 뒤 요구 확인</strong>
+              </div>
+              <div class="quality-order-preview basic-preview">
+                <div><b>#A-1042</b><b>결제 완료</b></div>
+                <span>배송 중</span><button type="button" tabindex="-1" aria-hidden="true">저장</button>
+              </div>
+              <ul>
+                <li class="is-done">기본 상태 변경</li>
+                <li class="is-missing">바꿀 수 있는 순서 미정</li>
+                <li class="is-missing">누가 바꿀지 미정</li>
+                <li class="is-missing">기록·오류 처리 미정</li>
+              </ul>
+              <p>결과가 틀렸다기보다 요청에 빈칸이 남아 있음</p>
+            </article>
+
+            <article class="quality-result planned-result">
+              <div class="quality-result-heading">
+                <span>PLAN + 단계별 확인</span>
+                <strong>정한 기준으로 결과 확인</strong>
+              </div>
+              <div class="quality-order-preview polished-preview">
+                <div><b>#A-1042</b><b>관리자 확인</b></div>
+                <span>결제 완료 → 배송 중</span><button type="button" tabindex="-1" aria-hidden="true">변경·기록</button>
+              </div>
+              <ul>
+                <li class="is-done">변경 순서·담당자 확인</li>
+                <li class="is-done">두 번 저장할 때 처리</li>
+                <li class="is-done">이번에 하지 않을 기능 확인</li>
+                <li class="is-done">기록·오류 테스트 확인</li>
+              </ul>
+              <p>확인한 계획과 구현·테스트 결과를 비교</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-11">
+        <div class="slide-content">
+          <p class="slide-kicker">계획이 필요한 작업에 꺼내 쓰기</p>
+          <h2 id="slide-title-11">이번 작업에 바로 써볼 요청</h2>
+          <div class="slide-prompt slide-prompt-compact">
+            <pre id="week-2-prompt"><code>지금은 구현하지 말고, 요청한 기능의 화면·동작·완료 기준을
+PLAN.md에 정리해줘. 불분명한 선택지는 따로 표시하고 멈춰줘.
+내가 계획을 확인하면 작업을 확인 가능한 Phase로 나눠줘.
+Phase별 범위와 완료 기준을 다시 확인한 뒤 순서대로 구현해줘.
+각 Phase가 끝나면 구현 내용과 테스트 결과를 정리하고 멈춰줘.
+내가 확인한 뒤 다음 Phase를 진행해줘.</code></pre>
+            <button class="copy-button" type="button" data-copy="week-2-prompt">프롬프트 복사</button>
+          </div>
+          <p class="copy-status" role="status" aria-live="polite"></p>
+          <p class="slide-caption">오타 수정처럼 범위와 완료 기준이 분명한 작업은 바로 맡겨도 괜찮습니다.</p>
+        </div>
+      </section>
+
+      <section class="slide slide-finale" aria-labelledby="slide-title-12">
+        <div class="slide-content slide-content-narrow">
+          <p class="slide-kicker">한 문장으로 정리</p>
+          <h2 id="slide-title-12" class="slide-finale-title">
+            계획을 함께 다듬고 나누어 구현하면,<br>
+            <span>원하는 결과와 실제 결과를<br>비교하기 쉬워집니다.</span>
+          </h2>
+          <p class="slide-statement">
+            다음 주에는 반복해서 사용할 작업 기준을 <code>CLAUDE.md</code>에 담는 방법을 살펴봅니다.
+          </p>
+          <div class="slide-final-links">
+            <a class="slide-roadmap-link" href="week-01.html">← Week 1 다시 보기</a>
+            <a class="slide-roadmap-link secondary" href="../index.html#roadmap">전체 로드맵</a>
+          </div>
+        </div>
       </section>
     </div>
 
-    <aside class="prompt-card compact-prompt">
-      <h2>계획을 확인한 뒤 이어서 요청하기</h2>
-      <p>세 단계의 내용이 괜찮다면 아래처럼 구현을 이어서 요청할 수 있습니다.</p>
-      <pre><code>위에서 정한 수정 범위대로 구현하고,
-테스트 결과와 추가로 확인할 부분을 정리해줘.</code></pre>
-    </aside>
-
-    <p>
-      이렇게 나누어두면 무엇을 고칠지와 어떻게 확인할지가 분명해져,
-      구현 후에도 계획한 범위대로 수정됐는지 검토하기 쉽습니다.
-    </p>
-
-    <h2>2. 계획을 확인하면 달라지는 점</h2>
-
-    <p>
-      조사 결과를 바로 구현하는 경우와 변경 계획을 먼저 확인하는 경우를 비교해보겠습니다.
-    </p>
-
-    <div class="compare-grid">
-      <section>
-        <h3>바로 구현을 맡긴 경우</h3>
-        <ul>
-          <li>수정 속도는 빠를 수 있습니다.</li>
-          <li>필요한 범위보다 수정 범위가 넓어질 수 있습니다.</li>
-          <li>테스트 근거가 부족하면 리뷰 부담이 커집니다.</li>
-        </ul>
-      </section>
-
-      <section>
-        <h3>계획을 먼저 확인한 경우</h3>
-        <ul>
-          <li>확인 단계가 추가되므로 작은 작업에서는 오히려 번거로울 수 있습니다.</li>
-          <li>수정할 파일과 제외할 범위가 먼저 보입니다.</li>
-          <li>구현 전에 테스트 방법을 확인할 수 있습니다.</li>
-          <li>수정한 코드가 기존 기능에 어떤 영향을 줄지 확인하기 쉽습니다.</li>
-        </ul>
-      </section>
-    </div>
-
-    <aside class="callout">
-      <h2>구현 후 리뷰에서 다시 확인하게 되는 질문</h2>
-      <p>
-        리뷰에서는 왜 이 파일을 바꿨는지, 다른 상태값에도 영향이 있는지,
-        어떤 테스트로 확인했는지를 살펴보게 됩니다.
-        구현 전 계획에 이 질문을 포함하고 작업 후 실제 결과를 덧붙이면,
-        리뷰에서 같은 내용을 다시 확인하는 부담을 줄일 수 있습니다.
-      </p>
-    </aside>
-
-    <h2>3. 기본 작업 루프</h2>
-
-    <pre><code>목표 정의
--> 코드 조사
--> 변경 계획
--> 계획 확인
--> 구현
--> 테스트
--> 변경 영향 검토</code></pre>
-
-    <p>
-      목표 정의에서는 원하는 결과와 제약을 말합니다.
-      코드 조사에서는 Claude Code가 관련 파일, 호출 흐름, 기존 테스트를 찾습니다.
-      변경 계획에서는 수정 범위와 검증 방법을 정리합니다.
-      계획 확인에서는 수정할 파일과 테스트 방법이 적절한지 사람이 짧게 봅니다.
-      구현과 테스트는 확인한 범위 안에서 진행하도록 요청할 수 있습니다.
-    </p>
-
-    <p>
-      여기서 계획 확인은 거창한 승인 절차를 말하는 것이 아닙니다.
-      “이 파일들만 바꾸고, 이 테스트로 확인하자”는 정도를 사람이 한 번 보는 단계입니다.
-      이 단계를 거치면 Claude Code의 수정 범위가 불필요하게 넓어지거나,
-      테스트 방법 없이 구현부터 진행하는 일을 줄이는 데 도움이 됩니다.
-    </p>
-
-    <p>
-      테스트가 끝난 뒤에는 Claude Code에게 수정한 코드를 기준으로
-      영향을 받을 수 있는 주변 동작도 확인해달라고 요청할 수 있습니다.
-      “무엇을 바꿨고, 어떤 동작이 영향을 받을 수 있으며, 어떤 테스트로 확인했는가”를
-      정리해달라고 하면 리뷰할 때 확인할 기준이 생깁니다.
-    </p>
-
-    <aside class="callout">
-      <h2>변경 후에 한 번 더 확인할 것</h2>
-      <p>
-        코드를 수정한 뒤에는 영향을 받을 수 있는 주변 기능이 있는지 확인해볼 수 있습니다.
-        테스트가 빠진 부분은 없는지, 계획보다 수정 범위가 넓어지지 않았는지도 같이 보면 좋습니다.
-      </p>
-    </aside>
-
-    <h2>4. 언제는 바로 맡겨도 될까</h2>
-
-    <p>
-      모든 작업에 긴 루프가 필요한 것은 아닙니다.
-      오타 수정, 주석 정리, 로그 문구 변경처럼 영향 범위가 작은 작업은 바로 맡겨도 괜찮습니다.
-      반대로 다음과 같은 작업에서는 조사와 계획을 먼저 받아보는 방식도 도움이 됩니다.
-    </p>
-
-    <ul>
-      <li>수정 파일이 여러 영역에 걸치거나 기존 설계 의도를 알아야 한다.</li>
-      <li>트랜잭션 범위, DB 업데이트 조건, 상태 전환처럼 영향 범위가 크다.</li>
-      <li>배치 처리, 외부 시스템 연동, 예외 처리, 재시도 로직에 영향이 있다.</li>
-      <li>테스트 실패의 원인이 명확하지 않거나 판단이 필요한 리팩토링이다.</li>
-    </ul>
-
-    <aside class="prompt-card">
-      <h2>참고해볼 요청 예시</h2>
-      <p>버그 수정이나 테스트 실패를 맡길 때 상황에 맞게 줄이거나 바꿔서 사용할 수 있습니다.</p>
-
-      <pre><code>지금은 코드를 수정하지 말고 관련 파일과 현재 동작을 조사해줘.
-원인 후보, 수정 범위, 테스트 방법을 정리한 뒤 멈춰줘.
-내가 계획을 확인하면 그 범위에서 구현하고 테스트해줘.
-실행하지 못한 테스트나 추가로 확인할 영향 범위가 있으면 함께 알려줘.</code></pre>
-    </aside>
-
-    <aside class="callout">
-      <h2>한 문장으로 정리</h2>
-      <p>
-        조사한 내용에서 수정 범위와 테스트 방법을 정한 뒤 구현하면,
-        변경 이유와 확인 결과를 함께 검토하기 쉬워집니다.
-      </p>
-    </aside>
-
-    <h2>다음 주 예고</h2>
-    <p>
-      다음 주에는 이 루프를 매번 길게 설명하지 않아도 되게 만드는 방법을 다룹니다.
-      이미 저장소에 공유된 <code>CLAUDE.md</code>를 활용해서,
-      테스트 명령, 주의할 수정 범위, 리뷰 포인트를 이번 작업의 기준으로 정리하고
-      실제 작업에 적용하는 방식을 살펴보겠습니다.
-    </p>
-
-    <nav class="article-nav" aria-label="뉴스레터 주차 이동">
-      <a class="prev-link" href="week-01.html">← 이전 글</a>
-      <a class="roadmap-link" href="../index.html#roadmap">전체 로드맵</a>
-      <a class="next-link" href="week-03.html">다음 글 →</a>
+    <nav class="slide-controls" aria-label="슬라이드 이동">
+      <button class="slide-button previous" type="button" aria-label="이전 슬라이드">←</button>
+      <div class="slide-position" aria-live="polite">
+        <span class="current-slide">1</span> / <span>12</span>
+        <span class="slide-progress-bar" aria-hidden="true"><span></span></span>
+      </div>
+      <button class="slide-button next" type="button" aria-label="다음 슬라이드">→</button>
     </nav>
   </main>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const previousButton = document.querySelector('.slide-button.previous');
+    const nextButton = document.querySelector('.slide-button.next');
+    const viewToggle = document.querySelector('.slide-view-toggle');
+    const currentSlide = document.querySelector('.current-slide');
+    const progress = document.querySelector('.slide-progress-bar span');
+    let activeSlide = 0;
+
+    function updateControls(index) {
+      activeSlide = Math.max(0, Math.min(index, slides.length - 1));
+      currentSlide.textContent = activeSlide + 1;
+      progress.style.width = `${((activeSlide + 1) / slides.length) * 100}%`;
+      previousButton.disabled = activeSlide === 0;
+      nextButton.disabled = activeSlide === slides.length - 1;
+      history.replaceState(null, '', `#slide-${activeSlide + 1}`);
+    }
+
+    function showSlide(index) {
+      const target = Math.max(0, Math.min(index, slides.length - 1));
+      slides.forEach((slide) => slide.classList.remove('is-active'));
+      slides[target].classList.add('is-active');
+      updateControls(target);
+    }
+
+    previousButton.addEventListener('click', () => showSlide(activeSlide - 1));
+    nextButton.addEventListener('click', () => showSlide(activeSlide + 1));
+
+    function setAllView(showAll) {
+      if (!showAll) {
+        const headerHeight = document.querySelector('.slide-header').offsetHeight;
+        activeSlide = slides.reduce((closest, slide, index) => {
+          const distance = Math.abs(slide.getBoundingClientRect().top - headerHeight);
+          return distance < closest.distance ? { index, distance } : closest;
+        }, { index: activeSlide, distance: Infinity }).index;
+      }
+
+      document.body.classList.toggle('show-all-slides', showAll);
+      viewToggle.setAttribute('aria-pressed', String(showAll));
+      viewToggle.textContent = showAll ? '슬라이드 보기' : '전체 보기';
+
+      if (!showAll) {
+        showSlide(activeSlide);
+        window.scrollTo(0, 0);
+      }
+    }
+
+    viewToggle.addEventListener('click', () => {
+      setAllView(!document.body.classList.contains('show-all-slides'));
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (document.body.classList.contains('show-all-slides')) return;
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+      if (event.target.matches('input, textarea, select, [contenteditable="true"]')) return;
+
+      if (event.key === 'ArrowRight' || event.key === 'PageDown') {
+        event.preventDefault();
+        showSlide(activeSlide + 1);
+      }
+      if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+        event.preventDefault();
+        showSlide(activeSlide - 1);
+      }
+      if (event.key === 'Home') {
+        event.preventDefault();
+        showSlide(0);
+      }
+      if (event.key === 'End') {
+        event.preventDefault();
+        showSlide(slides.length - 1);
+      }
+    });
+
+    document.querySelector('[data-copy]').addEventListener('click', async (event) => {
+      const prompt = document.getElementById(event.currentTarget.dataset.copy).innerText;
+      const status = document.querySelector('.copy-status');
+      try {
+        await navigator.clipboard.writeText(prompt);
+        status.textContent = '프롬프트를 복사했습니다.';
+      } catch {
+        status.textContent = '복사하지 못했습니다. 프롬프트를 직접 선택해 주세요.';
+      }
+    });
+
+    const initialSlide = Number(location.hash.replace('#slide-', '')) - 1;
+    if (Number.isInteger(initialSlide) && initialSlide >= 0 && initialSlide < slides.length) {
+      showSlide(initialSlide);
+    } else {
+      updateControls(0);
+    }
+  </script>
 </body>
 
 </html>

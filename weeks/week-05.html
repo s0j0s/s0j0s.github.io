@@ -4,23 +4,28 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Week 5. MCP로 외부 시스템 연결하기</title>
-    <meta name="description" content="Claude Code Engineering Newsletter Week 5">
+    <meta name="description" content="MCP로 GitHub, Jira, Confluence의 작업 맥락을 연결하고 읽기와 쓰기 권한을 나누는 방법을 소개합니다.">
+    <meta property="og:title" content="MCP로 외부 시스템 연결하기">
+    <meta property="og:description" content="Claude Code가 외부 작업 맥락을 안전하게 읽도록 MCP 연결과 권한 범위를 살펴봅니다.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://s0j0s.github.io/weeks/week-05.html">
+    <link rel="canonical" href="https://s0j0s.github.io/weeks/week-05.html">
     <link rel="stylesheet" href="../assets/styles.css">
   </head>
   <body>
     <header class="site-header">
       <nav class="nav">
         <a class="brand" href="../index.html">Claude Code Engineering</a>
-        <a href="../index.html#roadmap">Roadmap</a>
+        <a href="../index.html#roadmap">전체 로드맵</a>
       </nav>
     </header>
 
     <main class="article">
       <div class="week-progress week-5">Week 5 of 8 <span aria-hidden="true"></span> 외부 맥락</div>
       <p class="eyebrow">Week 5</p>
-    <h1>MCP로 외부 시스템 연결하기</h1>
-    <p class="article-meta">약 6분 · 실무 활용 팁</p>
-    <p class="lead">
+      <h1>MCP로 외부 시스템 연결하기</h1>
+      <p class="article-meta">약 6분 · 실무 활용 팁</p>
+      <p class="lead">
         Claude Code가 코드만 보는 단계에서 벗어나 GitHub, Jira, Confluence까지
         함께 볼 수 있으면 일의 단위가 달라집니다.
       </p>
@@ -152,14 +157,16 @@
       <pre><code># GitHub MCP 연결
 export GITHUB_PAT=your_github_fine_grained_token
 
-claude mcp add --transport http github https://api.githubcopilot.com/mcp/ \
-  --header "Authorization: Bearer $GITHUB_PAT"
+claude mcp add --transport http \
+  --header "Authorization: Bearer $GITHUB_PAT" \
+  github https://api.githubcopilot.com/mcp/
 
 # Jira, Confluence MCP 연결
 export ATLASSIAN_TOKEN=your_atlassian_token
 
-claude mcp add --transport http atlassian https://company-atlassian-mcp.example.com/mcp \
-  --header "Authorization: Bearer $ATLASSIAN_TOKEN"
+claude mcp add --transport http \
+  --header "Authorization: Bearer $ATLASSIAN_TOKEN" \
+  atlassian https://company-atlassian-mcp.example.com/mcp
 
 # 연결 확인
 claude mcp list</code></pre>
@@ -247,28 +254,13 @@ Confluence에서 관련 상태 전환 규칙을 확인해줘.
         신뢰할 수 있는 소스를 지정하면 Claude의 판단도 안정됩니다.
       </p>
 
-      <aside class="callout">
-        <h2>팀에서 가볍게 맞춰보면 좋은 것</h2>
-        <p>
-          MCP는 읽기부터 시작하고, 쓰기 작업은 작업 종류별로 한 번 더 확인합니다.
-          연결 개수보다 신뢰할 수 있는 출처의 품질이 중요합니다.
-        </p>
-      </aside>
-
       <aside class="action-box">
         <h2>이번 주 실천</h2>
         <p>
           Jira 이슈 하나를 골라 Claude Code에게 Jira, Confluence, GitHub 순서로
-          맥락을 확인하게 하고, 코드 수정 전 조사 결과만 받아봅니다.
-        </p>
-      </aside>
-
-      <aside class="callout">
-        <h2>이번 주에 가볍게 남겨볼 것</h2>
-        <p>
-          MCP 연결 목록보다 먼저 권한 범위를 메모해봅니다.
+          맥락을 확인하게 하고, 코드 수정 전 조사 결과만 받아봅니다. 연결 목록보다 먼저
           “읽기부터 써보기”, “확인 후 쓰기”, “별도 논의” 세 칸으로 나누어
-          GitHub, Jira, Confluence에서 Claude Code에게 맡겨볼 일을 적어둡니다.
+          맡겨볼 일도 함께 적어봅니다.
         </p>
       </aside>
 

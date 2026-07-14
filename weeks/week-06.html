@@ -4,23 +4,28 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Week 6. SubAgent로 큰 작업 나누기</title>
-    <meta name="description" content="Claude Code Engineering Newsletter Week 6">
+    <meta name="description" content="큰 Claude Code 작업을 조사, 구현, 리뷰 역할의 SubAgent로 나누고 결과를 통합하는 방법을 소개합니다.">
+    <meta property="og:title" content="SubAgent로 큰 작업 나누기">
+    <meta property="og:description" content="큰 작업을 독립적인 조사, 구현, 리뷰 역할로 나누는 기준과 예시를 살펴봅니다.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://s0j0s.github.io/weeks/week-06.html">
+    <link rel="canonical" href="https://s0j0s.github.io/weeks/week-06.html">
     <link rel="stylesheet" href="../assets/styles.css">
   </head>
   <body>
     <header class="site-header">
       <nav class="nav">
         <a class="brand" href="../index.html">Claude Code Engineering</a>
-        <a href="../index.html#roadmap">Roadmap</a>
+        <a href="../index.html#roadmap">전체 로드맵</a>
       </nav>
     </header>
 
     <main class="article">
       <div class="week-progress week-6">Week 6 of 8 <span aria-hidden="true"></span> 역할 분리</div>
       <p class="eyebrow">Week 6</p>
-    <h1>SubAgent로 큰 작업 나누기</h1>
-    <p class="article-meta">약 5분 · 실무 활용 팁</p>
-    <p class="lead">
+      <h1>SubAgent로 큰 작업 나누기</h1>
+      <p class="article-meta">약 5분 · 실무 활용 팁</p>
+      <p class="lead">
         큰 작업은 한 Claude에게 한 번에 맡기기보다 조사, 구현, 리뷰 역할을 나누면
         품질과 맥락 관리가 좋아집니다.
       </p>
@@ -220,28 +225,12 @@ Reviewer:
         어느 구현안을 진행할지, 리뷰 지적 중 무엇을 반영할지는 사람이 마지막에 고르면 됩니다.
       </p>
 
-      <aside class="callout">
-        <h2>팀에서 가볍게 맞춰보면 좋은 것</h2>
-        <p>
-          SubAgent는 “파일 수가 많다”보다 “역할을 나누면 더 편하겠다”는 느낌이 있을 때 써봅니다.
-          작은 작업은 기본 루프로 충분합니다.
-        </p>
-      </aside>
-
       <aside class="action-box">
         <h2>이번 주 실천</h2>
         <p>
           최근 이슈 하나를 골라 구현 요청 전에 Investigator 역할로만 맡겨봅니다.
-          결과가 충분히 명확할 때만 Builder에게 작은 수정 범위를 맡겨봅니다.
-        </p>
-      </aside>
-
-      <aside class="callout">
-        <h2>이번 주에 가볍게 남겨볼 것</h2>
-        <p>
-          SubAgent를 써볼 만한 경우를 짧게 메모합니다.
-          “작은 수정은 기본 루프”, “원인 분석이 긴 버그는 Investigator”, “확인한 수정만 Builder”,
-          “구현 후 diff는 Reviewer”처럼 역할별 힌트를 남깁니다.
+          결과가 충분히 명확할 때만 Builder에게 작은 수정 범위를 맡기고, 구현 후에는
+          Reviewer가 실제 diff를 확인하게 해봅니다. 작은 작업은 기본 루프로 충분합니다.
         </p>
       </aside>
 

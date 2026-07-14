@@ -1,166 +1,334 @@
 <!doctype html>
-
 <html lang="ko">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Week 3. CLAUDE.md를 작업 기준으로 활용하기</title>
-  <meta name="description" content="CLAUDE.md에 프로젝트 기준을 남기고 Claude Code 작업 전후의 확인 항목으로 활용하는 방법을 소개합니다.">
-  <meta property="og:title" content="CLAUDE.md를 작업 기준으로 활용하기">
-  <meta property="og:description" content="프로젝트 지침을 Claude Code의 작업 시작과 결과 검토에 활용하는 방법을 살펴봅니다.">
+  <title>Week 3. 우리 팀의 Claude Code 설정, 무엇부터 쓸까</title>
+  <meta name="description" content="CLAUDE.md, rules, settings와 확장 도구의 역할을 구분하고 우리 팀에 필요한 Claude Code 설정부터 적용하는 방법을 소개합니다.">
+  <meta property="og:title" content="우리 팀의 Claude Code 설정, 무엇부터 쓸까">
+  <meta property="og:description" content="프로젝트 기준, 권한 설정, 반복 작업 도구를 나누고 팀에 필요한 항목부터 적용하는 방법을 살펴봅니다.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://s0j0s.github.io/weeks/week-03.html">
   <link rel="canonical" href="https://s0j0s.github.io/weeks/week-03.html">
   <link rel="stylesheet" href="../assets/styles.css">
 </head>
 
-<body>
-  <header class="site-header">
+<body class="slide-page">
+  <header class="site-header slide-header">
     <nav class="nav">
       <a class="brand" href="../index.html">Claude Code Engineering</a>
-      <a href="../index.html#roadmap">전체 로드맵</a>
+      <div class="nav-actions">
+        <button class="slide-view-toggle" type="button" aria-pressed="false">전체 보기</button>
+        <a href="../index.html#roadmap">전체 로드맵</a>
+      </div>
     </nav>
   </header>
 
-  <main class="article">
-    <div class="week-progress week-3">Week 3 of 8 <span aria-hidden="true"></span> 프로젝트 지침</div>
-    <p class="eyebrow">Week 3</p>
-    <h1>CLAUDE.md를 작업 기준으로 활용하기</h1>
-    <p class="article-meta">약 3분 · 실무 활용 팁</p>
-    <p class="lead">
-      저장소에 공유된 <code>CLAUDE.md</code>를 실제 작업에서 어떻게 적용하고,
-      부족한 내용은 어떻게 개선 후보로 남길지 다룹니다.
-    </p>
-
-    <aside class="summary-box">
-      <h2>3줄 요약</h2>
-      <ul>
-        <li><code>CLAUDE.md</code>는 Claude가 팀의 작업 규칙을 참고하게 하는 프로젝트 지침 파일입니다.</li>
-        <li>작업 전에는 <code>CLAUDE.md</code>의 팀 규칙을 이번 작업 기준으로 정리하고, 작업 후에는 결과와 다시 비교합니다.</li>
-        <li>오래된 명령이나 애매한 규칙을 발견하면 다음 작업을 위해 개선 후보로 남깁니다.</li>
-      </ul>
-    </aside>
-
-    <p>
-      우리 팀은 이미 <code>CLAUDE.md</code>를 저장소에 공유해 사용하고 있습니다.
-      그래서 이번 글은 “어떻게 처음 만들까”보다
-      “작업할 때 어떻게 자연스럽게 적용할까”에 가깝습니다.
-      규칙이 많거나 서로 충돌하면 이번 작업에 필요한 기준이 흐려질 수 있습니다.
-      이럴 때는 적용할 규칙을 먼저 정리해볼 수 있습니다.
-    </p>
-
-    <p>
-      핵심은 간단합니다.
-      작업을 시작할 때 <code>CLAUDE.md</code>의 팀 규칙을 이번 작업 기준으로 정리하게 하고,
-      작업이 끝나면 결과가 그 기준과 맞는지 다시 보는 것입니다.
-      그리고 문서와 실제 코드가 어긋나는 부분을 발견하면 개선 후보로 남깁니다.
-      같은 문제를 다음 사람이 반복해서 만나지 않게 만드는 것이 목적입니다.
-    </p>
-
-    <h2>1. 작업 시작 전에 기준 확인하기</h2>
-    <p>
-      Claude Code는 작업을 시작할 때 프로젝트의 <code>CLAUDE.md</code>를 참고합니다.
-      다만 읽었다고 해서 모든 규칙이 항상 같은 중요도로 적용되는 것은 아닙니다.
-      그래서 중요한 작업을 맡길 때는 <code>CLAUDE.md</code>의 팀 규칙을
-      이번 작업에 어떻게 적용할지 먼저 정리해달라고 요청할 수 있습니다.
-    </p>
-
-    <pre><code>바로 구현하지 말고 CLAUDE.md의 팀 규칙을 기준으로
-이번 작업에 적용할 테스트 명령, 주의할 파일, 리뷰 포인트를 먼저 정리한 뒤
-수정 계획을 제안해줘.</code></pre>
-
-    <h2>2. 수정 결과를 기준과 비교해보기</h2>
-    <p>
-      구현이 끝난 뒤에는 <code>CLAUDE.md</code>를 기준으로 결과를 다시 점검할 수 있습니다.
-      수정된 내용이 문서의 기준과 맞는지 확인해달라고 요청하면
-      리뷰 전에 놓친 부분을 한 번 더 점검할 수 있습니다.
-    </p>
-
-    <pre><code>이번 수정 내용을 CLAUDE.md의 기준과 비교해서 다시 리뷰해줘.
-어긴 규칙, 빠진 테스트, 위험한 변경 범위가 있으면 먼저 알려줘.</code></pre>
-
-    <h2>3. 문서 내용이 실제 작업과 다를 때</h2>
-    <p>
-      실제 작업을 하다 보면 <code>CLAUDE.md</code>에 없는 규칙,
-      오래된 테스트 명령, 애매한 표현을 발견할 수 있습니다.
-      개인만 알고 넘어가면 비슷한 혼동이 다시 생길 수 있습니다.
-    </p>
-
-    <div class="example-grid">
-      <section class="neutral-example">
-        <h3>이번 작업에서만 처리한 경우</h3>
-        <pre><code>테스트 명령이 틀린 것 같은데
-이번에는 내가 알아서 돌릴게.</code></pre>
+  <main class="slide-deck" aria-label="Week 3 슬라이드">
+    <div class="slide-track">
+      <section class="slide slide-cover is-active" aria-labelledby="slide-title-1">
+        <div class="slide-content">
+          <p class="slide-kicker">Week 3 · 팀 설정</p>
+          <h1 id="slide-title-1">우리 팀의 Claude Code 설정,<br>무엇부터 쓸까</h1>
+          <p class="slide-lead">
+            매번 다시 설명하지 않도록<br>
+            팀의 매뉴얼, 권한, 도구를 나눠봅니다.
+          </p>
+          <p class="slide-hint">키보드 방향키 또는 아래 버튼으로 넘겨보세요.</p>
+        </div>
       </section>
-      <section class="neutral-example">
-        <h3>개선 후보를 남긴 경우</h3>
-        <pre><code>CLAUDE.md의 테스트 명령이 현재 Gradle 설정과 맞지 않아.
-이번 작업에서는 ./gradlew test를 사용했고,
-CLAUDE.md에는 이 명령으로 수정하는 것을 제안해줘.</code></pre>
+
+      <section class="slide" aria-labelledby="slide-title-2">
+        <div class="slide-content slide-content-narrow">
+          <p class="slide-kicker">Week 1·2에서 이어서</p>
+          <h2 id="slide-title-2">좋은 요청과 계획을<br><span>매번 다시 설명하고 있다면.</span></h2>
+          <p class="slide-statement">
+            1주차의 작업 순서와 2주차의 완료 기준 중 반복되는 내용을 남겨두면,<br>
+            Claude Code가 다음 작업에서도 같은 팀 기준을 참고할 수 있습니다.
+          </p>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-3">
+        <div class="slide-content slide-content-narrow">
+          <p class="slide-kicker">하나의 비유로 이해하기</p>
+          <h2 id="slide-title-3">Claude Code 설정은<br><span>새 팀원을 위한 업무 안내서입니다.</span></h2>
+          <p class="slide-statement">
+            반복해서 알려줄 팀 기준과 실행할 수 있는 범위,<br>
+            필요할 때 꺼내는 작업 도구를 역할별로 관리합니다.
+          </p>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-4">
+        <div class="slide-content">
+          <p class="slide-kicker">먼저 큰 그림</p>
+          <h2 id="slide-title-4">복잡해 보여도<br><span>세 종류로 나눌 수 있습니다.</span></h2>
+          <ol class="slide-flow">
+            <li><span>01</span><strong>팀 안내</strong><small>프로젝트와 일하는 방식</small></li>
+            <li><span>02</span><strong>실행 설정</strong><small>허용·확인·차단할 행동</small></li>
+            <li><span>03</span><strong>확장 도구</strong><small>특정한 불편을 해결하는 기능</small></li>
+          </ol>
+          <p class="slide-statement slide-statement-compact">파일 이름부터 외우기보다 각 항목이 맡는 역할을 먼저 구분해봅니다.</p>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-5">
+        <div class="slide-content">
+          <p class="slide-kicker">1 · 프로젝트 팀 안내</p>
+          <h2 id="slide-title-5"><code>CLAUDE.md</code>는<br><span>매번 필요한 설명을 맡습니다.</span></h2>
+          <ol class="slide-flow">
+            <li><span>1</span><strong>이게 무엇인가</strong><small>Claude Code가 작업할 때 참고하는 프로젝트 설명서</small></li>
+            <li><span>2</span><strong>왜 필요한가</strong><small>환경과 작업 방식을 매번 처음부터 설명하지 않기 위해</small></li>
+            <li><span>3</span><strong>무슨 역할인가</strong><small>빌드·테스트·구조·리뷰 기준을 작업 전에 전달</small></li>
+          </ol>
+          <p class="slide-statement slide-statement-compact">Java 8, Oracle 11g, 테스트 명령처럼 모든 작업에서 자주 필요한 기준부터 남깁니다.</p>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-6">
+        <div class="slide-content">
+          <p class="slide-kicker">우리 팀처럼 두 파일을 함께 쓴다면</p>
+          <h2 id="slide-title-6">두 <code>CLAUDE.md</code>는 모두<br><span>프로젝트 범위의 업무 매뉴얼입니다.</span></h2>
+          <div class="slide-boundary">
+            <article class="is-included">
+              <span>팀에서 정한 역할 · 프로젝트 입구</span>
+              <strong><code>./CLAUDE.md</code></strong>
+              <p>핵심 환경, 공통 명령, 전체 구조처럼 먼저 볼 기준</p>
+            </article>
+            <article>
+              <span>팀에서 정한 역할 · Claude Code 세부 안내</span>
+              <strong><code>./.claude/CLAUDE.md</code></strong>
+              <p>Claude Code 작업 흐름, 검토 방법, 세부 운영 기준</p>
+            </article>
+          </div>
+          <p class="slide-statement slide-statement-compact">두 파일의 역할 구분은 팀의 약속입니다. 같은 내용을 중복하거나 서로 다르게 쓰지 말고, <code>/memory</code> 명령으로 두 파일을 불러왔는지 확인합니다.</p>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-7">
+        <div class="slide-content">
+          <p class="slide-kicker">공용 매뉴얼과 개인 메모</p>
+          <h2 id="slide-title-7">함께 볼 내용과<br><span>나만 볼 내용을 나눕니다.</span></h2>
+          <div class="slide-boundary">
+            <article class="is-included">
+              <span>팀과 공유</span>
+              <strong><code>CLAUDE.md</code></strong>
+              <p>프로젝트 환경, 공통 명령, 설계와 리뷰 기준</p>
+            </article>
+            <article>
+              <span>개인 환경에만 적용</span>
+              <strong><code>CLAUDE.local.md</code></strong>
+              <p>개인 작업 습관, 로컬 메모, 공유하기 애매한 선호</p>
+            </article>
+          </div>
+          <p class="slide-statement slide-statement-compact">팀 기준에 개인 취향이 섞이지 않도록 역할을 분리합니다.</p>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-8">
+        <div class="slide-content">
+          <p class="slide-kicker">상황별 세부 지침</p>
+          <h2 id="slide-title-8"><code>rules/</code>는<br><span>필요할 때만 불러옵니다.</span></h2>
+          <div class="slide-compare">
+            <article>
+              <span>한 파일에 모두 작성</span>
+              <strong><code>CLAUDE.md</code><br>Java·SQL·테스트·문서 규칙</strong>
+              <p>관련 없는 작업에서도 모든 설명을 함께 참고</p>
+            </article>
+            <article class="recommended">
+              <span>상황별 규칙으로 분리</span>
+              <strong class="slide-compare-files"><code>rules/java.md</code><br><code>rules/database.md</code><br><code>rules/testing.md</code></strong>
+              <p>관련 파일을 다룰 때 필요한 규칙을 중심으로 참고</p>
+            </article>
+          </div>
+          <p class="slide-statement slide-statement-compact">팀 안내가 길어졌다면 적용 경로별로 나눠, 관련 파일을 다룰 때만 불러옵니다.</p>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-9">
+        <div class="slide-content">
+          <p class="slide-kicker">2 · 실제 권한과 동작</p>
+          <h2 id="slide-title-9"><code>settings.json</code>은<br><span>부탁이 아니라 실행 범위를 정합니다.</span></h2>
+          <div class="slide-boundary">
+            <article class="is-included">
+              <span>팀과 공유</span>
+              <strong><code>.claude/settings.json</code></strong>
+              <p>팀 공용 권한, 도구 설정, 읽지 못하게 할 파일</p>
+            </article>
+            <article>
+              <span>개인 환경에만 적용</span>
+              <strong><code>.claude/settings.local.json</code></strong>
+              <p>개인 실험, 로컬 환경 차이, 프로젝트별 개인 설정</p>
+            </article>
+          </div>
+          <p class="slide-statement slide-statement-compact"><code>CLAUDE.md</code>가 “이렇게 일해 주세요”라는 안내라면, settings는 어떤 행동을 허용·확인·차단할지 정합니다.</p>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-10">
+        <div class="slide-content">
+          <p class="slide-kicker">우리 팀의 AWS Bedrock 환경</p>
+          <h2 id="slide-title-10">설정은 공유해도,<br><span>비밀 값은 공유하지 않습니다.</span></h2>
+          <ul class="slide-checklist slide-checklist-tests">
+            <li>회사에서 관리하는 인증과 보안 정책은 그대로 따르기</li>
+            <li>인증 정보와 토큰을 저장소 파일에 넣지 않기</li>
+            <li>권한 설정에서 비밀 정보 경로를 읽지 못하게 했는지 확인하기</li>
+            <li>프로젝트 설정으로 회사 정책을 우회하지 않기</li>
+          </ul>
+          <p class="slide-statement slide-statement-compact">공유 설정에는 “어떻게 연결하는지”를 남기고, 실제 비밀 값은 회사가 정한 방식으로 관리합니다.</p>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-11">
+        <div class="slide-content">
+          <p class="slide-kicker">3 · 필요할 때 꺼내는 도구 상자</p>
+          <h2 id="slide-title-11">불편의 종류에 맞춰<br><span>하나씩 선택합니다.</span></h2>
+          <ol class="slide-output-list slide-question-grid" aria-label="외부 정보 연결, 반복 절차, 역할 분리, 자동 확인에 맞는 도구를 보여줍니다.">
+            <li style="--question: 0"><span>1</span><strong>외부 정보 · MCP</strong><small>GitHub·Jira·Confluence의 정보가 필요할 때</small></li>
+            <li style="--question: 1"><span>2</span><strong>반복 절차 · Skill</strong><small>같은 작업 순서를 반복해서 설명할 때</small></li>
+            <li style="--question: 2"><span>3</span><strong>역할 분담 · SubAgent</strong><small>조사·구현·리뷰를 따로 맡길 때</small></li>
+            <li style="--question: 3"><span>4</span><strong>자동 확인 · Hooks</strong><small>정해진 시점의 확인을 자주 잊을 때</small></li>
+          </ol>
+          <p class="slide-statement slide-statement-compact">전부 갖출 필요는 없습니다. 다음 주부터 각 도구가 필요한 순간을 하나씩 살펴봅니다.</p>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-12">
+        <div class="slide-content">
+          <p class="slide-kicker">Week 1·2의 기준을 팀 설정으로</p>
+          <h2 id="slide-title-12">반복해서 말하는 내용만<br><span>알맞은 자리에 남깁니다.</span></h2>
+          <ol class="slide-flow">
+            <li><span>1</span><strong>“먼저 조사하고 알려줘”</strong><small>항상 지킬 작업 순서라면 <code>CLAUDE.md</code></small></li>
+            <li><span>2</span><strong>“이 테스트까지 통과하면 완료”</strong><small>특정 파일에만 필요하다면 <code>rules/</code></small></li>
+            <li><span>3</span><strong>“이 명령은 실행 전 확인”</strong><small>실제 허용 범위라면 <code>settings.json</code></small></li>
+          </ol>
+          <p class="slide-statement slide-statement-compact">한 번 나온 요청을 모두 저장하기보다 여러 작업에서 반복되는 기준부터 남깁니다.</p>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-13">
+        <div class="slide-content">
+          <p class="slide-kicker">처음에는 두 가지면 충분합니다</p>
+          <h2 id="slide-title-13">팀 안내와 권한부터,<br><span>도구는 필요할 때 더합니다.</span></h2>
+          <ol class="slide-workflow">
+            <li><span>Step 1</span><strong><code>CLAUDE.md</code>에 자주 필요한 팀 기준 남기기</strong></li>
+            <li><span>Step 2</span><strong><code>settings.json</code>에서 권한과 실행 범위 확인하기</strong></li>
+            <li><span>Step 3</span><strong>길어진 기준은 <code>rules/</code>로 나누기</strong></li>
+            <li><span>Step 4</span><strong>반복되는 불편이 생기면 맞는 도구 더하기</strong></li>
+          </ol>
+          <p class="slide-statement slide-statement-compact">설정을 많이 만드는 것보다 팀이 실제로 참고하고 지킬 수 있게 유지하는 것이 중요합니다.</p>
+        </div>
+      </section>
+
+      <section class="slide slide-finale" aria-labelledby="slide-title-14">
+        <div class="slide-content slide-content-narrow">
+          <p class="slide-kicker">한 문장으로 정리</p>
+          <h2 id="slide-title-14" class="slide-finale-title">
+            반복할 팀 기준은 <code>CLAUDE.md</code>에,<br>
+            <span>실행 범위는<br><code>settings.json</code>에 둡니다.</span>
+          </h2>
+          <p class="slide-statement">
+            다음 주에는 코드 밖의 작업 정보를 연결하는 MCP를 살펴봅니다.
+          </p>
+          <div class="slide-final-links">
+            <a class="slide-roadmap-link" href="week-02.html">← Week 2 다시 보기</a>
+            <a class="slide-roadmap-link secondary" href="../index.html#roadmap">전체 로드맵</a>
+          </div>
+        </div>
       </section>
     </div>
-    <p>
-      문서 수정 권한이 없어도 괜찮습니다.
-      PR 설명이나 팀 채널에 “이번 작업에서 발견한 CLAUDE.md 개선 후보”로 남기는 것만으로도
-      다음 작업의 기준이 더 명확해집니다.
-    </p>
 
-    <h2>4. 개인 설정과 팀 지침 나누기</h2>
-    <p>
-      프로젝트의 <code>CLAUDE.md</code>는 팀원이 함께 사용하는 지침 파일입니다.
-      모든 프로젝트에 적용할 개인 설정은 <code>~/.claude/CLAUDE.md</code>에,
-      현재 프로젝트에만 적용할 설정은 <code>CLAUDE.local.md</code>에 관리하고,
-      팀 문서에는 빌드, 테스트, 설계, 리뷰처럼 함께 참고할 내용을 남길 수 있습니다.
-    </p>
-
-    <h2>5. 길어질수록 가끔 정리하기</h2>
-    <p>
-      <code>CLAUDE.md</code>의 내용이 너무 많아지면 필요한 지침을 일관되게 따르기 어려울 수 있습니다.
-      오래된 규칙, 특정 사건의 회고, 예외가 많은 설명은 필요할 때 정리할 수 있습니다.
-      목적은 문서를 길게 만드는 것이 아니라 Claude가 필요한 내용을 찾기 쉽게 유지하는 것입니다.
-    </p>
-
-    <h2>6. Skill과 나누는 기준</h2>
-    <p>
-      여러 작업에서 계속 참고할 프로젝트 규칙은 <code>CLAUDE.md</code>에 두기 좋습니다.
-      반면 코드 리뷰나 릴리즈 노트 작성처럼 특정 작업에서만 꺼내 쓰는 절차와 참고 자료는
-      Skill로 분리하는 편이 적합합니다.
-    </p>
-
-    <aside class="callout">
-      <h2>가볍게 참고해볼 점</h2>
-      <p>
-        Claude Code는 프로젝트의 <code>CLAUDE.md</code>를 불러오지만,
-        그 내용이 항상 같은 수준으로 반영된다고 보기는 어렵습니다.
-        중요한 작업을 맡길 때는 “읽었는지”보다
-        “이번 작업에 어떤 기준을 적용할지”를 먼저 정리하게 하는 편이 좋습니다.
-      </p>
-      <pre><code>CLAUDE.md 기준으로 이번 작업에 적용할 규칙과 검증 방법을 먼저 정리해줘.
-그 기준 안에서만 수정하고, 작업 후에는 어긋난 부분이 없는지 다시 확인해줘.</code></pre>
-    </aside>
-
-    <aside class="action-box">
-      <h2>한 문장으로 정리</h2>
-      <p>
-        <code>CLAUDE.md</code>는 작업 전 기준 정리와 작업 후 점검에 활용하는
-        프로젝트 지침 파일입니다.
-      </p>
-    </aside>
-
-    <h2>다음 주 예고</h2>
-    <p>
-      다음 주에는 반복해서 시키는 작업을 매번 프롬프트로 설명하지 않고,
-      Skill로 다시 꺼내 쓰기 쉽게 남기는 방법을 다룹니다.
-    </p>
-
-    <nav class="article-nav" aria-label="뉴스레터 주차 이동">
-      <a class="prev-link" href="week-02.html">← 이전 글</a>
-      <a class="roadmap-link" href="../index.html#roadmap">전체 로드맵</a>
-      <a class="next-link" href="week-04.html">다음 글 →</a>
+    <nav class="slide-controls" aria-label="슬라이드 이동">
+      <button class="slide-button previous" type="button" aria-label="이전 슬라이드">←</button>
+      <div class="slide-position" aria-live="polite">
+        <span class="current-slide">1</span> / <span>14</span>
+        <span class="slide-progress-bar" aria-hidden="true"><span></span></span>
+      </div>
+      <button class="slide-button next" type="button" aria-label="다음 슬라이드">→</button>
     </nav>
   </main>
 
-</body>
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const previousButton = document.querySelector('.slide-button.previous');
+    const nextButton = document.querySelector('.slide-button.next');
+    const viewToggle = document.querySelector('.slide-view-toggle');
+    const currentSlide = document.querySelector('.current-slide');
+    const progress = document.querySelector('.slide-progress-bar span');
+    let activeSlide = 0;
 
+    function updateControls(index) {
+      activeSlide = Math.max(0, Math.min(index, slides.length - 1));
+      currentSlide.textContent = activeSlide + 1;
+      progress.style.width = `${((activeSlide + 1) / slides.length) * 100}%`;
+      previousButton.disabled = activeSlide === 0;
+      nextButton.disabled = activeSlide === slides.length - 1;
+      history.replaceState(null, '', `#slide-${activeSlide + 1}`);
+    }
+
+    function showSlide(index) {
+      const target = Math.max(0, Math.min(index, slides.length - 1));
+      slides.forEach((slide) => slide.classList.remove('is-active'));
+      slides[target].classList.add('is-active');
+      updateControls(target);
+    }
+
+    previousButton.addEventListener('click', () => showSlide(activeSlide - 1));
+    nextButton.addEventListener('click', () => showSlide(activeSlide + 1));
+
+    function setAllView(showAll) {
+      if (!showAll) {
+        const headerHeight = document.querySelector('.slide-header').offsetHeight;
+        activeSlide = slides.reduce((closest, slide, index) => {
+          const distance = Math.abs(slide.getBoundingClientRect().top - headerHeight);
+          return distance < closest.distance ? { index, distance } : closest;
+        }, { index: activeSlide, distance: Infinity }).index;
+      }
+
+      document.body.classList.toggle('show-all-slides', showAll);
+      viewToggle.setAttribute('aria-pressed', String(showAll));
+      viewToggle.textContent = showAll ? '슬라이드 보기' : '전체 보기';
+
+      if (!showAll) {
+        showSlide(activeSlide);
+        window.scrollTo(0, 0);
+      }
+    }
+
+    viewToggle.addEventListener('click', () => {
+      setAllView(!document.body.classList.contains('show-all-slides'));
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (document.body.classList.contains('show-all-slides')) return;
+      if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+      if (event.target.matches('input, textarea, select, [contenteditable="true"]')) return;
+
+      if (event.key === 'ArrowRight' || event.key === 'PageDown') {
+        event.preventDefault();
+        showSlide(activeSlide + 1);
+      }
+      if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+        event.preventDefault();
+        showSlide(activeSlide - 1);
+      }
+      if (event.key === 'Home') {
+        event.preventDefault();
+        showSlide(0);
+      }
+      if (event.key === 'End') {
+        event.preventDefault();
+        showSlide(slides.length - 1);
+      }
+    });
+
+    const initialSlide = Number(location.hash.replace('#slide-', '')) - 1;
+    if (Number.isInteger(initialSlide) && initialSlide >= 0 && initialSlide < slides.length) {
+      showSlide(initialSlide);
+    } else {
+      updateControls(0);
+    }
+  </script>
+</body>
 </html>

@@ -679,6 +679,96 @@ code {
   line-height: 1.35;
 }
 
+.slide-compare strong.slide-compare-files {
+  font-size: clamp(20px, 2vw, 24px);
+  line-height: 1.25;
+}
+
+.slide-load-timeline {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin: 30px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.slide-load-timeline li {
+  position: relative;
+  min-width: 0;
+  min-height: 190px;
+  padding: 22px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.slide-load-timeline li:not(:last-child)::after {
+  position: absolute;
+  top: 50%;
+  right: -18px;
+  z-index: 1;
+  width: 18px;
+  color: var(--accent);
+  background: var(--bg);
+  content: "→";
+  font-size: 20px;
+  font-weight: 900;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-50%);
+}
+
+.slide-load-timeline span,
+.slide-load-timeline strong,
+.slide-load-timeline small {
+  display: block;
+}
+
+.slide-load-timeline span {
+  min-height: 38px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.slide-load-timeline strong {
+  margin-top: 10px;
+  font-size: 19px;
+}
+
+.slide-load-timeline small {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.slide.is-active .slide-load-timeline li {
+  animation: reveal-load-step 420ms ease-out forwards;
+  animation-delay: calc(180ms + var(--load-step) * 650ms);
+}
+
+.slide.is-active .slide-load-timeline li:not(:last-child)::after {
+  animation: reveal-load-arrow 260ms ease-out forwards;
+  animation-delay: calc(700ms + var(--load-step) * 650ms);
+}
+
+@keyframes reveal-load-step {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes reveal-load-arrow {
+  to {
+    opacity: 1;
+  }
+}
+
 .slide-compare p {
   margin: 20px 0 0;
   color: var(--muted);
@@ -1453,6 +1543,8 @@ code {
   .slide.is-active .quality-result,
   .slide.is-active .quality-result li,
   .slide.is-active .slide-question-grid li,
+  .slide.is-active .slide-load-timeline li,
+  .slide.is-active .slide-load-timeline li::after,
   .slide.is-active .agentic-plan-animation > li,
   .slide.is-active .agentic-plan-caption {
     opacity: 1;
@@ -1787,6 +1879,8 @@ code {
 .show-all-slides .quality-result,
 .show-all-slides .quality-result li,
 .show-all-slides .slide-question-grid li,
+.show-all-slides .slide-load-timeline li,
+.show-all-slides .slide-load-timeline li::after,
 .show-all-slides .agentic-plan-animation > li,
 .show-all-slides .agentic-plan-caption {
   opacity: 1;

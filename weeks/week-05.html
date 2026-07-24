@@ -1,211 +1,195 @@
 <!doctype html>
-
 <html lang="ko">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Week 5. Skill로 반복 설명 줄이기</title>
-  <meta name="description" content="반복해서 설명하는 Claude Code 작업 절차와 참고 자료를 작은 Skill로 분리하는 방법을 살펴봅니다.">
+  <meta name="description" content="반복하는 작업 절차와 참고 자료를 작은 Skill로 묶고 필요할 때 불러오는 방법을 소개합니다.">
   <meta property="og:title" content="Skill로 반복 설명 줄이기">
-  <meta property="og:description" content="반복 작업의 절차와 출력 형식을 Claude Code Skill로 묶는 방법을 살펴봅니다.">
+  <meta property="og:description" content="코드 리뷰와 테스트 계획처럼 되풀이하는 작업을 작은 Skill로 시작해봅니다.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://s0j0s.github.io/weeks/week-05.html">
   <link rel="canonical" href="https://s0j0s.github.io/weeks/week-05.html">
   <link rel="stylesheet" href="../assets/styles.css">
 </head>
 
-<body>
-  <header class="site-header">
+<body class="slide-page">
+  <header class="site-header slide-header">
     <nav class="nav">
       <a class="brand" href="../index.html">Claude Code Engineering</a>
-      <a href="../index.html#roadmap">전체 로드맵</a>
+      <div class="nav-actions">
+        <button class="slide-view-toggle" type="button" aria-pressed="false">전체 보기</button>
+        <a href="../index.html#roadmap">전체 로드맵</a>
+      </div>
     </nav>
   </header>
 
-  <main class="article">
-    <div class="week-progress week-5">Week 5 of 8 <span aria-hidden="true"></span> 반복 작업</div>
-    <p class="eyebrow">Week 5</p>
-    <h1>Skill로 반복 설명 줄이기</h1>
-    <p class="article-meta">약 4분 · 실무 활용 팁</p>
-    <p class="lead">
-      Skill은 자주 하는 작업의 레시피와 비슷합니다.
-      순서와 참고 자료를 한 번 정리해두고 필요할 때 다시 꺼내 씁니다.
-    </p>
-
-    <aside class="summary-box">
-      <h2>3줄 요약</h2>
-      <ul>
-        <li>같은 설명을 여러 번 반복하고 있다면 Skill 후보로 검토해볼 수 있습니다.</li>
-        <li>Skill에는 반복 작업의 절차와 해당 작업에서 필요한 참고 자료를 함께 담을 수 있습니다.</li>
-        <li>리뷰, 테스트 보강, 장애 원인 분석처럼 익숙한 작업부터 시험해볼 수 있습니다.</li>
-      </ul>
-    </aside>
-
-    <p>
-      Claude Code를 몇 주 쓰다 보면 반복되는 요청이 보입니다.
-      “커밋 메시지 써줘”, “수정 내용 리뷰해줘”, “릴리즈 노트 정리해줘”,
-      “테스트 빠진 부분 찾아줘.” 매번 원하는 형식과 우선순위를 다시 설명하다 보면
-      작업 흐름이 길어질 수 있습니다.
-    </p>
-
-    <p>
-      Skill은 반복해서 사용하는 지침과 참고 자료를 필요할 때 다시 불러오는 기능입니다.
-      언제 사용하면 좋은지, 어떤 순서로 확인할지,
-      어떤 형식으로 답할지를 함께 정리할 수 있습니다.
-    </p>
-
-    <p>
-      <strong>무엇인가</strong>는 반복 작업의 설명서, <strong>왜 필요한가</strong>는 같은 지시를
-      다시 쓰지 않기 위해서, <strong>무슨 역할인가</strong>는 Claude Code가 그 작업에서만
-      같은 순서와 기준을 참고하게 하는 것입니다. 모든 작업에 필요한 기준은
-      <code>CLAUDE.md</code>에 두고, 특정 작업의 레시피만 Skill로 나눕니다.
-    </p>
-
-    <h2>1. 반복 설명이 보일 때</h2>
-    <p>
-      여기서 프롬프트는 현재 대화에서 직접 전달하는 지시입니다.
-      Skill은 반복할 지침과 특정 작업에서 필요한 참고 자료를 파일로 묶어 다시 사용하는 방식입니다.
-      커밋 메시지 작성, 코드 리뷰, 테스트 보강처럼 같은 기준을 여러 번 설명하고 있다면
-      Skill 후보로 생각해볼 수 있습니다.
-    </p>
-
-    <div class="example-grid">
-      <section class="neutral-example">
-        <h3>현재 요청에서 직접 설명</h3>
-        <pre><code>이번 수정 내용을 리뷰해줘.
-버그랑 테스트 누락 위주로 보고,
-스타일 얘기는 적게 해줘.</code></pre>
+  <main class="slide-deck" aria-label="Week 5 슬라이드">
+    <div class="slide-track">
+      <section class="slide slide-cover is-active" aria-labelledby="slide-title-1">
+        <div class="slide-content">
+          <p class="slide-kicker">Week 5 · 반복 절차</p>
+          <h1 id="slide-title-1">Skill로 반복 설명<br>줄이기</h1>
+          <p class="slide-lead">매번 다시 쓰는 작업 순서와 답변 형식을<br>필요할 때 꺼내는 작은 레시피로 만듭니다.</p>
+          <p class="slide-hint">키보드 방향키 또는 아래 버튼으로 넘겨보세요.</p>
+        </div>
       </section>
-      <section class="neutral-example">
-        <h3>반복할 기준을 Skill로 분리</h3>
-        <pre><code>코드 리뷰 요청이면 항상:
-1. 버그와 회귀 위험을 먼저 본다.
-2. 파일/라인 기준으로 짧게 쓴다.
-3. 스타일 의견은 실제 유지보수 위험이 있을 때만 쓴다.</code></pre>
 
+      <section class="slide" aria-labelledby="slide-title-2">
+        <div class="slide-content slide-content-narrow">
+          <p class="slide-kicker">반복되는 요청</p>
+          <h2 id="slide-title-2">리뷰할 때마다 같은 기준을<br><span>다시 설명하고 있다면.</span></h2>
+          <p class="slide-statement">버그와 테스트 누락을 먼저 보고,<br>파일과 라인을 기준으로 짧게 써달라고 반복합니다.</p>
+        </div>
       </section>
-    </div>
 
-    <h2>2. 작게 만드는 Skill</h2>
-    <p>
-      Skill은 길게 쓰기보다 역할과 확인 순서를 분명하게 적는 편이 읽기 쉽습니다.
-      Claude Code에서는 보통 <code>.claude/skills/스킬이름/SKILL.md</code> 형태로 둡니다.
-    </p>
-
-    <ul>
-      <li>언제 이 Skill을 쓰면 좋은지 적습니다.</li>
-      <li>작업 순서를 짧게 남깁니다.</li>
-      <li>읽기 편한 답변 형식을 적습니다.</li>
-      <li>필요한 참고 파일을 연결하고, 제외할 작업 범위를 적습니다.</li>
-    </ul>
-
-    <p>
-      하나의 거대한 Skill에 리뷰, 테스트, 릴리즈, 장애 분석을 모두 넣으면
-      Claude가 어느 포인트를 우선해야 하는지 흐려집니다.
-      처음에는 리뷰와 테스트 보강처럼 역할을 나누면 결과를 비교하고 고치기 쉽습니다.
-      리뷰 Skill은 트랜잭션 범위, DB 업데이트 조건, 예외 처리 누락을 먼저 보게 하고,
-      테스트 보강 Skill은 성공, 실패, 경계 케이스를 기존 JUnit 스타일에 맞춰 찾게 합니다.
-    </p>
-
-    <h2>3. 참고할 만한 Skill 후보</h2>
-    <p>
-      관심이 있다면 팀에서 자주 반복하는 요청 하나를 골라 가볍게 시험해볼 수 있습니다.
-    </p>
-
-    <div class="compare-grid">
-      <section class="strong-example">
-        <h3>backend-review</h3>
-        <ul>
-          <li>PR이나 수정 내용 리뷰 요청에 사용합니다.</li>
-          <li>트랜잭션, DB 업데이트 조건, 예외 처리, 테스트 누락을 먼저 봅니다.</li>
-          <li>출력은 파일/라인 기준으로 짧게 씁니다.</li>
-        </ul>
+      <section class="slide" aria-labelledby="slide-title-3">
+        <div class="slide-content">
+          <p class="slide-kicker">Skill이 맡는 일</p>
+          <h2 id="slide-title-3">특정 작업의 절차를<br><span>필요할 때만 불러옵니다.</span></h2>
+          <ol class="slide-flow">
+            <li><span>1</span><strong>언제 쓸까</strong><small>코드 리뷰, 테스트 계획, 이슈 조사</small></li>
+            <li><span>2</span><strong>어떤 순서일까</strong><small>확인할 항목과 제외할 작업</small></li>
+            <li><span>3</span><strong>무엇을 남길까</strong><small>답변 형식과 필요한 참고 자료</small></li>
+          </ol>
+          <p class="slide-statement slide-statement-compact">세션 시작에는 이름과 설명만 보이고, 본문은 Skill을 사용할 때 불러옵니다.</p>
+        </div>
       </section>
-      <section class="strong-example">
-        <h3>junit-test-planner</h3>
-        <ul>
-          <li>버그 수정 전후에 필요한 JUnit 케이스를 찾습니다.</li>
-          <li>성공, 실패, 경계, 재시도 케이스를 분리합니다.</li>
-          <li>기존 테스트 스타일을 먼저 확인합니다.</li>
-        </ul>
+
+      <section class="slide" aria-labelledby="slide-title-4">
+        <div class="slide-content">
+          <p class="slide-kicker">상시 기준과 작업 절차</p>
+          <h2 id="slide-title-4">항상 알아야 할 사실과<br><span>필요할 때 할 일을 나눕니다.</span></h2>
+          <div class="slide-compare">
+            <article>
+              <span>모든 작업에서 참고</span>
+              <strong><code>CLAUDE.md</code></strong>
+              <p>Java 8, Oracle 11g, 공통 명령과 팀 기준</p>
+            </article>
+            <article class="recommended">
+              <span>특정 작업에서 실행</span>
+              <strong>Skill</strong>
+              <p>리뷰 순서, 테스트 체크리스트, 답변 형식</p>
+            </article>
+          </div>
+          <p class="slide-statement slide-statement-compact">30줄짜리 절차가 <code>CLAUDE.md</code>에 쌓였다면 Skill 후보입니다.</p>
+        </div>
       </section>
-      <section class="strong-example">
-        <h3>issue-investigator</h3>
-        <ul>
-          <li>프롬프트나 파일로 제공된 Jira 이슈의 원인 분석에 사용합니다.</li>
-          <li>구현하지 않고 호출 흐름과 원인 후보만 정리합니다.</li>
-          <li>확인할 로그, 테스트, 관련 파일을 남깁니다.</li>
-        </ul>
+
+      <section class="slide" aria-labelledby="slide-title-5">
+        <div class="slide-content">
+          <p class="slide-kicker">가장 작은 구조</p>
+          <h2 id="slide-title-5">하나의 폴더와<br><span><code>SKILL.md</code>로 시작합니다.</span></h2>
+          <div class="slide-boundary">
+            <article class="is-included">
+              <span>프로젝트 Skill</span>
+              <strong><code>.claude/skills/<br>backend-review/SKILL.md</code></strong>
+              <p>팀이 함께 쓰고 저장소에서 관리</p>
+            </article>
+            <article>
+              <span>필요해지면 추가</span>
+              <strong>references · scripts</strong>
+              <p>긴 참고 자료, 반복 실행할 검사 도구</p>
+            </article>
+          </div>
+          <p class="slide-statement slide-statement-compact">처음부터 큰 폴더를 만들 필요는 없습니다. 반복이 분명한 절차 하나면 충분합니다.</p>
+        </div>
       </section>
-    </div>
 
-    <p>
-      공개된 Java 코드 리뷰 Skill이나 범용 코드 리뷰 Skill을 참고할 수도 있지만,
-      우리 팀의 Java 8, Oracle 11g, 기존 JUnit 스타일에 맞는 기준만 골라볼 수 있습니다.
-      여러 사람이 반복해서 쓰는 기준은 공통 Skill로, 개인의 요약 방식이나 탐색 순서는 개인 Skill로 둘 수 있습니다.
-    </p>
+      <section class="slide" aria-labelledby="slide-title-6">
+        <div class="slide-content">
+          <p class="slide-kicker">우리 팀의 첫 후보</p>
+          <h2 id="slide-title-6">익숙한 작업 하나부터<br><span>작게 시험합니다.</span></h2>
+          <ol class="slide-flow">
+            <li><span>1</span><strong>backend-review</strong><small>트랜잭션, DB 조건, 테스트 누락</small></li>
+            <li><span>2</span><strong>junit-test-planner</strong><small>성공, 실패, 경계, 재시도 케이스</small></li>
+            <li><span>3</span><strong>issue-investigator</strong><small>호출 흐름, 원인 후보, 검증 방법</small></li>
+          </ol>
+          <p class="slide-statement slide-statement-compact">리뷰·테스트·조사를 하나의 거대한 Skill에 모두 넣지 않습니다.</p>
+        </div>
+      </section>
 
-    <h2>4. 실전 Skill 예시</h2>
-    <p>
-      예를 들어 공통 리뷰 Skill을 만든다면 아래처럼 시작할 수 있습니다.
-    </p>
-
-    <p><code>.claude/skills/backend-review/SKILL.md</code></p>
-    <pre><code>---
-description: >-
-  Java 8 백엔드 변경에서 트랜잭션, DB 조건, 예외 처리,
-  테스트 누락을 리뷰할 때 사용
+      <section class="slide" aria-labelledby="slide-title-7">
+        <div class="slide-content">
+          <p class="slide-kicker">실전 Skill 예시</p>
+          <h2 id="slide-title-7">설명보다<br><span>작업 순서가 보이게 씁니다.</span></h2>
+          <div class="slide-prompt slide-prompt-compact">
+            <pre><code>---
+description: Java 8 백엔드 변경을 리뷰할 때 사용
 ---
 
-Java 백엔드 수정 내용을 리뷰할 때는 다음 순서로 본다.
+1. 트랜잭션 범위와 DB 업데이트 조건을 확인한다.
+2. 예외 처리와 중복 처리 누락을 찾는다.
+3. 빠진 JUnit 테스트를 제안한다.
+4. 결과는 위험도 높은 순서로 짧게 쓴다.</code></pre>
+          </div>
+        </div>
+      </section>
 
-1. 트랜잭션 범위와 DB 업데이트 조건을 먼저 확인한다.
-2. 예외 처리, 재시도, 중복 처리 누락을 찾는다.
-3. 기존 JUnit 테스트 스타일에 맞춰 빠진 케이스를 제안한다.
-4. 스타일 의견은 실제 장애나 유지보수 위험이 있을 때만 쓴다.
-5. 출력은 위험도 높은 순서로 파일/라인 기준으로 짧게 쓴다.</code></pre>
+      <section class="slide" aria-labelledby="slide-title-8">
+        <div class="slide-content">
+          <p class="slide-kicker">두 가지 호출 방식</p>
+          <h2 id="slide-title-8">직접 실행하거나,<br><span>Claude가 골라 사용합니다.</span></h2>
+          <div class="slide-boundary">
+            <article class="is-included">
+              <span>사용자가 직접</span>
+              <strong><code>/backend-review</code></strong>
+              <p>실행 시점을 내가 정하고 싶을 때</p>
+            </article>
+            <article>
+              <span>요청에 맞춰 자동 선택</span>
+              <strong>“현재 diff를 리뷰해줘”</strong>
+              <p>description이 작업과 잘 맞을 때</p>
+            </article>
+          </div>
+          <p class="slide-statement slide-statement-compact">배포나 커밋처럼 시점을 직접 정해야 한다면 <code>disable-model-invocation: true</code>로 자동 호출을 막습니다.</p>
+        </div>
+      </section>
 
-    <pre><code>/backend-review
+      <section class="slide" aria-labelledby="slide-title-9">
+        <div class="slide-content">
+          <p class="slide-kicker">완성보다 반복 개선</p>
+          <h2 id="slide-title-9">작은 PR에서 써보고<br><span>쓸모없는 기준을 덜어냅니다.</span></h2>
+          <ol class="slide-workflow">
+            <li><span>Step 1</span><strong>Skill 초안 하나 만들기</strong></li>
+            <li><span>Step 2</span><strong>작은 PR에서 직접 실행하기</strong></li>
+            <li><span>Step 3</span><strong>빠진 내용과 불필요한 의견 기록하기</strong></li>
+            <li><span>Step 4</span><strong>2~3번 쓴 뒤 유용한 기준만 남기기</strong></li>
+          </ol>
+        </div>
+      </section>
 
-현재 브랜치의 상태 업데이트 로직 변경을 리뷰해줘.</code></pre>
+      <section class="slide" aria-labelledby="slide-title-10">
+        <div class="slide-content slide-content-narrow">
+          <p class="slide-kicker">이번 주 실천</p>
+          <h2 id="slide-title-10"><code>backend-review</code> 하나를<br><span>작은 PR에 써봅니다.</span></h2>
+          <p class="slide-statement">한 번에 팀 표준으로 정하지 않습니다.<br>반복해서 도움이 된 기준만 함께 다듬습니다.</p>
+        </div>
+      </section>
 
-    <h2>5. 가볍게 시험해보는 순서</h2>
-    <p>
-      처음부터 여러 Skill을 만들기보다 <code>backend-review</code> 하나를 작은 PR에 적용해볼 수 있습니다.
-    </p>
+      <section class="slide slide-finale" aria-labelledby="slide-title-11">
+        <div class="slide-content slide-content-narrow">
+          <p class="slide-kicker">한 문장으로 정리</p>
+          <h2 id="slide-title-11" class="slide-finale-title">Skill은 반복 요청을<br><span>필요할 때 꺼내 쓰는<br>작은 작업 절차입니다.</span></h2>
+          <p class="slide-statement">다음 주에는 긴 작업을 별도 맥락의 SubAgent로 나눠봅니다.</p>
+          <div class="slide-final-links">
+            <a class="slide-roadmap-link" href="week-04.html">← Week 4 다시 보기</a>
+            <a class="slide-roadmap-link secondary" href="../index.html#roadmap">전체 로드맵</a>
+          </div>
+        </div>
+      </section>
+    </div>
 
-    <pre><code>1. 저장소에 .claude/skills/backend-review/SKILL.md 초안을 만든다.
-2. 작은 PR 하나를 골라 /backend-review로 리뷰를 요청해본다.
-3. Claude가 낸 리뷰 중 쓸모없는 의견과 빠진 내용을 기록한다.
-4. 2~3번 써본 뒤 유용한 기준만 SKILL.md에 남긴다.</code></pre>
-
-    <p>
-      한 번에 공통 방식으로 정하기보다 실제 리뷰에 시험해보고,
-      팀에 도움이 되는 기준이 확인되면 함께 다듬어도 됩니다.
-    </p>
-
-    <aside class="action-box">
-      <h2>한 문장으로 정리</h2>
-      <p>
-        Skill은 자주 반복하는 요청의 순서, 답변 형식, 참고 자료를 묶어
-        필요할 때 다시 사용하는 지침 묶음입니다.
-      </p>
-    </aside>
-
-    <h2>다음 주 예고</h2>
-    <p>
-      다음 주에는 큰 작업을 한 Claude에게 한 번에 맡기지 않고,
-      조사, 구현, 리뷰 역할로 나누는 SubAgent 활용법을 다룹니다.
-    </p>
-
-    <nav class="article-nav" aria-label="뉴스레터 주차 이동">
-      <a class="prev-link" href="week-04.html">← 이전 글</a>
-      <a class="roadmap-link" href="../index.html#roadmap">전체 로드맵</a>
-      <a class="next-link" href="week-06.html">다음 글 →</a>
+    <nav class="slide-controls" aria-label="슬라이드 이동">
+      <button class="slide-button previous" type="button" aria-label="이전 슬라이드">←</button>
+      <div class="slide-position" aria-live="polite">
+        <span class="current-slide">1</span> / <span>11</span>
+        <span class="slide-progress-bar" aria-hidden="true"><span></span></span>
+      </div>
+      <button class="slide-button next" type="button" aria-label="다음 슬라이드">→</button>
     </nav>
-
   </main>
-</body>
 
+  <script src="../assets/slides.js"></script>
+</body>
 </html>

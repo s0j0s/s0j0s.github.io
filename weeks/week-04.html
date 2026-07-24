@@ -1,286 +1,186 @@
 <!doctype html>
 <html lang="ko">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Week 4. MCP로 외부 시스템 연결하기</title>
-    <meta name="description" content="MCP로 GitHub, Jira, Confluence의 작업 맥락을 연결하고 읽기와 쓰기 권한을 나누는 방법을 소개합니다.">
-    <meta property="og:title" content="MCP로 외부 시스템 연결하기">
-    <meta property="og:description" content="Claude Code가 외부 작업 맥락을 안전하게 읽도록 MCP 연결과 권한 범위를 살펴봅니다.">
-    <meta property="og:type" content="article">
-    <meta property="og:url" content="https://s0j0s.github.io/weeks/week-04.html">
-    <link rel="canonical" href="https://s0j0s.github.io/weeks/week-04.html">
-    <link rel="stylesheet" href="../assets/styles.css">
-  </head>
-  <body>
-    <header class="site-header">
-      <nav class="nav">
-        <a class="brand" href="../index.html">Claude Code Engineering</a>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 4. MCP로 외부 시스템 연결하기</title>
+  <meta name="description" content="GitHub, Jira, Confluence의 작업 맥락을 MCP로 연결하고 읽기와 쓰기 권한을 안전하게 나누는 방법을 소개합니다.">
+  <meta property="og:title" content="MCP로 외부 시스템 연결하기">
+  <meta property="og:description" content="외부 시스템의 정보를 읽는 순서와 권한 범위를 정해 Claude Code의 조사 맥락을 넓혀봅니다.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://s0j0s.github.io/weeks/week-04.html">
+  <link rel="canonical" href="https://s0j0s.github.io/weeks/week-04.html">
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+
+<body class="slide-page">
+  <header class="site-header slide-header">
+    <nav class="nav">
+      <a class="brand" href="../index.html">Claude Code Engineering</a>
+      <div class="nav-actions">
+        <button class="slide-view-toggle" type="button" aria-pressed="false">전체 보기</button>
         <a href="../index.html#roadmap">전체 로드맵</a>
-      </nav>
-    </header>
-
-    <main class="article">
-      <div class="week-progress week-4">Week 4 of 8 <span aria-hidden="true"></span> 외부 맥락</div>
-      <p class="eyebrow">Week 4</p>
-      <h1>MCP로 외부 시스템 연결하기</h1>
-      <p class="article-meta">약 6분 · 실무 활용 팁</p>
-      <p class="lead">
-        MCP는 새 팀원에게 GitHub, Jira, Confluence를 볼 수 있는 길을 열어주는 것과 비슷합니다.
-        연결할 곳보다 먼저 무엇을 읽고 어디까지 맡길지 정해봅니다.
-      </p>
-
-      <aside class="summary-box">
-        <h2>3줄 요약</h2>
-        <ul>
-          <li>MCP는 Claude Code에게 더 많은 기능을 주는 것이 아니라 더 정확한 작업 맥락을 주는 방법입니다.</li>
-          <li>GitHub, Jira, Confluence는 읽기 권한부터 연결하고, 쓰기 작업은 한 번 확인하고 맡깁니다.</li>
-          <li>실전에서는 Jira 이슈, Confluence 설계 문서, GitHub PR 논의를 한 흐름으로 확인하게 만듭니다.</li>
-        </ul>
-      </aside>
-
-      <aside class="callout">
-        <h2>이번 주 포인트</h2>
-        <p>
-          MCP는 Claude에게 더 많은 도구를 주는 일이 아니라,
-          더 정확한 작업 맥락을 주는 일입니다. 권한은 읽기부터 시작하고,
-          쓰기는 한 번 확인하고 맡기는 편이 좋습니다.
-        </p>
-      </aside>
-
-      <p>
-        버그 수정은 코드만 보고 끝나지 않는 경우가 많습니다. 이슈에 재현 절차가 있고,
-        PR에 논의가 있고, Confluence에 설계 배경이 있고, Jira에 업무 히스토리가 있습니다.
-        Claude가 코드만 읽으면 이 맥락을 사람이 계속 복사해서 붙여야 합니다.
-      </p>
-
-      <p>
-        MCP는 Claude Code가 외부 시스템을 조회할 수 있게 해주는 연결 방식입니다.
-        제대로 쓰면 “파일을 수정하는 도구”에서 “작업 맥락을 모아 판단하는 도구”로 바뀝니다.
-      </p>
-
-      <p>
-        팀이 공유하는 프로젝트 범위 연결은 저장소 루트의 <code>.mcp.json</code>에 둡니다.
-        이는 <code>.claude</code> 폴더 안의 파일이 아닙니다. 연결 정보는 공유할 수 있지만,
-        토큰과 인증정보는 환경변수나 회사에서 정한 보안 방식으로 따로 관리합니다.
-      </p>
-
-      <h2>1. MCP를 쓰는 이유</h2>
-      <p>
-        MCP의 가치는 연결 자체가 아니라 정보의 정확도에 있습니다. Claude가 PR diff,
-        이슈 설명, 문서, API 스펙을 직접 확인할 수 있으면 사람이 중간에서 맥락을 요약하다가
-        빠뜨리는 부분이 줄어듭니다.
-      </p>
-
-      <p>
-        특히 오래된 코드나 복잡한 서비스에서는 코드만 읽어서는 왜 이렇게 만들었는지 알기 어렵습니다.
-        외부 시스템은 그 이유를 담고 있는 경우가 많습니다.
-        상태 업데이트 버그를 조사할 때는 Jira의 재현 절차, Confluence의 상태 전환 설계,
-        GitHub의 관련 PR 논의를 MCP로 먼저 확인하면 코드 변경 전에 판단 근거가 선명해집니다.
-      </p>
-
-      <h2>2. 실무에서 유용한 연결</h2>
-      <ul>
-        <li>GitHub PR, diff, review comment</li>
-        <li>Jira 이슈, 재현 절차, 상태, 담당자</li>
-        <li>Confluence 설계 문서, 운영 가이드, 의사결정 기록</li>
-        <li>사내 API 문서와 배포 체크리스트</li>
-        <li>로그와 모니터링 시스템</li>
-      </ul>
-
-      <p>
-        모든 시스템을 한 번에 붙일 필요는 없습니다. 팀이 실제로 자주 참고하는 신뢰 가능한 출처부터
-        연결하는 것이 좋습니다. 연결이 많아질수록 Claude가 어떤 정보를 먼저 보면 좋을지도
-        가볍게 적어두면 편합니다.
-      </p>
-
-      <h2>3. 먼저 얘기해두면 좋은 권한 범위</h2>
-      <p>
-        MCP를 팀에 적용할 때는 연결보다 권한 범위를 먼저 얘기해두는 편이 좋습니다.
-        읽기 작업은 조사 품질을 높이는 데 쓰고, 협업 기록을 바꾸는 쓰기 작업은 한 번 확인한 뒤 맡깁니다.
-      </p>
-
-      <div class="compare-grid">
-        <section class="strong-example">
-          <h3>읽기 허용</h3>
-          <ul>
-            <li>Jira 이슈 설명과 재현 조건 조회</li>
-            <li>Confluence 설계 문서 조회</li>
-            <li>GitHub PR, diff, review comment 조회</li>
-          </ul>
-        </section>
-        <section class="strong-example">
-          <h3>확인 후 쓰기</h3>
-          <ul>
-            <li>Jira 이슈에 조사 결과 댓글 작성</li>
-            <li>PR 설명 업데이트</li>
-            <li>리뷰 코멘트 작성</li>
-          </ul>
-        </section>
-        <section class="weak-example">
-          <h3>별도 논의</h3>
-          <ul>
-            <li>이슈 상태 변경</li>
-            <li>브랜치 삭제나 force push</li>
-            <li>운영 로그, 고객정보, 배포 관련 작업</li>
-          </ul>
-        </section>
       </div>
+    </nav>
+  </header>
 
-      <h2>4. GitHub, Jira, Confluence MCP 연동 단계</h2>
-      <p>
-        실제 설정 방법은 회사 계정, 보안 정책, 사용하는 MCP 서버에 따라 달라질 수 있습니다.
-        그래도 팀에서 가볍게 맞춰두면 좋은 순서는 비슷합니다.
-      </p>
+  <main class="slide-deck" aria-label="Week 4 슬라이드">
+    <div class="slide-track">
+      <section class="slide slide-cover is-active" aria-labelledby="slide-title-1">
+        <div class="slide-content">
+          <p class="slide-kicker">Week 4 · 외부 맥락</p>
+          <h1 id="slide-title-1">MCP로 외부 시스템<br>연결하기</h1>
+          <p class="slide-lead">GitHub, Jira, Confluence를 연결하기 전에<br>무엇을 읽고 어디까지 맡길지 정합니다.</p>
+          <p class="slide-hint">키보드 방향키 또는 아래 버튼으로 넘겨보세요.</p>
+        </div>
+      </section>
 
-      <pre><code>1. 연결할 시스템을 고른다.
-   GitHub PR, Jira 이슈, Confluence 문서처럼 자주 보는 출처부터 시작한다.
+      <section class="slide" aria-labelledby="slide-title-2">
+        <div class="slide-content slide-content-narrow">
+          <p class="slide-kicker">코드만으로는 부족할 때</p>
+          <h2 id="slide-title-2">버그의 이유는 종종<br><span>코드 밖에 남아 있습니다.</span></h2>
+          <p class="slide-statement">Jira에는 재현 조건이, Confluence에는 설계 배경이,<br>GitHub에는 변경 논의가 남아 있습니다.</p>
+        </div>
+      </section>
 
-2. 권한을 읽기 전용으로 시작한다.
-   PR 조회, 이슈 조회, 문서 조회까지만 허용하고 쓰기 작업은 막아둔다.
+      <section class="slide" aria-labelledby="slide-title-3">
+        <div class="slide-content">
+          <p class="slide-kicker">MCP가 맡는 일</p>
+          <h2 id="slide-title-3">도구를 많이 붙이는 것보다<br><span>정확한 맥락을 가져옵니다.</span></h2>
+          <ol class="slide-flow">
+            <li><span>1</span><strong>Jira</strong><small>이슈 설명, 재현 조건, 기대 동작</small></li>
+            <li><span>2</span><strong>Confluence</strong><small>설계 규칙, 예외, 의사결정 기록</small></li>
+            <li><span>3</span><strong>GitHub</strong><small>관련 PR, diff, review comment</small></li>
+          </ol>
+          <p class="slide-statement slide-statement-compact">사람이 복사해 전달하던 작업 정보를 Claude Code가 출처에서 직접 확인합니다.</p>
+        </div>
+      </section>
 
-3. 토큰과 접근 범위를 분리한다.
-   개인 토큰을 넓게 쓰지 말고, 필요한 저장소와 프로젝트 범위만 허용한다.
+      <section class="slide" aria-labelledby="slide-title-4">
+        <div class="slide-content">
+          <p class="slide-kicker">프로젝트 연결과 비밀 값</p>
+          <h2 id="slide-title-4">연결 정보는 공유해도,<br><span>인증 정보는 분리합니다.</span></h2>
+          <div class="slide-boundary">
+            <article class="is-included">
+              <span>팀과 공유</span>
+              <strong><code>./.mcp.json</code></strong>
+              <p>프로젝트에서 사용할 서버와 연결 방식</p>
+            </article>
+            <article>
+              <span>회사 방식으로 관리</span>
+              <strong>토큰 · 인증 정보</strong>
+              <p>환경변수나 회사가 정한 보안 저장소</p>
+            </article>
+          </div>
+          <p class="slide-statement slide-statement-compact"><code>.mcp.json</code>은 저장소 루트에 둡니다. 토큰 값은 저장소에 넣지 않습니다.</p>
+        </div>
+      </section>
 
-4. Claude에게 읽는 순서를 정해준다.
-   Jira -> Confluence -> GitHub -> 코드 순서처럼 읽는 흐름을 정해본다.
+      <section class="slide" aria-labelledby="slide-title-5">
+        <div class="slide-content">
+          <p class="slide-kicker">권한은 세 칸으로</p>
+          <h2 id="slide-title-5">연결하기 전에<br><span>어디까지 맡길지 나눕니다.</span></h2>
+          <ol class="slide-flow">
+            <li><span>1</span><strong>읽기부터</strong><small>이슈, 문서, PR과 diff 조회</small></li>
+            <li><span>2</span><strong>확인 후 쓰기</strong><small>댓글 작성, PR 설명 업데이트</small></li>
+            <li><span>3</span><strong>별도 논의</strong><small>상태 변경, 삭제, 배포 관련 작업</small></li>
+          </ol>
+          <p class="slide-statement slide-statement-compact">MCP를 연결했다는 사실이 모든 작업을 허용한다는 뜻은 아닙니다.</p>
+        </div>
+      </section>
 
-5. 쓰기 작업은 한 번 더 확인한다.
-   댓글 작성, 이슈 상태 변경, PR 수정은 사람이 확인한 뒤에만 실행한다.</code></pre>
+      <section class="slide" aria-labelledby="slide-title-6">
+        <div class="slide-content">
+          <p class="slide-kicker">처음 연결하는 순서</p>
+          <h2 id="slide-title-6">하나의 출처를<br><span>읽기 전용으로 시작합니다.</span></h2>
+          <ol class="slide-workflow">
+            <li><span>Step 1</span><strong>자주 보는 시스템 하나 고르기</strong></li>
+            <li><span>Step 2</span><strong>필요한 저장소와 프로젝트만 허용하기</strong></li>
+            <li><span>Step 3</span><strong><code>/mcp</code>로 연결과 인증 상태 확인하기</strong></li>
+            <li><span>Step 4</span><strong>조회 결과의 출처와 정확도 확인하기</strong></li>
+          </ol>
+          <p class="slide-statement slide-statement-compact">연결 목록보다 무엇을 읽을 수 있고 무엇을 할 수 없는지 아는 것이 먼저입니다.</p>
+        </div>
+      </section>
 
-      <p>
-        처음 연결할 때는 “잘 연결되었는지”보다 “무엇을 읽을 수 있고 무엇을 할 수 없는지”를
-        팀원이 이해하는 것이 더 중요합니다. 읽기 권한만으로도 조사 품질은 충분히 좋아집니다.
-      </p>
+      <section class="slide" aria-labelledby="slide-title-7">
+        <div class="slide-content">
+          <p class="slide-kicker">여러 출처를 함께 볼 때</p>
+          <h2 id="slide-title-7">연결 개수보다<br><span>읽는 순서를 정합니다.</span></h2>
+          <ol class="slide-flow">
+            <li><span>1</span><strong>업무 맥락</strong><small>Jira에서 재현 조건과 기대 동작</small></li>
+            <li><span>2</span><strong>설계 기준</strong><small>Confluence에서 규칙과 예외</small></li>
+            <li><span>3</span><strong>변경 기록</strong><small>GitHub에서 관련 PR과 최근 diff</small></li>
+          </ol>
+          <p class="slide-statement slide-statement-compact">마지막에 코드의 호출 흐름과 테스트를 찾아 수정 계획을 제안하게 합니다.</p>
+        </div>
+      </section>
 
-      <h2>5. 실제 연결 예시</h2>
-      <p>
-        아래 예시는 개인 토큰을 코드에 넣지 않고 환경변수로 넘기는 방식입니다.
-        토큰은 필요한 저장소와 프로젝트만 볼 수 있도록 범위를 좁혀서 발급합니다.
-        Atlassian 주소는 예시이므로, 실제로는 회사에서 운영하거나 확인한 MCP 서버 주소로 바꿔주세요.
-      </p>
+      <section class="slide" aria-labelledby="slide-title-8">
+        <div class="slide-content">
+          <p class="slide-kicker">언제 꺼내 쓸까</p>
+          <h2 id="slide-title-8">외부 맥락이 판단을 바꿀 때<br><span>MCP가 잘 맞습니다.</span></h2>
+          <div class="slide-compare">
+            <article class="recommended">
+              <span>잘 맞는 작업</span>
+              <strong>이슈 기반 버그 수정<br>PR 리뷰<br>릴리즈 영향 확인</strong>
+              <p>문서와 코드의 불일치까지 함께 확인</p>
+            </article>
+            <article>
+              <span>덜 필요한 작업</span>
+              <strong>작은 오타 수정<br>단일 파일 정리<br>명확한 테스트 추가</strong>
+              <p>대화 안에 필요한 맥락이 이미 있는 작업</p>
+            </article>
+          </div>
+        </div>
+      </section>
 
-      <pre><code># GitHub MCP 연결
-export GITHUB_PAT=your_github_fine_grained_token
-
-claude mcp add --transport http \
-  --header "Authorization: Bearer $GITHUB_PAT" \
-  github https://api.githubcopilot.com/mcp/
-
-# Jira, Confluence MCP 연결
-export ATLASSIAN_TOKEN=your_atlassian_token
-
-claude mcp add --transport http \
-  --header "Authorization: Bearer $ATLASSIAN_TOKEN" \
-  atlassian https://company-atlassian-mcp.example.com/mcp
-
-# 연결 확인
-claude mcp list</code></pre>
-
-      <p>
-        Claude Code 안에서는 <code>/mcp</code>로 연결 상태와 인증 상태를 확인합니다.
-        팀 공통으로 배포할 MCP는 project scope로 관리할 수 있지만, 토큰 값은 절대 저장소에 넣지 않습니다.
-      </p>
-
-      <pre><code>Jira MES-1234를 읽고 재현 조건과 기대 동작을 정리해줘.
-그 다음 Confluence의 상태 전환 설계 문서를 확인하고,
+      <section class="slide" aria-labelledby="slide-title-9">
+        <div class="slide-content">
+          <p class="slide-kicker">실전 요청</p>
+          <h2 id="slide-title-9">출처와 순서,<br><span>쓰기 경계를 함께 적습니다.</span></h2>
+          <div class="slide-prompt slide-prompt-compact">
+            <pre><code>Jira MES-1234의 재현 조건과 기대 동작을 읽어줘.
+Confluence에서 관련 상태 전환 규칙을 확인하고,
 GitHub에서 관련 PR과 최근 변경을 찾아줘.
-아직 코드는 수정하지 말고 원인 후보와 확인할 테스트만 알려줘.</code></pre>
 
-      <h2>6. MCP가 잘 맞는 작업</h2>
-      <p>
-        MCP는 “코드 변경 전에 확인해야 하는 외부 맥락”이 있는 작업에서 특히 유용합니다.
-      </p>
+아직 코드는 수정하지 말고 원인 후보와 테스트만 정리해줘.
+댓글 작성이나 상태 변경은 내가 확인하기 전에는 하지 마.</code></pre>
+          </div>
+        </div>
+      </section>
 
-      <div class="compare-grid">
-        <section>
-          <h3>잘 맞는 작업</h3>
-          <ul>
-            <li>PR 리뷰</li>
-            <li>이슈 기반 버그 수정</li>
-            <li>릴리즈 영향 범위 파악</li>
-            <li>문서와 코드 불일치 찾기</li>
-          </ul>
-        </section>
-        <section>
-          <h3>덜 필요한 작업</h3>
-          <ul>
-            <li>작은 오타 수정</li>
-            <li>단일 파일 정리</li>
-            <li>명확한 테스트 추가</li>
-            <li>이미 맥락이 대화에 모두 있는 작업</li>
-          </ul>
-        </section>
+      <section class="slide" aria-labelledby="slide-title-10">
+        <div class="slide-content slide-content-narrow">
+          <p class="slide-kicker">이번 주 실천</p>
+          <h2 id="slide-title-10">Jira 이슈 하나를 골라<br><span>조사 결과만 받아봅니다.</span></h2>
+          <p class="slide-statement">읽기부터, 확인 후 쓰기, 별도 논의.<br>맡길 일을 세 칸으로 나누면 충분합니다.</p>
+        </div>
+      </section>
+
+      <section class="slide slide-finale" aria-labelledby="slide-title-11">
+        <div class="slide-content slide-content-narrow">
+          <p class="slide-kicker">한 문장으로 정리</p>
+          <h2 id="slide-title-11" class="slide-finale-title">MCP는 연결의 수보다,<br><span>읽는 순서와<br>권한의 경계가 중요합니다.</span></h2>
+          <p class="slide-statement">다음 주에는 반복하는 작업 절차를 Skill로 묶어봅니다.</p>
+          <div class="slide-final-links">
+            <a class="slide-roadmap-link" href="week-03.html">← Week 3 다시 보기</a>
+            <a class="slide-roadmap-link secondary" href="../index.html#roadmap">전체 로드맵</a>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <nav class="slide-controls" aria-label="슬라이드 이동">
+      <button class="slide-button previous" type="button" aria-label="이전 슬라이드">←</button>
+      <div class="slide-position" aria-live="polite">
+        <span class="current-slide">1</span> / <span>11</span>
+        <span class="slide-progress-bar" aria-hidden="true"><span></span></span>
       </div>
+      <button class="slide-button next" type="button" aria-label="다음 슬라이드">→</button>
+    </nav>
+  </main>
 
-      <h2>7. GitHub, Jira, Confluence를 함께 쓰는 흐름</h2>
-      <p>
-        연결을 많이 하는 것보다, 어떤 순서로 읽게 할지가 중요합니다.
-        상태 업데이트 버그를 예로 들면 다음 순서가 무난합니다.
-      </p>
-
-      <pre><code>1. Jira에서 이슈 설명, 재현 조건, 기대 동작을 확인한다.
-2. Confluence에서 상태 전환 규칙과 예외 케이스를 확인한다.
-3. GitHub에서 관련 PR, 최근 변경, review comment를 확인한다.
-4. 코드에서 호출 흐름과 테스트를 찾는다.
-5. 수정 계획과 검증 방법을 제안한다.</code></pre>
-
-      <h2>8. 권한과 보안</h2>
-      <p>
-        MCP는 편리하지만 권한은 신중하게 다루는 편이 좋습니다. 처음에는 읽기 권한부터 시작하면 부담이 적습니다.
-        쓰기 작업은 댓글 작성, 이슈 수정, PR 업데이트처럼 실제 협업 기록을 바꾸기 때문에
-        실행 전에 한 번 확인하는 흐름이 있으면 안전합니다.
-      </p>
-
-      <p>
-        읽기 권한은 조사 품질을 높이는 데 쓰고, 쓰기 권한은 협업 기록을 바꾸는 행동으로 따로 봐야 합니다.
-        예를 들어 “이슈에 조사 결과를 댓글로 남기기”, “PR 설명 업데이트하기”,
-        “이슈 상태 바꾸기”는 모두 팀의 기록을 바꾸므로 진행 전에 한 번 확인하는 편이 좋습니다.
-      </p>
-
-      <p>
-        특히 사내 문서, 고객 로그, 운영 시스템은 접근 범위가 넓어질수록 리스크도 커집니다.
-        Claude가 볼 수 있는 정보와 할 수 있는 작업을 분리해서 생각하는 편이 좋습니다.
-      </p>
-
-      <h2>9. 실전 요청 예시</h2>
-      <aside class="prompt-card">
-        <h2>그대로 써봐도 되는 요청</h2>
-        <p>Jira 이슈를 기준으로 작업 맥락을 모을 때 사용할 수 있습니다.</p>
-        <pre><code>Jira 이슈 MES-1234를 기준으로 원인을 조사해줘.
-먼저 Jira의 재현 조건과 기대 동작을 읽고,
-Confluence에서 관련 상태 전환 규칙을 확인해줘.
-그 다음 GitHub에서 관련 PR과 최근 변경을 찾고,
-코드의 호출 흐름, 수정 계획, 필요한 테스트를 정리해줘.
-댓글 작성이나 이슈 상태 변경 같은 쓰기 작업은 내가 한 번 확인하기 전에는 하지 마.</code></pre>
-      </aside>
-
-      <p>
-        좋은 요청은 MCP를 “많이 써라”가 아니라 “어떤 출처를 어떤 순서로 확인하라”에 가깝습니다.
-        신뢰할 수 있는 소스를 지정하면 Claude의 판단도 안정됩니다.
-      </p>
-
-      <aside class="action-box">
-        <h2>이번 주 실천</h2>
-        <p>
-          Jira 이슈 하나를 골라 Claude Code에게 Jira, Confluence, GitHub 순서로
-          맥락을 확인하게 하고, 코드 수정 전 조사 결과만 받아봅니다. 연결 목록보다 먼저
-          “읽기부터 써보기”, “확인 후 쓰기”, “별도 논의” 세 칸으로 나누어
-          맡겨볼 일도 함께 적어봅니다.
-        </p>
-      </aside>
-
-      <h2>다음 주 예고</h2>
-      <p>
-        다음 주에는 반복해서 시키는 작업을 매번 프롬프트로 설명하지 않고,
-        Skill로 다시 꺼내 쓰기 쉽게 남기는 방법을 다룹니다.
-      </p>
-
-      <nav class="article-nav" aria-label="뉴스레터 주차 이동">
-        <a class="prev-link" href="week-03.html">← 이전 글</a>
-        <a class="roadmap-link" href="../index.html#roadmap">전체 로드맵</a>
-        <a class="next-link" href="week-05.html">다음 글 →</a>
-      </nav>
-    </main>
-  </body>
+  <script src="../assets/slides.js"></script>
+</body>
 </html>

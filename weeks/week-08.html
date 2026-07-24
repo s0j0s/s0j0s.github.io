@@ -1,260 +1,185 @@
 <!doctype html>
 <html lang="ko">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Week 8. 팀에서 편하게 꺼내 쓰는 Claude Code 메모</title>
-    <meta name="description" content="8주 동안 살펴본 Claude Code 작업 패턴을 팀에서 다시 꺼내 쓸 수 있는 작은 메모로 정리합니다.">
-    <meta property="og:title" content="팀에서 편하게 꺼내 쓰는 Claude Code 메모">
-    <meta property="og:description" content="요청 패턴, CLAUDE.md, Skill, MCP, SubAgent, Hooks를 작은 팀 메모로 정리합니다.">
-    <meta property="og:type" content="article">
-    <meta property="og:url" content="https://s0j0s.github.io/weeks/week-08.html">
-    <link rel="canonical" href="https://s0j0s.github.io/weeks/week-08.html">
-    <link rel="stylesheet" href="../assets/styles.css">
-  </head>
-  <body>
-    <header class="site-header">
-      <nav class="nav">
-        <a class="brand" href="../index.html">Claude Code Engineering</a>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 8. 팀에서 편하게 꺼내 쓰는 Claude Code 메모</title>
+  <meta name="description" content="앞선 7주의 요청 패턴과 Claude Code 설정을 언제 무엇을 고를지 중심으로 작은 팀 메모에 정리합니다.">
+  <meta property="og:title" content="팀에서 편하게 꺼내 쓰는 Claude Code 메모">
+  <meta property="og:description" content="완성된 플레이북보다 자주 반복되는 작업 하나의 요청 방식과 확인 포인트부터 기록합니다.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://s0j0s.github.io/weeks/week-08.html">
+  <link rel="canonical" href="https://s0j0s.github.io/weeks/week-08.html">
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+
+<body class="slide-page">
+  <header class="site-header slide-header">
+    <nav class="nav">
+      <a class="brand" href="../index.html">Claude Code Engineering</a>
+      <div class="nav-actions">
+        <button class="slide-view-toggle" type="button" aria-pressed="false">전체 보기</button>
         <a href="../index.html#roadmap">전체 로드맵</a>
-      </nav>
-    </header>
+      </div>
+    </nav>
+  </header>
 
-    <main class="article">
-      <div class="week-progress week-8">Week 8 of 8 <span aria-hidden="true"></span> 팀 메모</div>
-      <p class="eyebrow">Week 8</p>
-      <h1>팀에서 편하게 꺼내 쓰는 Claude Code 메모</h1>
-      <p class="article-meta">약 6분 · 실무 활용 팁</p>
-      <p class="lead">
-        각자 써본 Claude Code 활용법을 작은 메모로 남겨두면,
-        다음에 비슷한 작업을 할 때 더 편하게 꺼내 쓸 수 있습니다.
-      </p>
+  <main class="slide-deck" aria-label="Week 8 슬라이드">
+    <div class="slide-track">
+      <section class="slide slide-cover is-active" aria-labelledby="slide-title-1">
+        <div class="slide-content">
+          <p class="slide-kicker">Week 8 · 팀 메모</p>
+          <h1 id="slide-title-1">팀에서 편하게 꺼내 쓰는<br>Claude Code 메모</h1>
+          <p class="slide-lead">모든 기능을 정리하기보다<br>언제 무엇을 고를지 짧게 남깁니다.</p>
+          <p class="slide-hint">키보드 방향키 또는 아래 버튼으로 넘겨보세요.</p>
+        </div>
+      </section>
 
-      <aside class="summary-box">
-        <h2>3줄 요약</h2>
-        <ul>
-          <li>Claude Code 활용법은 개인 팁으로만 두기보다 쓸 만한 것만 가볍게 공유해도 도움이 됩니다.</li>
-          <li>팀 메모에는 요청 패턴, CLAUDE.md, Skill, MCP, SubAgent, Hooks에서 써본 내용을 짧게 남깁니다.</li>
-          <li>처음에는 모든 것을 만들기보다 자주 반복되는 업무 하나만 골라 작게 시도합니다.</li>
-        </ul>
-      </aside>
+      <section class="slide" aria-labelledby="slide-title-2">
+        <div class="slide-content slide-content-narrow">
+          <p class="slide-kicker">개인 팁에서 팀의 선택 기준으로</p>
+          <h2 id="slide-title-2">좋았던 사용법도<br><span>기록하지 않으면 다시 찾기 어렵습니다.</span></h2>
+          <p class="slide-statement">완성된 플레이북보다 실제로 써본 요청과 확인 포인트부터 남깁니다.</p>
+        </div>
+      </section>
 
-      <aside class="callout">
-        <h2>이번 주 포인트</h2>
-        <p>
-          Claude Code를 잘 쓰는 팀은 거창한 규칙보다,
-          써보고 괜찮았던 요청과 흐름을 다음 사람이 참고할 수 있게 남깁니다.
-        </p>
-      </aside>
+      <section class="slide" aria-labelledby="slide-title-3">
+        <div class="slide-content">
+          <p class="slide-kicker">지난 7주를 세 묶음으로</p>
+          <h2 id="slide-title-3">팀 기준, 작업 도구,<br><span>검증 루프로 이어집니다.</span></h2>
+          <ol class="slide-flow">
+            <li><span>1</span><strong>맡기는 순서</strong><small>조사, 계획, 방향 확인, 구현, 테스트</small></li>
+            <li><span>2</span><strong>설정과 도구</strong><small>CLAUDE.md, rules, MCP, Skill, SubAgent</small></li>
+            <li><span>3</span><strong>확인과 근거</strong><small>settings, Hooks, diff 리뷰, 테스트 결과</small></li>
+          </ol>
+          <p class="slide-statement slide-statement-compact">도구의 이름보다 지금 겪는 불편을 먼저 봅니다.</p>
+        </div>
+      </section>
 
-      <p>
-        지난 7주 동안 다룬 내용은 결국 하나로 이어집니다. Claude Code를 편하게 쓰려면
-        좋은 프롬프트 몇 개만 공유해도 도움이 됩니다. 여기에 일을 맡기는 흐름,
-        프로젝트 메모, 반복 작업, 외부 시스템, 리마인더를 조금씩 붙여볼 수 있습니다.
-      </p>
+      <section class="slide" aria-labelledby="slide-title-4">
+        <div class="slide-content">
+          <p class="slide-kicker">항상 참고할 내용</p>
+          <h2 id="slide-title-4">프로젝트 기준과 실행 범위는<br><span>설정 파일에 남깁니다.</span></h2>
+          <ol class="slide-flow">
+            <li><span>1</span><strong><code>CLAUDE.md</code></strong><small>모든 작업에서 필요한 프로젝트 설명</small></li>
+            <li><span>2</span><strong><code>.claude/rules/</code></strong><small>특정 경로에서만 필요한 세부 지침</small></li>
+            <li><span>3</span><strong><code>.claude/settings.json</code></strong><small>허용, 확인, 차단할 행동</small></li>
+          </ol>
+          <p class="slide-statement slide-statement-compact">사실과 기준은 지침에, 실제 허용 범위는 settings에 둡니다.</p>
+        </div>
+      </section>
 
-      <p>
-        이것을 작은 팀 메모로 남겨두면 각자 써본 방법을 다시 찾기 쉽습니다. 새로 합류한 사람도
-        “이 팀에서는 이런 식으로 써봤구나” 정도를 빠르게 참고할 수 있습니다.
-      </p>
+      <section class="slide" aria-labelledby="slide-title-5">
+        <div class="slide-content">
+          <p class="slide-kicker">필요할 때 꺼내는 도구</p>
+          <h2 id="slide-title-5">불편의 종류에 맞는<br><span>도구 하나를 고릅니다.</span></h2>
+          <ol class="slide-output-list slide-question-grid" aria-label="외부 맥락, 반복 절차, 독립 작업, 자동 실행에 맞는 도구를 보여줍니다.">
+            <li style="--question: 0"><span>1</span><strong>외부 맥락 · MCP</strong><small>GitHub·Jira·Confluence 정보가 필요할 때</small></li>
+            <li style="--question: 1"><span>2</span><strong>반복 절차 · Skill</strong><small>같은 절차를 현재 작업에서 반복할 때</small></li>
+            <li style="--question: 2"><span>3</span><strong>독립 작업 · SubAgent</strong><small>긴 조사나 분석을 별도 맥락에 맡길 때</small></li>
+            <li style="--question: 3"><span>4</span><strong>자동 실행 · Hooks</strong><small>특정 시점에 반드시 실행하거나 차단할 때</small></li>
+          </ol>
+        </div>
+      </section>
 
-      <h2>1. 지난 7주 정리</h2>
-      <ul>
-        <li>작업 루프: 바로 구현하지 않고 조사, 계획, 방향 확인, 구현, 테스트, 리뷰로 나눠본다.</li>
-        <li><code>.claude</code> 구성: 팀 기준, 파일별 규칙, 권한 설정을 목적에 맞게 나눈다.</li>
-        <li>Skill: 반복 작업을 다시 꺼내 쓸 수 있게 남긴다.</li>
-        <li>MCP: GitHub, Jira, Confluence 같은 외부 맥락을 필요할 때 연결한다.</li>
-        <li>SubAgent: 큰 작업을 조사, 구현, 리뷰 역할로 나눠본다.</li>
-        <li>Hooks: 테스트, 정적 검사, 보안 검사처럼 잊기 쉬운 확인을 알려준다.</li>
-      </ul>
+      <section class="slide" aria-labelledby="slide-title-6">
+        <div class="slide-content">
+          <p class="slide-kicker">팀 메모에 필요한 것</p>
+          <h2 id="slide-title-6">기능 설명보다<br><span>선택과 확인을 기록합니다.</span></h2>
+          <ul class="slide-checklist slide-checklist-tests">
+            <li>어떤 작업에서 꺼내 쓰는가</li>
+            <li>어디까지 읽고 실행할 수 있는가</li>
+            <li>사람이 확인할 시점은 언제인가</li>
+            <li>어떤 결과를 남겨야 완료인가</li>
+          </ul>
+          <p class="slide-statement slide-statement-compact">담당자와 마지막 검토일도 함께 남겨 오래된 기준을 정리합니다.</p>
+        </div>
+      </section>
 
-      <p>
-        작업 상태 업데이트 버그 사례로 보면 흐름은 하나입니다. Week 2의 기본 루프로 원인을 조사하고,
-        Week 3의 <code>CLAUDE.md</code>, <code>rules/</code>, <code>settings.json</code>으로
-        팀 기준과 파일별 규칙, 권한을 나눕니다.
-        Week 4의 MCP는 이슈와 PR 논의, Confluence 문서를 읽게 하고,
-        Week 5의 Skill은 리뷰와 테스트 보강 요청을 반복해서 쓰기 쉽게 만듭니다.
-        Week 6의 SubAgent는 조사, 구현, 리뷰를 나눠보고,
-        Week 7의 Hook은 관련 파일 변경 시 테스트 알림을 붙입니다.
-      </p>
+      <section class="slide" aria-labelledby="slide-title-7">
+        <div class="slide-content">
+          <p class="slide-kicker">가장 작은 팀 메모</p>
+          <h2 id="slide-title-7">이번 달에 쓸 내용만<br><span>한 페이지에 담습니다.</span></h2>
+          <div class="slide-prompt slide-prompt-compact">
+            <pre><code># Claude Code 팀 메모
+담당자: 백엔드 개발팀 · 검토일: 2026-07-19
+작업 루프: 조사 → 계획 → 구현 → 테스트 → diff 리뷰
+이번 달: backend-review Skill
+         Jira 읽기 전용 MCP · test-reminder Hook</code></pre>
+          </div>
+        </div>
+      </section>
 
-      <h2>2. 언제 무엇을 고를까</h2>
-      <p>
-        파일과 기능 이름을 모두 외울 필요는 없습니다. 지금 겪는 불편이 무엇인지 먼저 보고
-        그 역할을 맡는 항목을 고르면 됩니다.
-      </p>
+      <section class="slide" aria-labelledby="slide-title-8">
+        <div class="slide-content">
+          <p class="slide-kicker">도입은 문제 하나부터</p>
+          <h2 id="slide-title-8">무엇이 불편한지에 따라<br><span>시작점이 달라집니다.</span></h2>
+          <ol class="slide-flow">
+            <li><span>1</span><strong>리뷰 품질</strong><small>리뷰 요청 패턴과 backend-review Skill</small></li>
+            <li><span>2</span><strong>테스트 누락</strong><small>fix-with-tests Skill과 test-reminder Hook</small></li>
+            <li><span>3</span><strong>이슈 맥락</strong><small>Jira·Confluence·GitHub MCP 읽기 연결</small></li>
+          </ol>
+          <p class="slide-statement slide-statement-compact">모든 기능을 한 번에 도입하지 않습니다.</p>
+        </div>
+      </section>
 
-      <ul>
-        <li>모든 작업에서 같은 프로젝트 설명이 필요하다면 <code>CLAUDE.md</code></li>
-        <li>특정 파일에서만 세부 지침이 필요하다면 <code>rules/</code></li>
-        <li>허용·확인·차단할 행동을 정해야 한다면 <code>settings.json</code></li>
-        <li>GitHub, Jira, Confluence의 맥락이 필요하다면 MCP</li>
-        <li>같은 작업 순서를 반복해서 설명한다면 Skill</li>
-        <li>조사·구현·리뷰를 독립된 역할로 나눠야 한다면 SubAgent</li>
-        <li>정해진 시점의 확인을 놓치지 않아야 한다면 Hooks</li>
-      </ul>
+      <section class="slide" aria-labelledby="slide-title-9">
+        <div class="slide-content">
+          <p class="slide-kicker">잘 쓰고 있는지 보는 기준</p>
+          <h2 id="slide-title-9">코드 생성량보다<br><span>작업 근거가 좋아졌는지 봅니다.</span></h2>
+          <ul class="slide-checklist slide-checklist-tests">
+            <li>반복해서 설명하는 내용이 줄었는가</li>
+            <li>실행한 테스트와 결과를 남기기 쉬워졌는가</li>
+            <li>리뷰에서 발견되는 기본 실수가 줄었는가</li>
+            <li>위험한 작업에서 사람이 한 번 더 확인하는가</li>
+          </ul>
+        </div>
+      </section>
 
-      <p>
-        이 선택 결과를 팀 메모에 짧게 남깁니다. 예를 들어 GitHub PR, Jira 이슈, Confluence 문서 MCP는
-        읽기부터 써보고, 댓글 작성, 이슈 수정, PR 업데이트는 사람이 한 번 확인한 뒤 맡깁니다.
-        Hook은 관련 JUnit 테스트 알림, 정적 검사, secret 검사처럼 부담이 적은 항목부터 시작합니다.
-      </p>
+      <section class="slide" aria-labelledby="slide-title-10">
+        <div class="slide-content">
+          <p class="slide-kicker">첫 달의 운영</p>
+          <h2 id="slide-title-10">도구를 늘리기보다<br><span>쓴 것만 남깁니다.</span></h2>
+          <ol class="slide-workflow">
+            <li><span>Week 1</span><strong>요청 문장 하나 공유하기</strong></li>
+            <li><span>Week 2</span><strong>실제 이슈 하나에 작업 루프 적용하기</strong></li>
+            <li><span>Week 3</span><strong>Skill 또는 Hook 하나 시험하기</strong></li>
+            <li><span>Week 4</span><strong>쓸모없는 기준을 지우고 메모 갱신하기</strong></li>
+          </ol>
+        </div>
+      </section>
 
-      <h2>3. 팀 메모 템플릿</h2>
-      <p>
-        아래 템플릿을 그대로 복사해서 팀 메모의 초안으로 쓸 수 있습니다.
-        처음부터 완성하려고 하지 말고, 이번 달에 실제로 적용할 항목만 채워도 충분합니다.
-      </p>
+      <section class="slide" aria-labelledby="slide-title-11">
+        <div class="slide-content slide-content-narrow">
+          <p class="slide-kicker">이번 주 실천</p>
+          <h2 id="slide-title-11">가장 자주 반복한 작업 하나의<br><span>요청과 확인 포인트를 적습니다.</span></h2>
+          <p class="slide-statement">완성하려 하지 말고, 다음 작업에서 다시 꺼낼 만큼만 남깁니다.</p>
+        </div>
+      </section>
 
-      <pre><code># Claude Code 팀 메모
+      <section class="slide slide-finale" aria-labelledby="slide-title-12">
+        <div class="slide-content slide-content-narrow">
+          <p class="slide-kicker">8주를 마치며</p>
+          <h2 id="slide-title-12" class="slide-finale-title">중요한 것은 기능의 수가 아니라,<br><span>우리 팀이 편하게 쓰는<br>순간을 찾는 일입니다.</span></h2>
+          <p class="slide-statement">작은 기록 하나에서 시작해 써보면서 가볍게 고칩니다.</p>
+          <div class="slide-final-links">
+            <a class="slide-roadmap-link" href="week-07.html">← Week 7 다시 보기</a>
+            <a class="slide-roadmap-link secondary" href="../index.html#roadmap">전체 로드맵</a>
+          </div>
+        </div>
+      </section>
+    </div>
 
-## 1. 써볼 만한 작업 루프
-- 리스크가 있는 작업은 조사 -> 계획 -> 방향 확인 -> 구현 -> 테스트 -> diff 리뷰 순서로 맡겨본다.
-- 오타 수정, 단일 테스트 추가처럼 영향 범위가 작은 작업은 바로 맡겨도 괜찮다.
+    <nav class="slide-controls" aria-label="슬라이드 이동">
+      <button class="slide-button previous" type="button" aria-label="이전 슬라이드">←</button>
+      <div class="slide-position" aria-live="polite">
+        <span class="current-slide">1</span> / <span>12</span>
+        <span class="slide-progress-bar" aria-hidden="true"><span></span></span>
+      </div>
+      <button class="slide-button next" type="button" aria-label="다음 슬라이드">→</button>
+    </nav>
+  </main>
 
-## 2. 구현 전 방향 확인
-- Claude가 수정할 파일 범위와 테스트 방법을 먼저 제안하게 해본다.
-- 사람은 수정 범위가 과하지 않은지, 테스트 방법이 충분한지 한 번 본다.
-
-## 3. .claude 구성 메모
-- 모든 작업에서 참고할 기준은 CLAUDE.md에 둔다.
-- 특정 파일의 기준은 rules/ 후보로 나눈다.
-- 접근 권한과 도구 동작은 settings.json에서 관리한다.
-
-## 4. 같이 써볼 Skill
-- 첫 Skill: backend-review
-- 목적: diff에서 트랜잭션, DB 업데이트 조건, 예외 처리, 테스트 누락을 우선 확인한다.
-- 운영: 실제 PR에 적용한 뒤 쓸모없는 의견과 빠진 내용을 반영한다.
-
-## 5. MCP 권한 메모
-- 읽기부터 써보기: Jira 이슈, Confluence 문서, GitHub PR과 diff
-- 확인 후 쓰기: Jira 댓글, PR 설명 수정, 리뷰 코멘트
-- 별도 논의: 이슈 상태 변경, 운영 로그 조회, 배포 관련 작업
-
-## 6. SubAgent를 써볼 만한 경우
-- 작은 수정은 기본 루프로 처리한다.
-- 원인 분석이 길면 Investigator를 먼저 써본다.
-- 사람이 확인한 수정만 Builder에게 맡긴다.
-- 구현 후에는 Reviewer가 실제 diff 기준으로 본다.
-
-## 7. Hook 도입 순서
-- 첫 Hook은 test-reminder로 시작한다.
-- 처음에는 알림만 출력한다.
-- 1~2주 사용 후 자동 실행이나 실행 중단으로 올릴 항목만 고른다.
-
-## 8. PR 전 확인 항목
-- 변경 이유가 설명되어 있는가
-- 실행한 테스트와 결과가 남아 있는가
-- CLAUDE.md와 어긋나는 부분은 없는가
-- MCP나 외부 시스템에 쓰기 작업을 했다면 사람이 확인했는가</code></pre>
-
-      <h2>4. 명령처럼 실행하는 팀용 Skill 예시</h2>
-      <p>
-        팀에서 자주 쓰는 작업은 <code>.claude/skills/&lt;이름&gt;/SKILL.md</code>에 두고
-        <code>/이름</code>으로 직접 실행할 수 있습니다. 기존 <code>.claude/commands/</code>도 동작하지만,
-        참고 자료와 스크립트를 함께 묶을 수 있는 Skill 형식이 새 작업에는 더 잘 맞습니다.
-      </p>
-
-      <pre><code>/investigate
-관련 파일, 호출 흐름, 원인 후보, 검증 방법을 조사한다. 구현은 하지 않는다.
-
-/fix-with-tests
-수정 계획을 먼저 제안하고, 방향 확인 후 구현한다. 관련 테스트를 실행하고 결과를 요약한다.
-
-/backend-review
-diff 기준으로 버그, 회귀 위험, 테스트 누락을 우선순위대로 리뷰한다.
-
-/release-note
-병합된 변경을 사용자 영향 중심으로 정리한다. 내부 구현 세부사항은 줄인다.
-
-/issue-context
-Jira, Confluence, GitHub 순서로 작업 맥락을 모은다. 쓰기 작업은 하지 않는다.
-
-/small-refactor
-동작을 바꾸지 않는 범위에서 복잡도를 낮출 후보를 찾고, 작은 단계로 제안한다.</code></pre>
-
-      <h2>5. 도입 전략</h2>
-      <p>
-        모든 것을 한 번에 만들 필요는 없습니다. 오히려 한 번에 도입하면 팀이 따라가기 어렵습니다.
-        반복되는 작업 하나를 고르고, 거기서부터 작게 써보는 편이 좋습니다.
-      </p>
-
-      <p>
-        예를 들어 리뷰 품질이 문제라면 먼저 리뷰 Skill과 리뷰 요청 패턴을 만듭니다.
-        테스트 누락이 문제라면 <code>fix-with-tests</code> Skill과 Hooks부터 시작합니다.
-        이슈 맥락이 자주 빠진다면 GitHub, Jira, Confluence MCP부터 붙입니다.
-      </p>
-
-      <aside class="prompt-card">
-        <h2>그대로 써봐도 되는 요청</h2>
-        <p>팀 메모 초안을 만들 때 사용할 수 있습니다.</p>
-        <pre><code>우리 팀의 Claude Code 메모 초안을 만들어줘.
-대상은 Java 8 백엔드 개발자이고,
-자주 하는 작업은 버그 조사, 작은 수정, 리뷰, 테스트 보강이야.
-요청 패턴, CLAUDE.md에 넣을 내용, 공통 Skill 후보,
-GitHub/Jira/Confluence MCP 사용 메모,
-Hooks로 알려줄 항목을 짧게 정리해줘.</code></pre>
-      </aside>
-
-      <h2>6. 잘 쓰고 있는지 보는 힌트</h2>
-      <p>
-        Claude Code를 잘 쓰고 있는지 보는 척도를 코드 생성량으로 잡으면 방향이 흔들립니다.
-        더 많은 코드를 더 빨리 만드는 것보다, 더 적은 설명으로 더 안정적인 변경을 만들고,
-        리뷰와 테스트 루프를 편하게 남기는 것이 중요합니다.
-      </p>
-
-      <ul>
-        <li>리뷰에서 발견되는 기본 실수가 줄었는가</li>
-        <li>테스트 실행과 결과 공유가 조금 더 쉬워졌는가</li>
-        <li>반복 설명이 줄었는가</li>
-        <li>새 팀원이 Claude Code 사용 방식을 빠르게 따라오는가</li>
-        <li>위험한 작업에서 사람이 한 번 더 확인하고 넘어가는가</li>
-      </ul>
-
-      <h2>7. 첫 달에 가볍게 해볼 것</h2>
-      <p>
-        처음 한 달은 도구를 많이 붙이는 기간이 아니라, 부담 없이 몇 가지를 써보는 기간입니다.
-        아래 항목 중 한두 개만 해봐도 충분히 출발할 수 있습니다.
-      </p>
-
-      <pre><code>1주차: 써볼 만한 요청 문장 하나를 팀 채널에 공유한다.
-2주차: 조사 -> 계획 -> 방향 확인 -> 구현 -> 테스트 -> diff 리뷰 흐름을 실제 이슈 하나에 써본다.
-3주차: 현재 CLAUDE.md에서 rules/ 또는 settings로 나눌 후보를 하나 찾는다.
-4주차: MCP 읽기/쓰기 권한 범위를 세 칸으로 메모한다.
-5주차: backend-review Skill 초안을 만들고 작은 PR 하나에 써본다.
-6주차: SubAgent를 써볼 만한 작업과 쓰지 않아도 되는 작업을 적어본다.
-7주차: test-reminder Hook 후보 문구를 하나 써본다.
-8주차: 위 내용을 작은 팀 메모로 묶는다.</code></pre>
-
-      <aside class="callout">
-        <h2>팀에서 가볍게 맞춰보면 좋은 것</h2>
-        <p>
-          Claude Code 팀 메모는 완성된 문서가 아니라 써보면서 조금씩 다듬는 기록입니다.
-          반복되는 불편이 보이면 메모리, Skill, MCP, Hooks 중 어디에 남기면 좋을지 이야기해봅니다.
-        </p>
-      </aside>
-
-      <aside class="action-box">
-        <h2>이번 주 실천</h2>
-        <p>
-          팀 메모를 완성하려고 하지 말고, 이번 달에 가장 자주 반복된 작업 하나를 골라
-          요청 패턴과 확인 포인트부터 적어봅니다.
-        </p>
-      </aside>
-
-      <h2>마무리</h2>
-      <p>
-        Claude Code는 코드를 대신 써주는 도구로도 쓸 수 있습니다. 하지만 팀 차원의 효과는
-        작업 루프, 맥락, 반복 작업, 외부 연결, 역할 분리, 리마인더가 함께 맞물릴 때 나옵니다.
-        결국 중요한 질문은 “Claude에게 무엇을 시킬까”가 아니라
-        “우리 팀에서는 Claude를 어떤 순간에 쓰면 편할까”입니다.
-      </p>
-
-      <nav class="article-nav" aria-label="뉴스레터 주차 이동">
-        <a class="prev-link" href="week-07.html">← 이전 글</a>
-        <a class="roadmap-link" href="../index.html#roadmap">전체 로드맵</a>
-        <span aria-hidden="true"></span>
-      </nav>
-    </main>
-  </body>
+  <script src="../assets/slides.js"></script>
+</body>
 </html>

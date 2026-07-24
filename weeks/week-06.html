@@ -1,256 +1,205 @@
 <!doctype html>
 <html lang="ko">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Week 6. SubAgent로 큰 작업 나누기</title>
-    <meta name="description" content="큰 Claude Code 작업을 조사, 구현, 리뷰 역할의 SubAgent로 나누고 결과를 통합하는 방법을 소개합니다.">
-    <meta property="og:title" content="SubAgent로 큰 작업 나누기">
-    <meta property="og:description" content="큰 작업을 독립적인 조사, 구현, 리뷰 역할로 나누는 기준과 예시를 살펴봅니다.">
-    <meta property="og:type" content="article">
-    <meta property="og:url" content="https://s0j0s.github.io/weeks/week-06.html">
-    <link rel="canonical" href="https://s0j0s.github.io/weeks/week-06.html">
-    <link rel="stylesheet" href="../assets/styles.css">
-  </head>
-  <body>
-    <header class="site-header">
-      <nav class="nav">
-        <a class="brand" href="../index.html">Claude Code Engineering</a>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 6. SubAgent로 큰 작업 나누기</title>
+  <meta name="description" content="긴 조사와 분석을 별도 맥락의 SubAgent에 맡기고 결과를 검토 가능한 단위로 받는 방법을 소개합니다.">
+  <meta property="og:title" content="SubAgent로 큰 작업 나누기">
+  <meta property="og:description" content="조사, 구현, 리뷰처럼 성격이 다른 일을 독립된 역할로 나누는 기준을 살펴봅니다.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://s0j0s.github.io/weeks/week-06.html">
+  <link rel="canonical" href="https://s0j0s.github.io/weeks/week-06.html">
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+
+<body class="slide-page">
+  <header class="site-header slide-header">
+    <nav class="nav">
+      <a class="brand" href="../index.html">Claude Code Engineering</a>
+      <div class="nav-actions">
+        <button class="slide-view-toggle" type="button" aria-pressed="false">전체 보기</button>
         <a href="../index.html#roadmap">전체 로드맵</a>
-      </nav>
-    </header>
-
-    <main class="article">
-      <div class="week-progress week-6">Week 6 of 8 <span aria-hidden="true"></span> 역할 분리</div>
-      <p class="eyebrow">Week 6</p>
-      <h1>SubAgent로 큰 작업 나누기</h1>
-      <p class="article-meta">약 5분 · 실무 활용 팁</p>
-      <p class="lead">
-        SubAgent는 조사, 구현, 리뷰를 각각 맡는 전문 팀원과 비슷합니다.
-        큰 작업에서 역할과 맥락을 나누고 결과만 다시 모아봅니다.
-      </p>
-
-      <aside class="summary-box">
-        <h2>3줄 요약</h2>
-        <ul>
-          <li>SubAgent는 큰 작업을 조사, 구현, 리뷰처럼 작은 역할로 나누는 방식입니다.</li>
-          <li>역할을 나누면 한 대화 안에서 원인 분석과 수정과 리뷰가 섞이는 일을 줄일 수 있습니다.</li>
-          <li>작은 수정에는 과하고, 원인 분석이 길거나 변경 범위가 넓을 때 효과가 큽니다.</li>
-        </ul>
-      </aside>
-
-      <aside class="callout">
-        <h2>이번 주 포인트</h2>
-        <p>
-          SubAgent는 Claude를 더 똑똑하게 만드는 기능이 아니라,
-          큰 일을 더 작고 검증 가능한 단위로 나누는 방식입니다.
-        </p>
-      </aside>
-
-      <p>
-        리팩토링 범위가 넓거나 버그 원인이 길게 이어질 때, 한 대화에서 모든 것을 처리하려고 하면
-        맥락이 쉽게 흐려집니다. 처음에는 원인 분석을 하다가, 중간에는 구현을 하고,
-        마지막에는 리뷰까지 이어집니다. 역할이 섞이면 놓치는 부분도 생깁니다.
-      </p>
-
-      <p>
-        SubAgent는 이런 작업을 역할별로 나눌 때 유용합니다. 한쪽은 조사만 하고,
-        다른 쪽은 제한된 범위에서 구현하고, 또 다른 쪽은 diff를 기준으로 위험을 봅니다.
-      </p>
-
-      <p>
-        각 SubAgent는 별도의 맥락에서 맡은 일을 수행하고 결과를 메인 대화에 돌려줍니다.
-        그래서 역할 설명에는 “무엇을 할지”뿐 아니라 “하지 않을 일”과 “어떤 결과를
-        반환할지”도 함께 적는 편이 좋습니다.
-      </p>
-
-      <h2>1. 필요한 상황</h2>
-      <div class="compare-grid">
-        <section class="strong-example">
-          <h3>SubAgent를 써볼 만한 작업</h3>
-          <ul>
-            <li>변경 범위가 넓은 리팩토링</li>
-            <li>원인 후보가 여러 개인 버그</li>
-            <li>리뷰와 구현을 분리하고 싶은 작업</li>
-            <li>여러 후보 접근을 비교해야 하는 작업</li>
-          </ul>
-        </section>
-        <section class="weak-example">
-          <h3>쓰지 않아도 되는 작업</h3>
-          <ul>
-            <li>오타 수정</li>
-            <li>단일 테스트 추가</li>
-            <li>작은 조건문 수정</li>
-            <li>이미 원인이 명확한 버그</li>
-          </ul>
-        </section>
       </div>
+    </nav>
+  </header>
 
-      <p>
-        작은 수정까지 SubAgent로 나누면 오히려 느려집니다. SubAgent는 큰 작업의
-        맥락 부담을 줄이는 도구이지, 모든 일을 절차화하기 위한 도구는 아닙니다.
-      </p>
+  <main class="slide-deck" aria-label="Week 6 슬라이드">
+    <div class="slide-track">
+      <section class="slide slide-cover is-active" aria-labelledby="slide-title-1">
+        <div class="slide-content">
+          <p class="slide-kicker">Week 6 · 독립 작업</p>
+          <h1 id="slide-title-1">SubAgent로 큰 작업<br>나누기</h1>
+          <p class="slide-lead">긴 조사와 분석을 별도 맥락에 맡기고<br>메인 대화에는 필요한 결과만 가져옵니다.</p>
+          <p class="slide-hint">키보드 방향키 또는 아래 버튼으로 넘겨보세요.</p>
+        </div>
+      </section>
 
-      <h2>2. 역할 분리 예시</h2>
-      <div class="compare-grid">
-        <section>
-          <h3>Investigator</h3>
-          <ul>
-            <li>작업 상태 업데이트 실패 원인과 호출 흐름만 조사한다.</li>
-            <li>관련 파일과 원인 후보를 정리한다.</li>
-            <li>구현은 하지 않는다.</li>
+      <section class="slide" aria-labelledby="slide-title-2">
+        <div class="slide-content slide-content-narrow">
+          <p class="slide-kicker">한 대화에 모든 일을 담으면</p>
+          <h2 id="slide-title-2">조사하다 구현하고,<br><span>마지막에는 리뷰까지 섞입니다.</span></h2>
+          <p class="slide-statement">중간 정보가 길어질수록 지금 무엇을 판단해야 하는지 흐려집니다.</p>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-3">
+        <div class="slide-content">
+          <p class="slide-kicker">SubAgent가 맡는 일</p>
+          <h2 id="slide-title-3">별도의 맥락에서 일하고<br><span>최종 결과를 돌려줍니다.</span></h2>
+          <ol class="slide-flow">
+            <li><span>1</span><strong>독립된 역할</strong><small>조사, 로그 분석, 의존성 점검</small></li>
+            <li><span>2</span><strong>제한된 도구</strong><small>역할에 필요한 읽기·검색만 허용</small></li>
+            <li><span>3</span><strong>정해진 결과</strong><small>관련 파일, 원인 후보, 검증 방법</small></li>
+          </ol>
+          <p class="slide-statement slide-statement-compact">메인 대화에는 SubAgent의 최종 답변과 기본 실행 정보만 돌아옵니다.</p>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-4">
+        <div class="slide-content">
+          <p class="slide-kicker">Skill과 SubAgent</p>
+          <h2 id="slide-title-4">과정을 함께 볼지,<br><span>결과만 받을지 고릅니다.</span></h2>
+          <div class="slide-compare">
+            <article>
+              <span>메인 대화에서 진행</span>
+              <strong>Skill</strong>
+              <p>각 단계를 보면서 질문하고 방향을 조정</p>
+            </article>
+            <article class="recommended">
+              <span>별도 맥락에서 진행</span>
+              <strong>SubAgent</strong>
+              <p>긴 중간 과정은 분리하고 최종 결과만 전달</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-5">
+        <div class="slide-content">
+          <p class="slide-kicker">언제 나눌까</p>
+          <h2 id="slide-title-5">맥락 부담이 큰 옆 작업에<br><span>SubAgent가 잘 맞습니다.</span></h2>
+          <div class="slide-compare">
+            <article class="recommended">
+              <span>써볼 만한 작업</span>
+              <strong>원인 후보가 많은 버그<br>긴 로그 분석<br>독립적인 diff 리뷰</strong>
+              <p>중간 결과를 메인 대화에서 다시 쓰지 않을 때</p>
+            </article>
+            <article>
+              <span>기본 루프로 충분</span>
+              <strong>오타 수정<br>단일 테스트 추가<br>명확한 조건문 수정</strong>
+              <p>역할을 나누는 시간이 수정 시간보다 길 때</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-6">
+        <div class="slide-content">
+          <p class="slide-kicker">우리 팀의 첫 역할</p>
+          <h2 id="slide-title-6">구현보다 먼저<br><span>읽기 전용 조사부터 맡깁니다.</span></h2>
+          <ol class="slide-flow">
+            <li><span>1</span><strong>Issue Investigator</strong><small>호출 흐름, 관련 파일, 원인 후보</small></li>
+            <li><span>2</span><strong>Small Fix Builder</strong><small>사람이 고른 작은 수정과 테스트</small></li>
+            <li><span>3</span><strong>Diff Reviewer</strong><small>회귀 위험, 테스트 누락, 과한 변경</small></li>
+          </ol>
+          <p class="slide-statement slide-statement-compact">처음에는 파일을 수정하지 않는 Investigator 하나만 공유해도 충분합니다.</p>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-7">
+        <div class="slide-content">
+          <p class="slide-kicker">역할을 나누는 흐름</p>
+          <h2 id="slide-title-7">결과를 확인한 뒤<br><span>다음 역할로 넘깁니다.</span></h2>
+          <ol class="slide-workflow">
+            <li><span>Step 1</span><strong>Investigator가 원인 후보 조사</strong></li>
+            <li><span>Step 2</span><strong>사람이 수정 방향과 범위 선택</strong></li>
+            <li><span>Step 3</span><strong>Builder가 작은 수정과 테스트 수행</strong></li>
+            <li><span>Step 4</span><strong>Reviewer가 실제 diff 검토</strong></li>
+          </ol>
+          <p class="slide-statement slide-statement-compact">앞 결과에 의존하는 작업은 한꺼번에 병렬로 보내지 않습니다.</p>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-8">
+        <div class="slide-content">
+          <p class="slide-kicker">SubAgent 파일</p>
+          <h2 id="slide-title-8">할 일뿐 아니라<br><span>하지 않을 일도 적습니다.</span></h2>
+          <div class="slide-boundary">
+            <article class="is-included">
+              <span>프로젝트 역할 정의</span>
+              <strong><code>.claude/agents/<br>issue-investigator.md</code></strong>
+              <p>이름, 설명, 모델, 사용할 도구</p>
+            </article>
+            <article>
+              <span>결과 계약</span>
+              <strong>범위 · 제외 · 출력</strong>
+              <p>수정 금지, 원인 후보 2개, 테스트 계획</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-9">
+        <div class="slide-content">
+          <p class="slide-kicker">실전 요청</p>
+          <h2 id="slide-title-9">역할과 반환할 결과를<br><span>짧게 지정합니다.</span></h2>
+          <div class="slide-prompt slide-prompt-compact">
+            <pre><code>issue-investigator agent로 MES-1234 원인을 조사해줘.
+
+파일은 수정하지 말고 다음 결과만 정리해줘.
+- 관련 코드 위치와 호출 흐름
+- 가능성 높은 원인 2개
+- 확인해야 할 JUnit 테스트</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-10">
+        <div class="slide-content">
+          <p class="slide-kicker">남용하면 생기는 일</p>
+          <h2 id="slide-title-10">역할이 많아질수록<br><span>통합과 조율 비용도 커집니다.</span></h2>
+          <ul class="slide-checklist slide-checklist-tests">
+            <li>같은 파일을 여러 역할이 중복해서 읽음</li>
+            <li>조사 결과와 구현 범위가 서로 어긋남</li>
+            <li>작은 수정에 실제 작업보다 설명이 더 길어짐</li>
+            <li>최종 판단의 책임이 흐려짐</li>
           </ul>
-        </section>
-        <section>
-          <h3>Builder</h3>
-          <ul>
-            <li>확인된 작은 수정만 구현한다.</li>
-            <li>기존 패턴을 따른다.</li>
-            <li>테스트를 실행하고 결과를 남긴다.</li>
-          </ul>
-        </section>
+          <p class="slide-statement slide-statement-compact">어떤 결과를 채택하고 무엇을 수정할지는 사람이 마지막에 고릅니다.</p>
+        </div>
+      </section>
+
+      <section class="slide" aria-labelledby="slide-title-11">
+        <div class="slide-content slide-content-narrow">
+          <p class="slide-kicker">이번 주 실천</p>
+          <h2 id="slide-title-11">최근 이슈 하나를<br><span>Investigator에게만 맡겨봅니다.</span></h2>
+          <p class="slide-statement">결과가 충분히 명확할 때만 작은 구현으로 넘어갑니다.</p>
+        </div>
+      </section>
+
+      <section class="slide slide-finale" aria-labelledby="slide-title-12">
+        <div class="slide-content slide-content-narrow">
+          <p class="slide-kicker">한 문장으로 정리</p>
+          <h2 id="slide-title-12" class="slide-finale-title">SubAgent는 큰 작업보다,<br><span>분리할 가치가 있는<br>옆 작업에 씁니다.</span></h2>
+          <p class="slide-statement">다음 주에는 정해진 시점의 확인을 Hooks로 자동화합니다.</p>
+          <div class="slide-final-links">
+            <a class="slide-roadmap-link" href="week-05.html">← Week 5 다시 보기</a>
+            <a class="slide-roadmap-link secondary" href="../index.html#roadmap">전체 로드맵</a>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <nav class="slide-controls" aria-label="슬라이드 이동">
+      <button class="slide-button previous" type="button" aria-label="이전 슬라이드">←</button>
+      <div class="slide-position" aria-live="polite">
+        <span class="current-slide">1</span> / <span>12</span>
+        <span class="slide-progress-bar" aria-hidden="true"><span></span></span>
       </div>
+      <button class="slide-button next" type="button" aria-label="다음 슬라이드">→</button>
+    </nav>
+  </main>
 
-      <p>
-        Reviewer 역할도 중요합니다. Reviewer는 구현자의 설명을 믿는 것이 아니라 diff를 기준으로 봅니다.
-        트랜잭션 범위, DB 업데이트 조건, 누락된 테스트, 과한 변경을 우선 확인합니다.
-      </p>
-
-      <h2>3. 우리 팀에서 써볼 만한 SubAgent 구성</h2>
-      <p>
-        처음에는 역할을 세 개 정도로만 나누는 것이 좋습니다. 이름이 많아지면 오히려
-        어떤 역할을 써야 할지 고민이 늘어납니다.
-      </p>
-
-      <div class="compare-grid">
-        <section class="strong-example">
-          <h3>Issue Investigator</h3>
-          <ul>
-            <li>Jira, Confluence, GitHub, 코드를 읽고 원인 후보를 좁힙니다.</li>
-            <li>파일 수정은 하지 않습니다.</li>
-            <li>결과로 호출 흐름, 관련 파일, 원인 후보, 확인할 테스트를 남깁니다.</li>
-          </ul>
-        </section>
-        <section class="strong-example">
-          <h3>Small Fix Builder</h3>
-          <ul>
-            <li>사람이 확인한 수정안 하나만 구현합니다.</li>
-            <li>공통 모듈 리팩토링이나 넓은 구조 변경은 하지 않습니다.</li>
-            <li>수정 후 관련 JUnit 테스트 결과를 남깁니다.</li>
-          </ul>
-        </section>
-        <section class="strong-example">
-          <h3>Diff Reviewer</h3>
-          <ul>
-            <li>구현 설명이 아니라 실제 diff를 기준으로 봅니다.</li>
-            <li>회귀 위험, 테스트 누락, 과한 변경을 우선 확인합니다.</li>
-            <li>문제 없으면 남은 리스크와 확인한 테스트만 짧게 남깁니다.</li>
-          </ul>
-        </section>
-        <section class="strong-example">
-          <h3>Test Planner</h3>
-          <ul>
-            <li>기존 테스트 스타일을 먼저 확인합니다.</li>
-            <li>성공, 실패, 경계, 재시도 케이스를 제안합니다.</li>
-            <li>테스트 코드는 방향을 확인한 뒤 추가합니다.</li>
-          </ul>
-        </section>
-      </div>
-
-      <p>
-        써볼 만한 흐름은 <code>Issue Investigator</code>로 조사하고, 사람이 수정 방향을 고른 뒤
-        <code>Small Fix Builder</code>에게 구현을 맡기고, 마지막에 <code>Diff Reviewer</code>로
-        검토하는 방식입니다. 테스트가 애매한 작업만 <code>Test Planner</code>를 추가합니다.
-      </p>
-
-      <h2>4. 실제 SubAgent 파일 예시</h2>
-      <p>
-        프로젝트에서 함께 써볼 SubAgent는 <code>.claude/agents/</code> 아래에 둘 수 있습니다.
-        먼저 파일을 수정하지 않는 조사 agent부터 만들어보면 부담이 적습니다.
-      </p>
-
-      <pre><code># .claude/agents/issue-investigator.md
----
-name: issue-investigator
-description: Use for Jira-based Java backend bug investigation before code changes
-tools: Read, Grep, Glob
-model: sonnet
----
-
-You investigate Java backend bugs before implementation.
-
-Rules:
-- Do not edit files.
-- Start from Jira, Confluence, or GitHub context if provided.
-- Find related service, repository, adapter, and test files.
-- Summarize call flow, likely causes, and verification tests.
-- Output: related files, call flow, top 2 causes, test plan.</code></pre>
-
-      <pre><code>issue-investigator agent를 사용해서 MES-1234 원인을 조사해줘.
-파일 수정은 하지 말고 관련 코드 위치, 호출 흐름,
-원인 후보 2개, 확인할 JUnit 테스트만 정리해줘.</code></pre>
-
-      <p>
-        구현 agent를 만들 때는 권한을 더 신중하게 보는 편이 좋습니다. 처음에는 조사 agent만 팀에 공유하고,
-        구현은 기본 Claude Code 세션에서 사람이 방향을 확인한 뒤 진행해도 충분합니다.
-      </p>
-
-      <h2>5. 좋은 요청 방식</h2>
-      <p>
-        SubAgent를 쓸 때는 역할과 기대하는 결과를 짧게 적어두면 좋습니다.
-        “조사해줘”보다 “구현하지 말고 관련 파일, 호출 흐름, 원인 후보, 검증 방법만 정리해줘”가 낫습니다.
-      </p>
-
-      <aside class="prompt-card">
-        <h2>그대로 써봐도 되는 요청</h2>
-        <p>상태 업데이트 버그를 역할별로 나눠서 볼 때 사용할 수 있습니다.</p>
-        <pre><code>Investigator:
-작업 상태 업데이트 이슈의 원인을 조사해줘.
-파일 수정은 하지 말고 관련 코드 위치, 호출 흐름,
-가능성 높은 원인 2개, 확인해야 할 테스트만 정리해줘.
-
-Builder:
-Investigator 결과를 바탕으로 가장 작은 수정만 적용해줘.
-공통 트랜잭션 처리나 외부 연동 모듈은 계획 없이 리팩토링하지 마.
-구현 후 관련 JUnit 테스트를 실행해줘.
-
-Reviewer:
-이번 diff를 리뷰해줘.
-버그, 회귀 위험, 테스트 누락만 우선순위대로 말해줘.</code></pre>
-      </aside>
-
-      <h2>6. 남용하면 생기는 문제</h2>
-      <p>
-        SubAgent가 많아지면 각자의 결과를 통합하는 비용이 생깁니다. 작은 작업에 역할을 나누면
-        실제 수정 시간보다 조율 시간이 더 커질 수 있습니다. 또한 역할을 잘못 나누면
-        조사 결과와 구현 결과가 어긋날 수 있습니다.
-      </p>
-
-      <p>
-        그래서 마지막 판단은 사람이 하는 편이 좋습니다. 어떤 조사 결과를 채택할지,
-        어느 구현안을 진행할지, 리뷰 지적 중 무엇을 반영할지는 사람이 마지막에 고르면 됩니다.
-      </p>
-
-      <aside class="action-box">
-        <h2>이번 주 실천</h2>
-        <p>
-          최근 이슈 하나를 골라 구현 요청 전에 Investigator 역할로만 맡겨봅니다.
-          결과가 충분히 명확할 때만 Builder에게 작은 수정 범위를 맡기고, 구현 후에는
-          Reviewer가 실제 diff를 확인하게 해봅니다. 작은 작업은 기본 루프로 충분합니다.
-        </p>
-      </aside>
-
-      <h2>다음 주 예고</h2>
-      <p>
-        다음 주에는 Claude Code를 안정적으로 쓰기 위한 작은 리마인더,
-        Hooks로 잊기 쉬운 확인을 알려주는 방법을 다룹니다.
-      </p>
-
-      <nav class="article-nav" aria-label="뉴스레터 주차 이동">
-        <a class="prev-link" href="week-05.html">← 이전 글</a>
-        <a class="roadmap-link" href="../index.html#roadmap">전체 로드맵</a>
-        <a class="next-link" href="week-07.html">다음 글 →</a>
-      </nav>
-    </main>
-  </body>
+  <script src="../assets/slides.js"></script>
+</body>
 </html>

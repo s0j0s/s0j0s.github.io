@@ -1,300 +1,206 @@
 <!doctype html>
 <html lang="ko">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Week 7. Hooks로 잊기 쉬운 확인 알려주기</title>
-    <meta name="description" content="Claude Code Hooks로 테스트와 정적 검사처럼 놓치기 쉬운 확인을 알림부터 단계적으로 자동화하는 방법을 소개합니다.">
-    <meta property="og:title" content="Hooks로 잊기 쉬운 확인 알려주기">
-    <meta property="og:description" content="Claude Code 작업 흐름에 부담 없는 알림을 추가하고 단계적으로 자동화하는 방법을 살펴봅니다.">
-    <meta property="og:type" content="article">
-    <meta property="og:url" content="https://s0j0s.github.io/weeks/week-07.html">
-    <link rel="canonical" href="https://s0j0s.github.io/weeks/week-07.html">
-    <link rel="stylesheet" href="../assets/styles.css">
-  </head>
-  <body>
-    <header class="site-header">
-      <nav class="nav">
-        <a class="brand" href="../index.html">Claude Code Engineering</a>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 7. Hooks로 잊기 쉬운 확인 알려주기</title>
+  <meta name="description" content="정해진 시점에 테스트와 검사를 실행하거나 위험한 작업을 차단하는 Claude Code Hooks의 시작 방법을 소개합니다.">
+  <meta property="og:title" content="Hooks로 잊기 쉬운 확인 알려주기">
+  <meta property="og:description" content="가벼운 알림부터 시작해 자동 검사와 제한적인 차단으로 확장하는 흐름을 살펴봅니다.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://s0j0s.github.io/weeks/week-07.html">
+  <link rel="canonical" href="https://s0j0s.github.io/weeks/week-07.html">
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+
+<body class="slide-page">
+  <header class="site-header slide-header">
+    <nav class="nav">
+      <a class="brand" href="../index.html">Claude Code Engineering</a>
+      <div class="nav-actions">
+        <button class="slide-view-toggle" type="button" aria-pressed="false">전체 보기</button>
         <a href="../index.html#roadmap">전체 로드맵</a>
-      </nav>
-    </header>
+      </div>
+    </nav>
+  </header>
 
-    <main class="article">
-      <div class="week-progress week-7">Week 7 of 8 <span aria-hidden="true"></span> 리마인더</div>
-      <p class="eyebrow">Week 7</p>
-      <h1>Hooks로 잊기 쉬운 확인 알려주기</h1>
-      <p class="article-meta">약 6분 · 실무 활용 팁</p>
-      <p class="lead">
-        Hooks는 정해진 순간에 작동하는 자동문 센서와 비슷합니다.
-        사람이 잊기 쉬운 확인을 작업 흐름 안에서 자동으로 불러옵니다.
-      </p>
+  <main class="slide-deck" aria-label="Week 7 슬라이드">
+    <div class="slide-track">
+      <section class="slide slide-cover is-active" aria-labelledby="slide-title-1">
+        <div class="slide-content">
+          <p class="slide-kicker">Week 7 · 자동 확인</p>
+          <h1 id="slide-title-1">Hooks로 잊기 쉬운 확인<br>알려주기</h1>
+          <p class="slide-lead">알림부터 시작해 자동 검사와<br>정말 위험한 작업의 차단으로 확장합니다.</p>
+          <p class="slide-hint">키보드 방향키 또는 아래 버튼으로 넘겨보세요.</p>
+        </div>
+      </section>
 
-      <aside class="summary-box">
-        <h2>3줄 요약</h2>
-        <ul>
-          <li>Hooks는 Claude Code 작업 중 반복 확인을 자동으로 알려주는 리마인더입니다.</li>
-          <li>처음부터 막으려 하지 말고 알림부터 시작하면 팀원이 부담 없이 받아들일 수 있습니다.</li>
-          <li>Java 백엔드 팀이라면 관련 JUnit 테스트, 정적 검사, secret 검사부터 연결하기 좋습니다.</li>
-        </ul>
-      </aside>
+      <section class="slide" aria-labelledby="slide-title-2">
+        <div class="slide-content slide-content-narrow">
+          <p class="slide-kicker">대화로만 반복하면</p>
+          <h2 id="slide-title-2">“테스트 확인해줘”를<br><span>매번 기억해야 합니다.</span></h2>
+          <p class="slide-statement">사람도 Claude도 반복 확인을 놓칠 수 있습니다.<br>변경 속도가 빨라질수록 검증 루프가 뒤처집니다.</p>
+        </div>
+      </section>
 
-      <aside class="callout">
-        <h2>이번 주 포인트</h2>
-        <p>
-          Hooks는 Claude를 믿지 못해서 거는 장치가 아니라,
-          자주 잊는 확인을 작업 흐름 안에서 알려주는 리마인더입니다.
-          도입은 자동 실행보다 가벼운 알림부터 시작하는 편이 편합니다.
-        </p>
-      </aside>
+      <section class="slide" aria-labelledby="slide-title-3">
+        <div class="slide-content">
+          <p class="slide-kicker">Hooks가 맡는 일</p>
+          <h2 id="slide-title-3">정해둔 시점에<br><span>빠짐없이 실행됩니다.</span></h2>
+          <ol class="slide-flow">
+            <li><span>1</span><strong>알려주기</strong><small>관련 테스트와 호환성 확인 추가</small></li>
+            <li><span>2</span><strong>실행하기</strong><small>테스트, 정적 검사, secret 검사</small></li>
+            <li><span>3</span><strong>차단하기</strong><small>위험 명령과 명확한 정책 위반</small></li>
+          </ol>
+          <p class="slide-statement slide-statement-compact">Claude가 실행할지 판단하는 지침과 달리 Hook의 이벤트는 정해진 조건에서 동작합니다.</p>
+        </div>
+      </section>
 
-      <p>
-        Claude에게 매번 “테스트 돌려줘”, “포맷 확인해줘”, “secret 들어갔는지 봐줘”라고
-        말하는 것은 오래 가지 않습니다. 사람도 반복 확인을 가끔 빠뜨리는데,
-        Claude에게 매번 대화로만 지시하는 방식은 더 쉽게 흔들립니다.
-      </p>
+      <section class="slide" aria-labelledby="slide-title-4">
+        <div class="slide-content">
+          <p class="slide-kicker">파일과 등록 위치</p>
+          <h2 id="slide-title-4">스크립트만 두면<br><span>아직 Hook이 아닙니다.</span></h2>
+          <div class="slide-boundary">
+            <article class="is-included">
+              <span>언제 실행할지 등록</span>
+              <strong><code>.claude/settings.json</code></strong>
+              <p>이벤트, matcher, 실행할 handler</p>
+            </article>
+            <article>
+              <span>무엇을 할지 구현</span>
+              <strong><code>.claude/hooks/<br>test-reminder.sh</code></strong>
+              <p>알림, 테스트, 검사, 차단 판단</p>
+            </article>
+          </div>
+          <p class="slide-statement slide-statement-compact"><code>.claude/hooks/</code>는 팀이 정한 스크립트 위치일 뿐, 파일만 만들어서는 실행되지 않습니다.</p>
+        </div>
+      </section>
 
-      <p>
-        Hooks는 특정 시점에 자동으로 실행되는 작은 알림입니다. 변경 후 테스트를 떠올리게 하거나,
-        위험한 명령을 한 번 더 확인하거나, 특정 파일이 수정될 때 메시지를 띄우는 식으로
-        반복 확인을 작업 흐름 안에 넣을 수 있습니다.
-      </p>
+      <section class="slide" aria-labelledby="slide-title-5">
+        <div class="slide-content">
+          <p class="slide-kicker">실행 전과 실행 후</p>
+          <h2 id="slide-title-5">막아야 한다면<br><span>도구가 실행되기 전이어야 합니다.</span></h2>
+          <div class="slide-compare">
+            <article class="recommended">
+              <span>실행 전</span>
+              <strong><code>PreToolUse</code></strong>
+              <p>도구 입력을 검사하고 위험한 호출을 차단</p>
+            </article>
+            <article>
+              <span>실행 후</span>
+              <strong><code>PostToolUse</code></strong>
+              <p>결과에 피드백과 추가 컨텍스트 전달</p>
+            </article>
+          </div>
+          <p class="slide-statement slide-statement-compact"><code>PostToolUse</code> 시점에는 이미 도구가 실행되어 이전 행동을 되돌릴 수 없습니다.</p>
+        </div>
+      </section>
 
-      <p>
-        Hook 스크립트를 <code>.claude/hooks/</code>에 두는 것만으로는 실행되지 않습니다.
-        어떤 시점에 어떤 Hook을 부를지 <code>.claude/settings.json</code>에 등록해야 합니다.
-        스크립트는 실제 동작을 맡고, settings는 작동할 순간을 연결합니다.
-      </p>
-
-      <h2>1. 왜 필요한가</h2>
-      <p>
-        반복 확인을 기억에만 맡기면 가끔 빠질 수 있습니다. 특히 Claude Code를 쓰면 변경 속도가 빨라지기 때문에
-        검증 루프가 따라오지 못할 수 있습니다. Hooks는 이 간격을 줄입니다.
-      </p>
-
-      <p>
-        중요한 점은 Hooks가 모든 판단을 자동화하는 것이 아니라는 점입니다.
-        사람이 항상 기억하지 않아도 되는 기본 확인을 자연스럽게 떠올리게 하는 데 목적이 있습니다.
-      </p>
-
-      <h2>2. 실무 Hook 예시</h2>
-      <ul>
-        <li>변경 후 관련 JUnit 테스트 실행</li>
-        <li>정적 검사와 코드 스타일 확인</li>
-        <li>secret 검사</li>
-        <li>위험 명령 실행 전 확인</li>
-        <li>트랜잭션, 배치, 외부 연동 파일 수정 시 알림</li>
-        <li>상태 업데이트 관련 파일 수정 시 관련 테스트 실행 안내</li>
-        <li>PR 전 체크리스트 출력</li>
-      </ul>
-
-      <p>
-        예를 들어 상태 업데이트 서비스나 외부 연동 어댑터가 바뀌면
-        관련 JUnit 테스트나 <code>./gradlew test</code>를 떠올리게 하는 Hook부터 시작할 수 있습니다.
-        팀이 안정성을 확인한 뒤에는 같은 Hook을 자동 실행으로 올리고,
-        민감정보 유출이나 위험 명령처럼 명확한 리스크만 제한적으로 실행을 멈춥니다.
-      </p>
-
-      <h2>3. Hook을 만드는 순서</h2>
-      <p>
-        처음 Hook을 만들 때는 자동 실행보다 알림 메시지부터 만드는 편이 좋습니다.
-        팀원이 실제 흐름에서 불편하지 않은지 확인한 뒤 자동 실행이나 제한적인 실행 중단을 검토합니다.
-      </p>
-
-      <pre><code>1. 자주 놓치는 검증을 하나 고른다.
-   예: 상태 업데이트 서비스 변경 후 관련 JUnit 테스트 확인
-
-2. 감지할 파일 범위를 골라본다.
-   예: *StatusService.java, *StateRepository.java, 외부 연동 adapter
-
-3. 처음에는 알림만 출력한다.
-   예: "상태 업데이트 로직이 변경되었습니다. 관련 JUnit 테스트를 확인하세요."
-
-4. 팀에서 괜찮다고 느끼면 자동 실행으로 올린다.
-   예: ./gradlew test --tests "*Status*"
-
-5. 정말 위험한 작업만 실행을 멈춘다.
-   예: secret 노출, 확인 없는 force push, 운영 설정 파일 삭제</code></pre>
-
-      <h2>4. 실제 Hook 파일 예시</h2>
-      <p>
-        처음에는 파일 경로를 파싱하지 않는 단순 Hook부터 시작해도 충분합니다.
-        아래 예시는 Claude가 파일을 수정한 뒤 테스트, Java 8, Oracle 11g 확인을 잊지 않도록
-        알림만 출력합니다.
-      </p>
-
-      <pre><code># .claude/settings.json
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/test-reminder.sh"
-          }
-        ]
-      }
-    ]
-  }
+      <section class="slide" aria-labelledby="slide-title-6">
+        <div class="slide-content">
+          <p class="slide-kicker">첫 Hook은 가볍게</p>
+          <h2 id="slide-title-6">파일 수정 뒤<br><span>확인할 내용을 더합니다.</span></h2>
+          <div class="slide-prompt slide-prompt-compact">
+            <pre><code>{
+  "hooks": {"PostToolUse": [{
+    "matcher": "Write|Edit",
+    "hooks": [{
+      "type": "command",
+      "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/test-reminder.sh"
+    }]
+  }]}
 }</code></pre>
+          </div>
+        </div>
+      </section>
 
-      <pre><code># .claude/hooks/test-reminder.sh
-#!/usr/bin/env bash
+      <section class="slide" aria-labelledby="slide-title-7">
+        <div class="slide-content">
+          <p class="slide-kicker">리마인더 출력</p>
+          <h2 id="slide-title-7">일반 문자열 대신<br><span>구조화된 결과를 돌려줍니다.</span></h2>
+          <div class="slide-prompt slide-prompt-compact">
+            <pre><code>#!/usr/bin/env bash
 
-echo "Files were changed. Before finishing, ask Claude to check related JUnit tests." &gt;&amp;2
-echo "If Java code changed, check Java 8 compatibility." &gt;&amp;2
-echo "If SQL, MyBatis XML, or JDBC query changed, check Oracle 11g compatibility." &gt;&amp;2
+printf '%s\n' \
+'{"hookSpecificOutput":{"hookEventName":"PostToolUse",
+"additionalContext":"관련 JUnit 테스트와 Java 8, Oracle 11g 호환성을 확인하세요."}}'
 
 exit 0</code></pre>
+          </div>
+        </div>
+      </section>
 
-      <pre><code>chmod +x .claude/hooks/test-reminder.sh</code></pre>
+      <section class="slide" aria-labelledby="slide-title-8">
+        <div class="slide-content">
+          <p class="slide-kicker">차단은 제한적으로</p>
+          <h2 id="slide-title-8">명확한 위험만<br><span><code>exit 2</code>로 멈춥니다.</span></h2>
+          <ul class="slide-checklist slide-checklist-tests">
+            <li><code>PreToolUse</code>에서 실행할 명령과 인자를 검사</li>
+            <li>차단 사유는 stderr로 Claude에게 전달</li>
+            <li>secret 노출, 강제 push, 운영 설정 삭제처럼 범위를 좁힘</li>
+            <li>조직 전체 정책은 회사의 managed settings를 우선</li>
+          </ul>
+          <p class="slide-statement slide-statement-compact">일반적인 설계 판단이나 배포 리스크 수용은 Hook이 아니라 사람이 결정합니다.</p>
+        </div>
+      </section>
 
-      <p>
-        이 버전은 별도 도구 설치가 필요 없습니다. 팀원이 알림을 부담 없이 받아들이는지 먼저 확인한 뒤,
-        필요할 때 파일별로 다른 알림을 띄우는 정교한 Hook으로 확장합니다.
-      </p>
+      <section class="slide" aria-labelledby="slide-title-9">
+        <div class="slide-content">
+          <p class="slide-kicker">우리 팀의 첫 후보</p>
+          <h2 id="slide-title-9">자주 빠뜨리지만<br><span>판단이 적은 확인부터 시작합니다.</span></h2>
+          <ol class="slide-flow">
+            <li><span>1</span><strong>test-reminder</strong><small>관련 JUnit 테스트와 결과 확인</small></li>
+            <li><span>2</span><strong>secret-guard</strong><small>토큰, 비밀번호, 인증키 패턴</small></li>
+            <li><span>3</span><strong>oracle11g-sql-guard</strong><small>지원하지 않는 SQL 문법 확인</small></li>
+          </ol>
+          <p class="slide-statement slide-statement-compact">오탐이 많은 검사는 알림으로 낮추고, 명확한 패턴만 차단 후보로 둡니다.</p>
+        </div>
+      </section>
 
-      <p>
-        이 Hook이 팀 흐름에 맞는지 확인한 뒤 더 정교한 검사를 붙입니다.
-        예를 들어 Java 파일이 바뀌면 Java 8 호환성을 확인하라고 알려주거나,
-        SQL, MyBatis XML, JDBC query 문자열이 바뀌면 Oracle 11g 호환성을 확인하라고
-        안내할 수 있습니다. 처음부터 모든 검사를 자동 실행하거나 막으려 하지 않으면 부담이 적습니다.
-      </p>
+      <section class="slide" aria-labelledby="slide-title-10">
+        <div class="slide-content">
+          <p class="slide-kicker">팀에 적용하는 순서</p>
+          <h2 id="slide-title-10">알림으로 관찰한 뒤<br><span>필요한 자동화만 올립니다.</span></h2>
+          <ol class="slide-workflow">
+            <li><span>Step 1</span><strong>놓치는 확인 하나 고르기</strong></li>
+            <li><span>Step 2</span><strong>알림으로 1~2주 사용하기</strong></li>
+            <li><span>Step 3</span><strong>오탐과 실행 시간을 확인하기</strong></li>
+            <li><span>Step 4</span><strong>자동 실행과 차단 후보만 남기기</strong></li>
+          </ol>
+        </div>
+      </section>
 
-      <h2>5. 추천 Hook Set</h2>
-      <div class="compare-grid">
-        <section class="strong-example">
-          <h3>test-reminder</h3>
-          <ul>
-            <li>서비스, repository, adapter 변경 시 관련 JUnit 테스트를 안내합니다.</li>
-            <li>처음에는 알림만 출력합니다.</li>
-            <li>안정화되면 제한된 테스트 자동 실행으로 올립니다.</li>
-          </ul>
-        </section>
-        <section class="strong-example">
-          <h3>secret-guard</h3>
-          <ul>
-            <li>토큰, 비밀번호, 인증키 패턴을 검사합니다.</li>
-            <li>명확한 민감정보 패턴은 실행 중단 후보입니다.</li>
-            <li>오탐이 많으면 알림 단계로 낮춥니다.</li>
-          </ul>
-        </section>
-        <section class="strong-example">
-          <h3>risk-command-guard</h3>
-          <ul>
-            <li>삭제, 강제 push, 권한 변경 같은 위험 명령을 확인합니다.</li>
-            <li>Claude가 실행하기 전 사람이 한 번 확인하게 합니다.</li>
-            <li>팀에서 허용한 명령은 예외 목록으로 관리합니다.</li>
-          </ul>
-        </section>
-        <section class="strong-example">
-          <h3>pr-checklist</h3>
-          <ul>
-            <li>작업 종료 전에 테스트, diff 리스크, 문서 변경 여부를 출력합니다.</li>
-            <li>리뷰 요청 전에 빠진 근거를 확인하게 도와줍니다.</li>
-            <li>막기보다 체크리스트 출력에 적합합니다.</li>
-          </ul>
-        </section>
-        <section class="strong-example">
-          <h3>oracle11g-sql-guard</h3>
-          <ul>
-            <li><code>.sql</code>, <code>.xml</code>, <code>.java</code> 변경 시 SQL 문법을 확인합니다.</li>
-            <li>Oracle 12c+, MySQL, PostgreSQL 문법이 섞이면 알려줍니다.</li>
-            <li>처음에는 알림만 두고, 오탐이 적은 패턴만 실행 중단 후보로 둡니다.</li>
-          </ul>
-        </section>
+      <section class="slide" aria-labelledby="slide-title-11">
+        <div class="slide-content slide-content-narrow">
+          <p class="slide-kicker">이번 주 실천</p>
+          <h2 id="slide-title-11"><code>test-reminder</code> 하나를<br><span>알림 단계로 써봅니다.</span></h2>
+          <p class="slide-statement">팀이 불편하지 않은지 확인한 뒤<br>제한된 테스트 자동 실행을 검토합니다.</p>
+        </div>
+      </section>
+
+      <section class="slide slide-finale" aria-labelledby="slide-title-12">
+        <div class="slide-content slide-content-narrow">
+          <p class="slide-kicker">한 문장으로 정리</p>
+          <h2 id="slide-title-12" class="slide-finale-title">Hooks는 기억을 대신하되,<br><span>사람의 판단까지<br>대신하지 않습니다.</span></h2>
+          <p class="slide-statement">다음 주에는 앞선 설정과 도구를 작은 팀 메모로 묶습니다.</p>
+          <div class="slide-final-links">
+            <a class="slide-roadmap-link" href="week-06.html">← Week 6 다시 보기</a>
+            <a class="slide-roadmap-link secondary" href="../index.html#roadmap">전체 로드맵</a>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <nav class="slide-controls" aria-label="슬라이드 이동">
+      <button class="slide-button previous" type="button" aria-label="이전 슬라이드">←</button>
+      <div class="slide-position" aria-live="polite">
+        <span class="current-slide">1</span> / <span>12</span>
+        <span class="slide-progress-bar" aria-hidden="true"><span></span></span>
       </div>
+      <button class="slide-button next" type="button" aria-label="다음 슬라이드">→</button>
+    </nav>
+  </main>
 
-      <h2>6. 팀에 적용하는 순서</h2>
-      <p>
-        Hook은 적용 순간부터 개발 흐름에 영향을 줍니다. 그래서 첫 주에는 알림만 켜고,
-        팀원이 실제로 불편함 없이 받아들이는지 확인하는 편이 좋습니다.
-      </p>
-
-      <pre><code>1. .claude/hooks/test-reminder.sh를 단순 알림 버전으로 만든다.
-2. .claude/settings.json에 test-reminder Hook만 연결한다.
-3. 작은 Java 파일 하나를 Claude Code로 수정해보고 알림이 뜨는지 확인한다.
-4. 팀원이 알림을 부담 없이 받아들이면 저장소에 남긴다.
-5. 1~2주 사용한 뒤 자동 실행이나 실행 중단으로 올릴 항목만 따로 고른다.
-6. Java 8, Oracle 11g, secret 검사는 오탐이 적은 항목부터 하나씩 추가한다.</code></pre>
-
-      <p>
-        처음부터 <code>./gradlew test</code>를 매번 자동 실행하면 느릴 수 있습니다.
-        먼저 “관련 테스트를 확인하라”는 알림을 써보고, 이후 특정 파일 패턴에만 제한적으로
-        테스트 자동 실행을 붙이는 것이 현실적입니다.
-      </p>
-
-      <h2>7. 자동화할 것과 사람이 판단할 것</h2>
-      <p>
-        자동화하기 좋은 것은 결과가 명확한 작업입니다. 테스트 통과 여부, 코드 스타일 위반 여부,
-        secret 패턴 검출, 위험 명령 확인 같은 것은 Hook에 잘 맞습니다.
-      </p>
-
-      <p>
-        반대로 제품 의도, 설계 방향, 리스크 수용 여부는 사람이 판단하는 편이 좋습니다.
-        Hook은 사람의 판단을 대체하기보다 판단 전에 놓치면 안 되는 기본 신호를 제공합니다.
-      </p>
-
-      <div class="compare-grid">
-        <section>
-          <h3>Hook에 잘 맞음</h3>
-          <ul>
-            <li>테스트 명령 실행</li>
-            <li>코드 스타일 검사</li>
-            <li>민감정보 패턴 검사</li>
-            <li>주의할 파일 변경 알림</li>
-          </ul>
-        </section>
-        <section>
-          <h3>사람이 판단</h3>
-          <ul>
-            <li>변경 방향 확인</li>
-            <li>배포 리스크 수용</li>
-            <li>설계 트레이드오프</li>
-            <li>제품 요구사항 해석</li>
-          </ul>
-        </section>
-      </div>
-
-      <h2>8. 너무 강한 Hook의 문제</h2>
-      <p>
-        모든 것을 막는 방식으로 시작하면 개발 흐름이 막힙니다. 테스트가 느리거나 flaky한데 매번 강제하면
-        Claude Code 사용 자체가 답답해질 수 있습니다. 처음부터 완벽한 방어선을 만들려고 하기보다
-        팀이 실제로 놓치는 문제부터 잡는 편이 좋습니다.
-      </p>
-
-      <aside class="prompt-card">
-        <h2>그대로 써봐도 되는 요청</h2>
-        <p>팀에서 첫 Hook 후보를 정할 때 사용할 수 있습니다.</p>
-        <pre><code>최근 변경에서 자주 수정되는 Java 백엔드 파일을 기준으로
-Hook으로 알려주면 좋을 항목을 제안해줘.
-처음부터 막으려 하지 말고 알림으로 시작할 항목,
-자동 실행해도 괜찮은 테스트,
-사람 확인이 필요한 위험 작업을 나눠서 정리해줘.</code></pre>
-      </aside>
-
-      <aside class="action-box">
-        <h2>이번 주 실천</h2>
-        <p>
-          실행을 멈추는 Hook을 만들기 전에 “상태 업데이트 관련 파일이 바뀌면 관련 테스트를 확인하라”는
-          <code>test-reminder</code> 알림 하나만 먼저 써봅니다. 팀이 1~2주 사용한 뒤
-          자동 실행이나 실행 중단으로 올릴 항목을 따로 고릅니다.
-        </p>
-      </aside>
-
-      <h2>다음 주 예고</h2>
-      <p>
-        다음 주에는 지금까지 다룬 작업 루프, <code>CLAUDE.md</code>, Skill, MCP,
-        SubAgent, Hooks를 작은 팀 메모로 묶는 방법을 정리합니다.
-      </p>
-
-      <nav class="article-nav" aria-label="뉴스레터 주차 이동">
-        <a class="prev-link" href="week-06.html">← 이전 글</a>
-        <a class="roadmap-link" href="../index.html#roadmap">전체 로드맵</a>
-        <a class="next-link" href="week-08.html">다음 글 →</a>
-      </nav>
-    </main>
-  </body>
+  <script src="../assets/slides.js"></script>
+</body>
 </html>
